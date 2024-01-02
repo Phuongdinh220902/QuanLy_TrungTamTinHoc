@@ -24,8 +24,5 @@ const loginadmin = async (formdata) => {
     }
 };
 
-const themgv = () => {
-    return axios.get("api/v1/themgv");
-};
 
-export { laydshv, laydsgv, loginadmin, themgv };
+export { laydshv, laydsgv, loginadmin };

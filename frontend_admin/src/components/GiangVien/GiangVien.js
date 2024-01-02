@@ -12,8 +12,9 @@ import {
     // faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import {
-    laydsgv, themgv
+    laydsgv
 } from "../../services/apiService";
+import axios from "axios"
 
 
 
@@ -28,7 +29,16 @@ function Example() {
     const [image, setImage] = useState('');
     const [previewImage, setPreviewImage] = useState('');
 
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false)
+        setTen("");
+        setEmail("");
+        setSdt("");
+        setNgaysinh("");
+        setGioitinh("Nam");
+        setImage("");
+        setPreviewImage("");
+    }
     const handleShow = () => setShow(true);
 
     const handleUpLoadImage = (event) => {
@@ -39,35 +49,20 @@ function Example() {
     };
 
     const handleSave = async () => {
-        try {
-            const formData = new FormData();
-            formData.append('tenGV', tenGV);
-            formData.append('email', email);
-            formData.append('sdt', sdt);
-            formData.append('ngaysinh', ngaysinh);
-            // Ánh xạ giới tính từ frontend sang backend
-            const gioitinhValue = gioitinh === 'Nam' ? 1 : 0;
-            formData.append('gioitinh', gioitinhValue);
+        const formData = new FormData();
+        formData.append('tenGV', tenGV);
+        formData.append('email', email);
+        formData.append('sdt', sdt);
+        formData.append('ngaysinh', ngaysinh);
+        // Ánh xạ giới tính từ frontend sang backend
+        const gioitinhValue = gioitinh === 'Nam' ? 1 : 0;
+        formData.append('gioitinh', gioitinhValue);
 
-            formData.append('tenHA', image);
-
-            // Gửi yêu cầu POST sử dụng axios
-            const response = await themgv();
-
-            if (response.data.check === '1') {
-                console.log('Thêm giảng viên thành công');
-                // Thêm các logic cập nhật UI hoặc chuyển hướng tùy ý
-            } else {
-                console.error('Thêm giảng viên thất bại');
-            }
-        } catch (error) {
-            console.error('Lỗi khi thêm giảng viên:', error.message);
-        } finally {
-            // Sau khi thêm giảng viên xong, đóng modal
-            handleClose();
-        }
-    };
-
+        // formData.append('file', image);
+        formData.append('file', image, image.name);
+        let res = await axios.post('http://localhost:2209/api/v1/themgv', formData);
+        console.log("check", res)
+    }
 
     return (
         <>
@@ -78,7 +73,6 @@ function Example() {
             <Button variant="primary" onClick={handleShow} className="btn-lg bt-sreach">
                 <FontAwesomeIcon icon={faUserPlus} /> Tìm
             </Button>
-
 
             <Modal show={show} onHide={handleClose}
                 size="xl"
@@ -138,7 +132,7 @@ function Example() {
                     <Button variant="secondary" onClick={handleClose}>
                         Đóng
                     </Button>
-                    <Button variant="primary" onClick={handleSave}>
+                    <Button variant="primary" onClick={() => handleSave()}>
                         Lưu
                     </Button>
                 </Modal.Footer>
@@ -360,11 +354,11 @@ const GiangVien = (props) => {
                                 <tr>
                                     <th className="table-item ">STT</th>
                                     <th className="table-item">Tên Giảng Viên</th>
-                                    <th>Ngày sinh</th>
-                                    <th>Giới tính</th>
-                                    <th>Email</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Chỉnh sửa</th>
+                                    <th className="table-item">Ngày sinh</th>
+                                    <th className="table-item">Giới tính</th>
+                                    <th className="table-item">Email</th>
+                                    <th className="table-item">Số điện thoại</th>
+                                    <th className="table-item">Chỉnh sửa</th>
                                 </tr>
                             </thead>
                             <tbody id="myTable">
@@ -373,20 +367,20 @@ const GiangVien = (props) => {
                                     DSGiangVien.map((item, index) => {
                                         return (
                                             <tr key={`table-doanvien-${index}`} className="tableRow">
-                                                <td className="table-item col-right">{index + 1}</td>
-                                                <td className="table-item">{item.tenGV}</td>
-                                                <td className="table-item">
+                                                <td className="col-center">{index + 1}</td>
+                                                <td className="">{item.tenGV}</td>
+                                                <td className=" col-center">
                                                     {format(new Date(item.ngaysinh), "dd/MM/yyyy")}
                                                 </td>
-                                                <td className="table-item">
+                                                <td className="">
                                                     {item.gioitinh === 0
                                                         ? "Nữ"
                                                         : item.gioitinh === 1
                                                             ? "Nam"
                                                             : "Khác"}
                                                 </td>
-                                                <td className="table-item">{item.email}</td>
-                                                <td className="table-item">{item.sdt}</td>
+                                                <td className="">{item.email}</td>
+                                                <td className="">{item.sdt}</td>
 
                                                 <td>
                                                     <button className="btnOnTable">

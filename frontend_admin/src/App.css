@@ -246,3 +246,20 @@ code {
   position: absolute;
   right: 10px;
 }
+
+.btn-lg.bt-create.btn.btn-primary {
+  margin-right: 30px;
+}
+
+.col-right {
+  text-align: right !important;
+}
+
+.col-left {
+  text-align: left !important;
+}
+
+.table-item,
+.col-center {
+  text-align: center !important;
+}
