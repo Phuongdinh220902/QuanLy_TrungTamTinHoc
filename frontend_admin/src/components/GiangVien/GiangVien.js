@@ -15,8 +15,10 @@ import {
     laydsgv
 } from "../../services/apiService";
 import axios from "axios"
-
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import ModalUpdateGV from "./ModalUpdate";
+import ModalDelete from "./ModalDelete";
 
 function Example() {
     const [show, setShow] = useState(false);
@@ -48,7 +50,22 @@ function Example() {
         }
     };
 
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
+
     const handleSave = async () => {
+        const isValidEmail = validateEmail(email);
+
+        if (!isValidEmail) {
+            // alert('Email sai')
+            toast.error('Email không hợp lệ');
+            return;
+        }
         const formData = new FormData();
         formData.append('tenGV', tenGV);
         formData.append('email', email);
@@ -61,7 +78,15 @@ function Example() {
         // formData.append('file', image);
         formData.append('file', image, image.name);
         let res = await axios.post('http://localhost:2209/api/v1/themgv', formData);
-        console.log("check", res)
+        console.log("check", res.data)
+        if (res.data && res.data.EC === 0) {
+            toast.success(res.data.EM);
+            handleClose();
+        }
+
+        if (res.data && res.data.EC !== 0) {
+            toast.error(res.data.EM);
+        }
     }
 
     return (
@@ -142,34 +167,38 @@ function Example() {
 }
 
 
-const GiangVien = (props) => {
-    // const { MaLop } = useParams();
-    const [DSGiangVien, setListGiangVien] = useState([]);
 
-    //     // Lấy dữ liệu từ form, ví dụ:
-    //     const data = {
-    //         tenKH: "Khoá học mới",
-    //         moTa: "Mô tả khoá học mới",
-    //     };
-    //     try {
-    //         let res = await themKH(data);
-    //         if (res.status === 200) {
-    //             // Cập nhật danh sách khoá học sau khi thêm thành công
-    //             fetchDSKhoaHoc();
-    //         } else {
-    //             console.error("Lỗi khi thêm khoá học:", res.statusText);
-    //         }
-    //     } catch (error) {
-    //         console.error("Lỗi khi thêm khoá học:", error.message);
-    //     }
-    // };
-    // const [searchData, setSearchData] = useState({
-    //     MaLop: MaLop,
-    //     MSSV: "",
-    //     HoTen: "",
-    //     IDChucVu: "",
-    //     GioiTinh: "",
-    // });
+
+const GiangVien = (props) => {
+    const [DSGiangVien, setListGiangVien] = useState([]);
+    const [showModalUpdateGV, setShowModalUpdateGV] = useState(false);
+    const [selectedGiangVien, setSelectedGiangVien] = useState(null);
+    const [deleteGiangVienId, setDeleteGiangVienId] = useState(null);
+
+    const handleDelete = (maGV) => {
+        setDeleteGiangVienId(maGV);
+    };
+
+    const handleOpenModalUpdate = (giangVien) => {
+        setSelectedGiangVien(giangVien);
+        setShowModalUpdateGV(true);
+    };
+
+
+    const handleConfirmDelete = async () => {
+        try {
+            console.log(deleteGiangVienId)
+
+            await axios.post(`http://localhost:2209/api/v1/deleteGV/${deleteGiangVienId}`);
+            toast.success("Xoá giảng viên thành công");
+            setDeleteGiangVienId(null);
+            fetchDSGiangVien();
+        } catch (error) {
+            console.error("Lỗi khi gọi API xoá giảng viên:", error.message);
+            toast.error("Đã xảy ra lỗi khi xoá giảng viên");
+        }
+    };
+
 
     useEffect(() => {
         fetchDSGiangVien();
@@ -358,7 +387,7 @@ const GiangVien = (props) => {
                                     <th className="table-item">Giới tính</th>
                                     <th className="table-item">Email</th>
                                     <th className="table-item">Số điện thoại</th>
-                                    <th className="table-item">Chỉnh sửa</th>
+                                    <th className="table-item"> </th>
                                 </tr>
                             </thead>
                             <tbody id="myTable">
@@ -383,22 +412,50 @@ const GiangVien = (props) => {
                                                 <td className="">{item.sdt}</td>
 
                                                 <td>
-                                                    <button className="btnOnTable">
+                                                    <button className="btn btn-warning mx-3" onClick={() => handleOpenModalUpdate(item)}>
                                                         <FontAwesomeIcon icon={faPenToSquare} /> Chỉnh sửa
+
                                                     </button>
+                                                    <button className="btn btn-danger"
+                                                        onClick={() => handleDelete(item.maGV)}
+                                                    >Xoá</button>
                                                 </td>
+
                                             </tr>
                                         );
                                     })}
                                 {DSGiangVien && DSGiangVien.length === 0 && (
                                     <tr className="tablenone">
-                                        <td className="tablenone">Không có đoàn viên nào!</td>
+                                        <td className="tablenone">Không có giảng viên nào!</td>
                                     </tr>
                                 )}
                             </tbody>
                         </table>
                     </div>
                 </div>
+                <ModalUpdateGV
+                    show={showModalUpdateGV}
+                    handleClose={() => setShowModalUpdateGV(false)}
+                    selectedGiangVien={selectedGiangVien}
+                    onUpdate={fetchDSGiangVien} // Callback to refresh the list after updating
+                />
+                <ModalDelete
+                    show={deleteGiangVienId !== null}
+                    handleClose={() => setDeleteGiangVienId(null)}
+                    handleConfirmDelete={handleConfirmDelete}
+                />
+                <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
             </div>
         </>
     );

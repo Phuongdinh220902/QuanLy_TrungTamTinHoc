@@ -46,29 +46,6 @@ const jwt = require('jsonwebtoken');
 // }
 
 
-// let hsungtuyen = async (req, res) => {
-//     try {
-//         // Kiểm tra xem trường maHB có trong req.body không
-//         if (!req.body.maHB) {
-//             return res.status(400).json({ message: "Thiếu thông tin mã học bổng" });
-//         }
-
-//         const maHB = req.body.maHB; // Giả sử trường mã học bổng là maHB
-//         console.log(req.body);
-//         const [rows, fields] = await pool.execute("SELECT id_sv, ten_file FROM ung_tuyen WHERE maHB = ?", [maHB]);
-//         if (rows.length > 0) {
-//             console.log(rows)
-//             return res.status(200).json({ sv: rows });
-//         } else {
-//             return res.status(404).json({ message: "Không tìm thấy thông tin học bổng" });
-//         }
-//     } catch (error) {
-//         console.error("Error occurred: ", error);
-//         return res.status(500).json({ message: "Internal Server Error" });
-//     }
-// }
-
-
 
 // let getMaXacNhan = async (req, res) => {
 //     let email = req.body.email
@@ -135,6 +112,27 @@ const jwt = require('jsonwebtoken');
 //             return res.status(200).json({ check: "1" });
 //         }
 //     });
+// }
+// let hsungtuyen = async (req, res) => {
+//     try {
+//         // Kiểm tra xem trường maHB có trong req.body không
+//         if (!req.body.maHB) {
+//             return res.status(400).json({ message: "Thiếu thông tin mã học bổng" });
+//         }
+
+//         const maHB = req.body.maHB; // Giả sử trường mã học bổng là maHB
+//         console.log(req.body);
+//         const [rows, fields] = await pool.execute("SELECT id_sv, ten_file FROM ung_tuyen WHERE maHB = ?", [maHB]);
+//         if (rows.length > 0) {
+//             console.log(rows)
+//             return res.status(200).json({ sv: rows });
+//         } else {
+//             return res.status(404).json({ message: "Không tìm thấy thông tin học bổng" });
+//         }
+//     } catch (error) {
+//         console.error("Error occurred: ", error);
+//         return res.status(500).json({ message: "Internal Server Error" });
+//     }
 // }
 
 // let getfile = async (req, res) => {
@@ -290,58 +288,10 @@ let dangkytk = async (req, res) => {
     }
 }
 
-let themgv = async (req, res) => {
-    try {
-        const { tenGV, email, sdt, ngaysinh, gioitinh, tenHA } = req.body;
-
-        // Kiểm tra xem email đã tồn tại hay chưa
-        const [existingRows, existingFields] = await pool.execute("SELECT * FROM giang_vien WHERE email = ?", [email]);
-
-        if (existingRows.length > 0) {
-            return res.status(400).json({
-                message: "Email đã tồn tại",
-            });
-        }
-
-        // Thêm giảng viên vào bảng giang_vien
-        const [rows, fields] = await pool.execute(
-            "INSERT INTO giang_vien (tenGV, email, sdt, ngaysinh, gioitinh) VALUES (?, ?, ?, ?, ?)",
-            [tenGV, email, sdt, ngaysinh, gioitinh]
-        );
-
-        // Lấy giảng viên vừa thêm
-        const [newGiangVien] = await pool.execute("SELECT * FROM giang_vien WHERE email = ?", [email]);
-
-        // Thêm ảnh vào bảng hinh_anh
-        const [rowsHinhAnh, fieldsHinhAnh] = await pool.execute(
-            "INSERT INTO hinh_anh (tenHA, maGV) VALUES (?, ?)",
-            [tenHA, newGiangVien[0].maGV]
-        );
-
-        console.log("Rows affected in hinh_anh table:", rowsHinhAnh.affectedRows);
-
-        if (rowsHinhAnh.affectedRows === 1) {
-            return res.status(200).json({
-                check: "1",
-            });
-        } else {
-            console.error("Error adding image to hinh_anh table");
-            return res.status(500).json({
-                check: "0",
-            });
-        }
-    } catch (error) {
-        console.error("Error in themgv function:", error.message);
-        return res.status(500).json({
-            check: "0",
-        });
-    }
-};
-
-
 
 let updateGV = async (req, res) => {
     let { maGV, tenGV, email, sdt, ngaysinh, gioitinh } = req.body;
+    console.log(req.body);
     const [rows, fields] = await pool.execute("UPDATE giang_vien SET tenGV = ?, email =?, sdt = ?, ngaysinh = ?, gioitinh = ? WHERE maGV=?", [tenGV, email, sdt, ngaysinh, gioitinh, maGV])
     return res.status(200).json({
         "message": "ok"
@@ -350,25 +300,26 @@ let updateGV = async (req, res) => {
 
 let deleteGV = async (req, res) => {
     let maGV = req.body.maGV;
-    console.log(req.body.maGV)
+    console.log("Mã giảng viên để xoá:", maGV);
+
     if (!maGV) {
-        return res.status(400).json({ message: 'Mã khoá học không hợp lệ.' });
+        return res.status(400).json({ message: 'Mã giảng viên không hợp lệ.' });
     }
 
     try {
         const [rows, fields] = await pool.execute("DELETE FROM giang_vien WHERE maGV=?", [maGV]);
         if (rows.affectedRows > 0) {
-            return res.status(200).json({ message: 'ok' });
+            return res.status(200).json({ 'message': 'thêm thành công' });
         } else {
-            return res.status(404).json({ message: 'Không tìm thấy khoá học để xóa.' });
+            return res.status(404).json({ 'message': 'Không tìm thấy giảng viên để xóa.' });
         }
     } catch (error) {
         console.error("Lỗi khi xóa khoá học:", error);
-        return res.status(500).json({ message: 'Có lỗi xảy ra trong quá trình xóa khoá học.' });
+        return res.status(500).json({ 'message': 'Có lỗi xảy ra trong quá trình xóa giảng viên.' });
     }
 }
 
 
 module.exports = {
-    laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, dangkytk, themgv, deleteGV, updateGV
+    laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, dangkytk, deleteGV, updateGV
 }

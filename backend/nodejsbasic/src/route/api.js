@@ -27,8 +27,7 @@ const initAPIRoute = (app) => {
     router.post("/loginhv", APIController.loginhv)
     router.post("/loginadmin", APIController.loginadmin)
     router.post('/updateGV', APIController.updateGV)
-    router.post('/deleteGV', APIController.deleteGV)
-    router.post('/themgv', APIController.themgv)
+    router.delete('/deleteGV', APIController.deleteGV)
 
 
 
@@ -47,29 +46,50 @@ const initAPIRoute = (app) => {
         })
     });
 
-    router.post('/uploadfile', upload.single('file'), async (req, res) => {
+    router.post('/themgv', upload.single('file'), async (req, res) => {
+
+        let { tenGV, email, sdt, ngaysinh, gioitinh } = req.body
         console.log(req.body)
-        let { id_sv, maHB } = req.body
-        console.log(id_sv)
-        console.log(maHB)
-
-
         try {
-            // thêm vào CSDL
+            const [existingRows, existingFields] = await pool.execute("SELECT * FROM giang_vien WHERE email = ?", [email]);
+
+            if (existingRows.length > 0) {
+                return res.status(200).json({
+                    'DT': "",
+                    'EC': 1,
+                    'EM': 'Email đã tồn tại'
+                });
+            }
+            // Thêm giảng viên vào bảng giang_vien
             await pool.execute(
-                'INSERT INTO ung_tuyen(id_sv, maHB, ten_file, time_upload) VALUES(?, ?, ?, NOW())',
-                [id_sv, maHB, filename]
+                "INSERT INTO giang_vien (tenGV, email, sdt, ngaysinh, gioitinh) VALUES (?, ?, ?, ?, ?)",
+                [tenGV, email, sdt, ngaysinh, gioitinh]
             );
 
-            res.status(200).json({ message: 'Upload thành công' });
+            // Lấy giảng viên vừa thêm
+            const [newGiangVien] = await pool.execute("SELECT * FROM giang_vien WHERE email = ?", [email]);
+
+            // Thêm ảnh vào bảng hinh_anh
+            await pool.execute(
+                "INSERT INTO hinh_anh (tenHA, maGV) VALUES (?, ?)",
+                [filename, newGiangVien[0].maGV]
+            );
+            res.status(200).json({
+                'DT': {
+                    'tenGV': tenGV,
+                    'email': email,
+                    'sdt': sdt,
+                    'ngaysinh': ngaysinh,
+                    'gioitinh': gioitinh
+                },
+                'EC': 0,
+                'EM': 'Tạo thành công'
+            });
 
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Lỗi server' });
         }
-
-
-
     });
 
     return app.use('/api/v1/', router)

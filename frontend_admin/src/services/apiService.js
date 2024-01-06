@@ -24,5 +24,9 @@ const loginadmin = async (formdata) => {
     }
 };
 
+const deleteHV = (maHV) => {
+    return axios.post(`api/v1/deleteHV/${maHV}`);
+};
 
-export { laydshv, laydsgv, loginadmin };
+
+export { laydshv, laydsgv, loginadmin, deleteHV };
