@@ -28,5 +28,12 @@ const deleteHV = (maHV) => {
     return axios.post(`api/v1/deleteHV/${maHV}`);
 };
 
+const laydskh = () => {
+    return axios.get("api/v1/laydskh");
+};
 
-export { laydshv, laydsgv, loginadmin, deleteHV };
+const deleteKH = (maKH) => {
+    return axios.post(`api/v1/deleteKH/${maKH}`);
+};
+
+export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH };

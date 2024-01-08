@@ -1,91 +1,70 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import * as XLSX from "xlsx";
-import { format } from "date-fns";
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import { useParams } from "react-router-dom";
 import {
     faPenToSquare,
-    faFileImport,
-    faUserPlus,
-    // faMagnifyingGlass,
+    faUserPlus
 } from "@fortawesome/free-solid-svg-icons";
 import {
-    laydsgv
+    laydskh, deleteKH
 } from "../../services/apiService";
-import axios from "axios"
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import ModalUpdateGV from "./ModalUpdate";
-import ModalDelete from "./ModalDelete";
+import axios from "axios";
+import ModalUpdateKH from "./ModalUpdateKH";
 
-function Example() {
+function ThemKH() {
     const [show, setShow] = useState(false);
-    const [tenGV, setTen] = useState('');
-    const [email, setEmail] = useState('');
-    const [sdt, setSdt] = useState('');
-    const [ngaysinh, setNgaysinh] = useState('');
-
-    const [gioitinh, setGioitinh] = useState('Nữ');
-    const [image, setImage] = useState('');
-    const [previewImage, setPreviewImage] = useState('');
+    const [tenKH, setTen] = useState('');
+    const [hocphi, sethocphi] = useState('');
+    const [mota, setmota] = useState('');
+    const [monhoc, setmonhoc] = useState('');
+    const [so_gio, setso_gio] = useState('');
 
     const handleClose = () => {
         setShow(false)
         setTen("");
-        setEmail("");
-        setSdt("");
-        setNgaysinh("");
-        setGioitinh("Nam");
-        setImage("");
-        setPreviewImage("");
+        sethocphi("");
+        setmota("");
+        setmonhoc("");
+        setso_gio("");
     }
     const handleShow = () => setShow(true);
 
-    const handleUpLoadImage = (event) => {
-        if (event.target && event.target.files && event.target.files[0]) {
-            setPreviewImage(URL.createObjectURL(event.target.files[0]));
-            setImage(event.target.files[0]);
-        }
-    };
-
-    const validateEmail = (email) => {
-        return String(email)
-            .toLowerCase()
-            .match(
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            );
-    };
 
     const handleSave = async () => {
-        const isValidEmail = validateEmail(email);
+        try {
+            const formData = new FormData();
+            formData.append('tenKH', tenKH);
+            formData.append('hocphi', hocphi);
+            formData.append('mota', mota);
+            formData.append('monhoc', monhoc);
+            formData.append('so_gio', so_gio);
+            for (const value of formData.values()) {
+                console.log(value);
+            }
 
-        if (!isValidEmail) {
-            // alert('Email sai')
-            toast.error('Email không hợp lệ');
-            return;
-        }
-        const formData = new FormData();
-        formData.append('tenGV', tenGV);
-        formData.append('email', email);
-        formData.append('sdt', sdt);
-        formData.append('ngaysinh', ngaysinh);
-        // Ánh xạ giới tính từ frontend sang backend
-        const gioitinhValue = gioitinh === 'Nam' ? 1 : 0;
-        formData.append('gioitinh', gioitinhValue);
+            let mdata = {
+                tenKH: tenKH,
+                hocphi: hocphi,
+                mota: mota,
+                monhoc: monhoc,
+                so_gio: so_gio
+            }
+            console.log(mdata)
+            await axios.post('http://localhost:2209/api/v1/themKH', mdata, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
 
-        // formData.append('file', image);
-        formData.append('file', image, image.name);
-        let res = await axios.post('http://localhost:2209/api/v1/themgv', formData);
-        console.log("check", res.data)
-        if (res.data && res.data.EC === 0) {
-            toast.success(res.data.EM);
+            toast.success('Thêm thành công');
             handleClose();
         }
-
-        if (res.data && res.data.EC !== 0) {
-            toast.error(res.data.EM);
+        catch (error) {
+            console.error("Lỗi khi gọi API thêm giảng viên:", error.message);
+            toast.error("Đã xảy ra lỗi khi thêm giảng viên");
         }
     }
 
@@ -95,62 +74,41 @@ function Example() {
                 <FontAwesomeIcon icon={faUserPlus} /> Thêm
             </Button>
 
-            {/* <Button variant="primary" onClick={handleShow} className="btn-lg bt-sreach">
-                <FontAwesomeIcon icon={faUserPlus} /> Tìm
-            </Button> */}
-
             <Modal show={show} onHide={handleClose}
                 size="xl"
                 backdrop='static'
                 className="modal-add">
                 <Modal.Header closeButton>
-                    <Modal.Title>Thêm mới giảng viên</Modal.Title>
+                    <Modal.Title>Thêm mới khoá học</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form className="row g-3">
                         <div className="col-12">
-                            <label className="form-label">Tên Giảng Viên</label>
-                            <input type="text" className="form-control" value={tenGV}
+                            <label className="form-label">Tên Khoá Học</label>
+                            <input type="text" className="form-control" value={tenKH}
                                 onChange={(event) => setTen(event.target.value)} />
                         </div>
                         <div className="col-12">
-                            <label className="form-label">Email</label>
-                            <input type="email" className="form-control" value={email}
-                                onChange={(event) => setEmail(event.target.value)} />
+                            <label className="form-label">hocphi</label>
+                            <input type="hocphi" className="form-control" value={hocphi}
+                                onChange={(event) => sethocphi(event.target.value)} />
                         </div>
                         <div className="col-12">
-                            <label className="form-label">Số điện thoại</label>
-                            <input type="text" className="form-control" value={sdt}
-                                onChange={(event) => setSdt(event.target.value)} />
+                            <label className="form-label">Mô tả</label>
+                            <input type="text" className="form-control" value={mota}
+                                onChange={(event) => setmota(event.target.value)} />
                         </div>
                         <div className="col-12">
-                            <label className="form-label">Ngày sinh</label>
-                            <input type="date" className="form-control" value={ngaysinh}
-                                onChange={(event) => setNgaysinh(event.target.value)} />
+                            <label className="form-label">Môn học</label>
+                            <input type="text" className="form-control" value={monhoc}
+                                onChange={(event) => setmonhoc(event.target.value)} />
                         </div>
-                        <div className="col-md-4">
-                            <label className="form-label">Giới Tính</label>
-                            <select className="form-select"
-                                onChange={(event) => setGioitinh(event.target.value)}>
-                                <option value="Nam">Nam</option>
-                                <option value="Nữ">Nữ</option>
-                            </select>
+                        <div className="col-12">
+                            <label className="form-label">Số giờ</label>
+                            <input type="text" className="form-control" value={so_gio}
+                                onChange={(event) => setso_gio(event.target.value)} />
                         </div>
 
-                        <div className="col-md-12">
-                            <label className="form-label label-upload" htmlFor="labelUpload">
-                                <FontAwesomeIcon icon={faFileImport} /> Tải ảnh lên </label>
-                            <input type="file" id="labelUpload" hidden
-                                onChange={(event) => handleUpLoadImage(event)} />
-                        </div>
-
-                        <div className="col-md-12 img-preview">
-                            {previewImage ?
-                                <img src={previewImage} />
-                                :
-                                <span>preview</span>
-                            }
-                        </div>
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
@@ -166,51 +124,47 @@ function Example() {
     );
 }
 
+const KhoaHoc = (props) => {
+    const [DSKhoaHoc, setListKhoaHoc] = useState([]);
+    const { maKH } = useParams();
+    const [showModal, setShowModal] = useState(false);
+    const [selectID, setselectID] = useState(null);
+    const [selectedKH, setselectedKH] = useState(null);
+    const [showModalUpdateKH, setshowModalUpdateKH] = useState(false);
 
-
-
-const GiangVien = (props) => {
-    const [DSGiangVien, setListGiangVien] = useState([]);
-    const [showModalUpdateGV, setShowModalUpdateGV] = useState(false);
-    const [selectedGiangVien, setSelectedGiangVien] = useState(null);
-    const [deleteGiangVienId, setDeleteGiangVienId] = useState(null);
-
-    const handleDelete = (maGV) => {
-        setDeleteGiangVienId(maGV);
+    const handleOpenModalUpdate = (kh) => {
+        setselectedKH(kh);
+        setshowModalUpdateKH(true);
     };
 
-    const handleOpenModalUpdate = (giangVien) => {
-        setSelectedGiangVien(giangVien);
-        setShowModalUpdateGV(true);
-    };
-
-
-    const handleConfirmDelete = async () => {
+    const handleDelete = async () => {
         try {
-            console.log(deleteGiangVienId)
+            await deleteKH(selectID);
+            console.log(maKH)
+            // await axios.post(`http://localhost:2209/api/v1/deleteHV/${maKH}`);
+            setShowModal(false);
+            toast.success("Xoá khoá học thành công");
 
-            await axios.post(`http://localhost:2209/api/v1/deleteGV/${deleteGiangVienId}`);
-            toast.success("Xoá giảng viên thành công");
-            setDeleteGiangVienId(null);
-            fetchDSGiangVien();
+            fetchDSKhoaHoc();
+            console.log("Xoá khoá học thành công!");
         } catch (error) {
-            console.error("Lỗi khi gọi API xoá giảng viên:", error.message);
-            toast.error("Đã xảy ra lỗi khi xoá giảng viên");
+            toast.error("Lỗi khi xoá khoá học")
+            console.error("Lỗi khi xóa khoá học:", error);
         }
     };
 
-
     useEffect(() => {
-        fetchDSGiangVien();
+        fetchDSKhoaHoc();
     }, []);
 
-    const fetchDSGiangVien = async () => {
+
+    const fetchDSKhoaHoc = async () => {
         try {
-            let res = await laydsgv();
+            let res = await laydskh();
             console.log(res);
 
             if (res.status === 200) {
-                setListGiangVien(res.data.dataCD);
+                setListKhoaHoc(res.data.dataCD);
             } else {
                 // Xử lý trường hợp lỗi
                 console.error("Lỗi khi gọi API:", res.statusText);
@@ -272,14 +226,14 @@ const GiangVien = (props) => {
     //             Khóa: item.Khoa,
     //             MSSV: item.MSSV,
     //             HoTen: item.HoTen,
-    //             Email: item.Email,
+    //             hocphi: item.hocphi,
     //             SoDT: item.SoDT,
     //             GioiTinh:
     //                 item.GioiTinh === 0 ? "Nữ" : item.GioiTinh === 1 ? "Nam" : "Khác",
     //             QueQuan: item.QueQuan,
     //             DanToc: item.TenDanToc,
     //             TonGiao: item.TenTonGiao,
-    //             NgaySinh: format(new Date(item.NgaySinh), "dd/MM/yyyy"),
+    //             monhoc: format(new Date(item.monhoc), "dd/MM/yyyy"),
     //             NgayVaoDoan: format(new Date(item.NgayVaoDoan), "dd/MM/yyyy"),
     //             "Trạng thái": item.ttLop === 1 ? "Đang hoạt động" : "Đã tốt nghiệp",
     //         };
@@ -297,10 +251,8 @@ const GiangVien = (props) => {
     return (
         <>
             <div className="container-fluid app__content">
-                <h2 className="text-center">Danh Sách Giảng Viên</h2>
-
-                <Example />
-
+                <h2 className="text-center">Danh Sách Khoá Học</h2>
+                <ThemKH />
                 {/* <div className="search">
                     <div className="searchDV">
                         <div className="">
@@ -382,67 +334,52 @@ const GiangVien = (props) => {
                             <thead>
                                 <tr>
                                     <th className="table-item ">STT</th>
-                                    <th className="table-item">Tên Giảng Viên</th>
-                                    <th className="table-item">Ngày sinh</th>
-                                    <th className="table-item">Giới tính</th>
-                                    <th className="table-item">Email</th>
-                                    <th className="table-item">Số điện thoại</th>
-                                    <th className="table-item"> </th>
+                                    <th className="table-item ">Tên Khoá Học</th>
+                                    <th className="table-item ">Học Phí</th>
+                                    {/* <th className="table-item ">Mô tả</th> */}
+                                    <th className="table-item ">Môn Học</th>
+                                    {/* <th className="table-item ">Số giờ</th> */}
+                                    <th> </th>
                                 </tr>
                             </thead>
                             <tbody id="myTable">
-                                {DSGiangVien &&
-                                    DSGiangVien.length > 0 &&
-                                    DSGiangVien.map((item, index) => {
+                                {DSKhoaHoc &&
+                                    DSKhoaHoc.length > 0 &&
+                                    DSKhoaHoc.map((item, index) => {
                                         return (
                                             <tr key={`table-doanvien-${index}`} className="tableRow">
-                                                <td className="col-center">{index + 1}</td>
-                                                <td className="">{item.tenGV}</td>
-                                                <td className=" col-center">
-                                                    {format(new Date(item.ngaysinh), "dd/MM/yyyy")}
-                                                </td>
-                                                <td className="">
-                                                    {item.gioitinh === 0
-                                                        ? "Nữ"
-                                                        : item.gioitinh === 1
-                                                            ? "Nam"
-                                                            : "Khác"}
-                                                </td>
-                                                <td className="">{item.email}</td>
-                                                <td className="">{item.sdt}</td>
+                                                <td className="table-item col-right">{index + 1}</td>
+                                                <td className="table-item">{item.tenKH}</td>
+                                                <td className="table-item">{item.hocphi ? item.hocphi : 0}</td>
+                                                {/* <td className="table-item">{item.mota}</td> */}
+                                                <td className="table-item">{item.monhoc}</td>
+                                                {/* <td className="table-item">{item.so_gio}</td> */}
+
 
                                                 <td>
                                                     <button className="btn btn-warning mx-3" onClick={() => handleOpenModalUpdate(item)}>
                                                         <FontAwesomeIcon icon={faPenToSquare} /> Chỉnh sửa
-
                                                     </button>
-                                                    <button className="btn btn-danger"
-                                                        onClick={() => handleDelete(item.maGV)}
+                                                    <button className="btn btn-danger" onClick={() => { setselectID(item.maKH); setShowModal(true) }}
                                                     >Xoá</button>
                                                 </td>
-
                                             </tr>
                                         );
                                     })}
-                                {DSGiangVien && DSGiangVien.length === 0 && (
+                                {DSKhoaHoc && DSKhoaHoc.length === 0 && (
                                     <tr className="tablenone">
-                                        <td className="tablenone">Không có giảng viên nào!</td>
+                                        <td className="tablenone">Không có đoàn viên nào!</td>
                                     </tr>
                                 )}
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <ModalUpdateGV
-                    show={showModalUpdateGV}
-                    handleClose={() => setShowModalUpdateGV(false)}
-                    selectedGiangVien={selectedGiangVien}
-                    onUpdate={fetchDSGiangVien} // Callback to refresh the list after updating
-                />
-                <ModalDelete
-                    show={deleteGiangVienId !== null}
-                    handleClose={() => setDeleteGiangVienId(null)}
-                    handleConfirmDelete={handleConfirmDelete}
+                <ModalUpdateKH
+                    show={showModalUpdateKH}
+                    handleClose={() => setshowModalUpdateKH(false)}
+                    selectedKH={selectedKH}
+                    onUpdate={fetchDSKhoaHoc} // Callback to refresh the list after updating
                 />
                 <ToastContainer
                     position="top-right"
@@ -457,8 +394,28 @@ const GiangVien = (props) => {
                     theme="light"
                 />
             </div>
+            <Modal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                className="custom-modal"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Xác nhận xoá</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Bạn có chắc chắn muốn xoá khoá học này không?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Hủy
+                    </Button>
+                    <Button variant="danger" onClick={() => handleDelete()}>
+                        Xoá
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };
 
-export default GiangVien;
+export default KhoaHoc;

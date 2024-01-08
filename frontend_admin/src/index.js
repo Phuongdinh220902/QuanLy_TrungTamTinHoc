@@ -13,6 +13,7 @@ import {
 import GiangVien from './components/GiangVien/GiangVien';
 import User from './components/User/User';
 import DangNhap from './components/DangNhap/DangNhap';
+import KhoaHoc from './components/Khoahoc/KhoaHoc';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -27,6 +28,7 @@ root.render(
           <Route index path="user" element={<User />} />
 
           <Route path="giangvien" element={<GiangVien />} />
+          <Route path="khoahoc" element={<KhoaHoc />} />
 
         </Route>
       </Routes>

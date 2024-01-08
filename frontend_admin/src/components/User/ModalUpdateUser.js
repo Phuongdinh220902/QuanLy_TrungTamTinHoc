@@ -3,8 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import { toast } from 'react-toastify';
-// import ToastProvider from "../ToastContainer";
-import { format } from "date-fns";
 
 
 const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
@@ -60,6 +58,7 @@ const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
             });
 
             toast.success('Update người dùng thành công');
+            onUpdate();
             handleClose();
         }
         catch (error) {
