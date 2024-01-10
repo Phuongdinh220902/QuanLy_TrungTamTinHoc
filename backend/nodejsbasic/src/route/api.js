@@ -22,12 +22,19 @@ const initAPIRoute = (app) => {
     // router.post('/hsungtuyen', APIController.hsungtuyen)
     router.post('/dangkytk', APIController.dangkytk)
     router.post('/createKhoaHoc', APIController.createKhoaHoc)
-    router.get('/laydshv', APIController.laydshv)
-    router.get('/laydsgv', APIController.laydsgv)
+    router.get('/laydshv/:page/:tukhoa', APIController.laydshv)
+    router.get('/laydsgv/:page/:tukhoa', APIController.laydsgv)
     router.post("/loginhv", APIController.loginhv)
     router.post("/loginadmin", APIController.loginadmin)
     router.post('/updateGV', APIController.updateGV)
-    router.delete('/deleteGV', APIController.deleteGV)
+    router.post("/deleteGV/:maGV", APIController.deleteGV)
+    router.post('/themHV', APIController.themHV)
+    router.post("/deleteHV/:maHV", APIController.deleteHV)
+    router.post('/updateHV', APIController.updateHV)
+    router.get('/laydskh/:page/:tukhoa', APIController.laydskh)
+    router.post("/deleteKH/:maKH", APIController.deleteKH)
+    router.post('/updateKH', APIController.updateKH)
+    router.post('/themKH', APIController.themKH)
 
 
 

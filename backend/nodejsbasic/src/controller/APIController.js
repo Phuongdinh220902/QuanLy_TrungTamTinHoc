@@ -189,42 +189,373 @@ let loginadmin = async (req, res) => {
     }
 }
 
-
 let laydshv = async (req, res) => {
     try {
-        const [rows, fields] = await pool.execute("SELECT * FROM hoc_vien");
-        if (rows && rows.length > 0) {
+        let tukhoa = req.params.tukhoa
+
+        if (tukhoa == "null" || !tukhoa) {
+            const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+            const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+
+            const offset = (page - 1) * pageSize;
+
+            const [sotrang, fields] = await pool.execute("SELECT * FROM hoc_vien where hoc_vien.trang_thai = 1");
+
+            const [result2, fields1] = await Promise.all([
+                pool.execute("SELECT * FROM hoc_vien where hoc_vien.trang_thai = 1 LIMIT ? OFFSET ?", [
+                    pageSize,
+                    offset,
+
+                ]),
+            ]);
+
+            if (result2[0] && result2[0].length > 0) {
+                return res.status(200).json({
+                    dataCD: result2[0],
+                    totalPages: Math.ceil(sotrang.length / pageSize),
+                    currentPage: page,
+                });
+            } else {
+                console.log("Không tìm thấy kết quả");
+                return res.status(200).json({
+                    dataCD: [],
+                    totalPages: 0,
+                    currentPage: 1,
+                });
+            }
+        }
+        console.log(tukhoa)
+        const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+        const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+
+        const offset = (page - 1) * pageSize;
+
+        const [sotrang, fields] = await pool.execute(
+            "SELECT * FROM hoc_vien WHERE hoc_vien.trang_thai = 1 AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?))",
+            ["%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+        );
+        console.log(sotrang)
+
+        const [result2, fields1] = await Promise.all([
+            pool.execute(
+                "SELECT * FROM hoc_vien WHERE hoc_vien.trang_thai = 1 AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?))",
+                ["%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+            ),
+        ]);
+
+        if (result2[0] && result2[0].length > 0) {
             return res.status(200).json({
-                dataCD: rows,
+                dataCD: result2[0],
+                totalPages: Math.ceil(sotrang.length / pageSize),
+                currentPage: page,
             });
         } else {
             console.log("Không tìm thấy kết quả");
             return res.status(200).json({
                 dataCD: [],
+                totalPages: 0,
+                currentPage: 1,
             });
         }
     } catch (error) {
         console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
     }
 };
 
 let laydsgv = async (req, res) => {
     try {
-        const [rows, fields] = await pool.execute("SELECT * FROM giang_vien");
-        if (rows && rows.length > 0) {
+        let tukhoa = req.params.tukhoa
+
+        if (tukhoa == "null" || !tukhoa) {
+            const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+            const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+
+            const offset = (page - 1) * pageSize;
+
+            const [sotrang, fields] = await pool.execute("SELECT * FROM giang_vien where giang_vien.trang_thai = 1");
+
+            const [result2, fields1] = await Promise.all([
+                pool.execute("SELECT * FROM giang_vien where giang_vien.trang_thai = 1 LIMIT ? OFFSET ?", [
+                    pageSize,
+                    offset,
+
+                ]),
+            ]);
+
+            if (result2[0] && result2[0].length > 0) {
+                return res.status(200).json({
+                    dataCD: result2[0],
+                    totalPages: Math.ceil(sotrang.length / pageSize),
+                    currentPage: page,
+                });
+            } else {
+                console.log("Không tìm thấy kết quả");
+                return res.status(200).json({
+                    dataCD: [],
+                    totalPages: 0,
+                    currentPage: 1,
+                });
+            }
+        }
+        console.log(tukhoa)
+        const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+        const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+
+        const offset = (page - 1) * pageSize;
+
+        const [sotrang, fields] = await pool.execute(
+            "SELECT * FROM giang_vien WHERE giang_vien.trang_thai = 1 AND (UPPER(giang_vien.tenGV) LIKE UPPER(?) OR UPPER(giang_vien.email) LIKE UPPER(?) OR UPPER(giang_vien.sdt) LIKE UPPER(?))",
+            ["%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+        );
+        console.log(sotrang)
+
+        const [result2, fields1] = await Promise.all([
+            pool.execute(
+                "SELECT * FROM giang_vien WHERE giang_vien.trang_thai = 1 AND (UPPER(giang_vien.tenGV) LIKE UPPER(?) OR UPPER(giang_vien.email) LIKE UPPER(?) OR UPPER(giang_vien.sdt) LIKE UPPER(?))",
+                ["%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+            ),
+        ]);
+
+        if (result2[0] && result2[0].length > 0) {
             return res.status(200).json({
-                dataCD: rows,
+                dataCD: result2[0],
+                totalPages: Math.ceil(sotrang.length / pageSize),
+                currentPage: page,
             });
         } else {
             console.log("Không tìm thấy kết quả");
             return res.status(200).json({
                 dataCD: [],
+                totalPages: 0,
+                currentPage: 1,
             });
         }
     } catch (error) {
         console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
     }
 };
+
+let dangkytk = async (req, res) => {
+    let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password } = req.body;
+
+    const [existingRows, existingFields] = await pool.execute("SELECT * FROM hoc_vien WHERE email = ?", [email]);
+
+    if (existingRows.length > 0) {
+        return res.status(400).json({
+            message: "Email đã tồn tại",
+        });
+    }
+
+    try {
+        const [rows, fields] = await pool.execute(
+            "INSERT INTO hoc_vien (tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password]
+        );
+
+        return res.status(200).json({
+            check: "1",
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(200).json({
+            check: "0",
+        });
+    }
+}
+
+
+let updateGV = async (req, res) => {
+    let { maGV, tenGV, email, sdt, gioitinh } = req.body;
+    console.log(req.body);
+    try {
+        const [rows, fields] = await pool.execute("UPDATE giang_vien SET tenGV = ?, email =?, sdt = ?, gioitinh = ? WHERE maGV=?", [tenGV, email, sdt, gioitinh, maGV])
+        return res.status(200).json({
+            "message": "Cập nhật thành công"
+        })
+    }
+    catch (error) {
+        console.log("Lỗi khi cập nhật học viên: ", error);
+        return res.status(500).json({ error: "Lỗi khi cập nhật học viên" });
+    }
+}
+
+let deleteGV = async (req, res) => {
+    let maGV = req.params.maGV;
+    console.log("Mã giảng viên để xoá:", maGV);
+
+    try {
+        await pool.execute(
+            "update giang_vien set giang_vien.trang_thai = 0 where giang_vien.maGV = ?", [maGV]);
+
+        console.log("Xoa thanh cong");
+        return res.status(200).json({
+            message: "Xóa thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+    }
+}
+
+let themHV = async (req, res) => {
+    console.log("ok")
+    let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh } = req.body;
+    console.log(req.body);
+    try {
+        await pool.execute("insert into hoc_vien(tenHV, email, sdt, ngaysinh, gioitinh, noisinh) values (?, ?, ?, ?, ?, ?)",
+            [tenHV, email, sdt, ngaysinh, gioitinh, noisinh]
+        );
+
+        res.status(200).json({
+            'DT': {
+                'tenHV': tenHV,
+                'email': email,
+                'sdt': sdt,
+                'ngaysinh': ngaysinh,
+                'gioitinh': gioitinh,
+                'noisinh': noisinh,
+            },
+            'EC': 0,
+            'EM': 'Tạo thành công'
+        });
+    } catch (error) {
+        console.log("Lỗi khi thêm học viên: ", error);
+        return res.status(500).json({ error: "Lỗi khi thêm học viên" });
+    }
+};
+
+let deleteHV = async (req, res) => {
+    console.log("ok");
+
+    let maHV = req.params.maHV;
+    console.log("Mã học viên để xoá:", maHV);
+
+    try {
+        await pool.execute(
+            "update hoc_vien set hoc_vien.trang_thai = 0 where hoc_vien.maHV = ?", [maHV]);
+
+        return res.status(200).json({
+            message: "Xóa thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+    }
+}
+
+let updateHV = async (req, res) => {
+    let { maHV, tenHV, email, sdt, gioitinh, noisinh } = req.body;
+    console.log(req.body);
+    try {
+        const [rows, fields] = await pool.execute("UPDATE hoc_vien SET tenHV = ?, email =?, sdt = ?, gioitinh = ?, noisinh = ? WHERE maHV=?", [tenHV, email, sdt, gioitinh, noisinh, maHV])
+        return res.status(200).json({
+            "message": "Cập nhật thành công"
+        })
+    }
+    catch (error) {
+        console.log("Lỗi khi cập nhật học viên: ", error);
+        return res.status(500).json({ error: "Lỗi khi cập nhật học viên" });
+    }
+}
+
+let laydskh = async (req, res) => {
+    try {
+        let tukhoa = req.params.tukhoa
+
+        if (tukhoa == "null" || !tukhoa) {
+            const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+            const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+
+            const offset = (page - 1) * pageSize;
+
+            const [sotrang, fields] = await pool.execute("SELECT * FROM khoa_hoc where khoa_hoc.trang_thai = 1");
+
+            const [result2, fields1] = await Promise.all([
+                pool.execute("SELECT * FROM khoa_hoc where khoa_hoc.trang_thai = 1 LIMIT ? OFFSET ?", [
+                    pageSize,
+                    offset,
+
+                ]),
+            ]);
+
+            if (result2[0] && result2[0].length > 0) {
+                return res.status(200).json({
+                    dataCD: result2[0],
+                    totalPages: Math.ceil(sotrang.length / pageSize),
+                    currentPage: page,
+                });
+            } else {
+                console.log("Không tìm thấy kết quả");
+                return res.status(200).json({
+                    dataCD: [],
+                    totalPages: 0,
+                    currentPage: 1,
+                });
+            }
+        }
+        console.log(tukhoa)
+        const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+        const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+
+        const offset = (page - 1) * pageSize;
+
+        const [sotrang, fields] = await pool.execute(
+            "SELECT * FROM khoa_hoc WHERE khoa_hoc.trang_thai = 1 AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.monhoc) LIKE UPPER(?))",
+            ["%" + tukhoa + "%", "%" + tukhoa + "%"]
+        );
+        console.log(sotrang)
+
+        const [result2, fields1] = await Promise.all([
+            pool.execute(
+                "SELECT * FROM khoa_hoc WHERE khoa_hoc.trang_thai = 1 AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.monhoc) LIKE UPPER(?))",
+                ["%" + tukhoa + "%", "%" + tukhoa + "%"]
+            ),
+        ]);
+
+        if (result2[0] && result2[0].length > 0) {
+            return res.status(200).json({
+                dataCD: result2[0],
+                totalPages: Math.ceil(sotrang.length / pageSize),
+                currentPage: page,
+            });
+        } else {
+            console.log("Không tìm thấy kết quả");
+            return res.status(200).json({
+                dataCD: [],
+                totalPages: 0,
+                currentPage: 1,
+            });
+        }
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+
+let deleteKH = async (req, res) => {
+    console.log("ok");
+
+    let maKH = req.params.maKH;
+    console.log("Mã học viên để xoá:", maKH);
+
+    try {
+        await pool.execute(
+            "update khoa_hoc set khoa_hoc.trang_thai = 0 where khoa_hoc.maKH = ?", [maKH]);
+
+        return res.status(200).json({
+            message: "Xóa thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+    }
+}
 
 let createKhoaHoc = async (req, res) => {
     console.log(req.body);
@@ -260,66 +591,49 @@ let createKhoaHoc = async (req, res) => {
     }
 };
 
-let dangkytk = async (req, res) => {
-    let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password } = req.body;
-
-    const [existingRows, existingFields] = await pool.execute("SELECT * FROM hoc_vien WHERE email = ?", [email]);
-
-    if (existingRows.length > 0) {
-        return res.status(400).json({
-            message: "Email đã tồn tại",
-        });
-    }
-
+let updateKH = async (req, res) => {
+    let { maKH, tenKH, hocphi, mota, monhoc, so_gio } = req.body;
+    console.log(req.body);
     try {
-        const [rows, fields] = await pool.execute(
-            "INSERT INTO hoc_vien (tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password]
+        const [rows, fields] = await pool.execute("UPDATE khoa_hoc SET tenKH = ?, hocphi =?, mota = ?, monhoc = ?, so_gio = ? WHERE maKH=?", [tenKH, hocphi, mota, monhoc, so_gio, maKH])
+        return res.status(200).json({
+            "message": "Cập nhật thành công"
+        })
+    }
+    catch (error) {
+        console.log("Lỗi khi cập nhật khoá học: ", error);
+        return res.status(500).json({ error: "Lỗi khi cập nhật khoá học" });
+    }
+}
+
+let themKH = async (req, res) => {
+    console.log("ok")
+    let { tenKH, hocphi, mota, monhoc, so_gio } = req.body;
+    console.log(req.body);
+    try {
+        await pool.execute("insert into khoa_hoc(tenKH, hocphi, mota, monhoc, so_gio) values (?, ?, ?, ?, ?)",
+            [tenKH, hocphi, mota, monhoc, so_gio]
         );
 
-        return res.status(200).json({
-            check: "1",
+        res.status(200).json({
+            'DT': {
+                'tenKH': tenKH,
+                'hocphi': hocphi,
+                'mota': mota,
+                'monhoc': monhoc,
+                'so_gio': so_gio,
+            },
+            'EC': 0,
+            'EM': 'Tạo thành công'
         });
     } catch (error) {
-        console.error(error);
-        return res.status(200).json({
-            check: "0",
-        });
+        console.log("Lỗi khi thêm khoá học: ", error);
+        return res.status(500).json({ error: "Lỗi khi thêm khoá học" });
     }
-}
-
-
-let updateGV = async (req, res) => {
-    let { maGV, tenGV, email, sdt, ngaysinh, gioitinh } = req.body;
-    console.log(req.body);
-    const [rows, fields] = await pool.execute("UPDATE giang_vien SET tenGV = ?, email =?, sdt = ?, ngaysinh = ?, gioitinh = ? WHERE maGV=?", [tenGV, email, sdt, ngaysinh, gioitinh, maGV])
-    return res.status(200).json({
-        "message": "ok"
-    })
-}
-
-let deleteGV = async (req, res) => {
-    let maGV = req.body.maGV;
-    console.log("Mã giảng viên để xoá:", maGV);
-
-    if (!maGV) {
-        return res.status(400).json({ message: 'Mã giảng viên không hợp lệ.' });
-    }
-
-    try {
-        const [rows, fields] = await pool.execute("DELETE FROM giang_vien WHERE maGV=?", [maGV]);
-        if (rows.affectedRows > 0) {
-            return res.status(200).json({ 'message': 'thêm thành công' });
-        } else {
-            return res.status(404).json({ 'message': 'Không tìm thấy giảng viên để xóa.' });
-        }
-    } catch (error) {
-        console.error("Lỗi khi xóa khoá học:", error);
-        return res.status(500).json({ 'message': 'Có lỗi xảy ra trong quá trình xóa giảng viên.' });
-    }
-}
+};
 
 
 module.exports = {
-    laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, dangkytk, deleteGV, updateGV
+    laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, dangkytk, deleteGV, updateGV, themHV, deleteHV, updateHV,
+    laydskh, deleteKH, updateKH, themKH
 }
