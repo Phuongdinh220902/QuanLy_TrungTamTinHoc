@@ -14,6 +14,7 @@ import GiangVien from './components/GiangVien/GiangVien';
 import User from './components/User/User';
 import DangNhap from './components/DangNhap/DangNhap';
 import KhoaHoc from './components/Khoahoc/KhoaHoc';
+import LopHoc from './components/Khoahoc/LopHoc';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -29,6 +30,7 @@ root.render(
 
           <Route path="giangvien" element={<GiangVien />} />
           <Route path="khoahoc" element={<KhoaHoc />} />
+          <Route path="lophoc/:maKH" element={<LopHoc />} />
 
         </Route>
       </Routes>
@@ -37,7 +39,6 @@ root.render(
   </Provider>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+

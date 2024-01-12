@@ -263,3 +263,85 @@ code {
 .col-center {
   text-align: center !important;
 }
+
+.pagination {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  padding: 12px;
+  justify-content: center;
+}
+
+.btn-footer {
+  padding: 12px 18px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin: 0 6px;
+}
+
+.btn-footer.active {
+  color: var(--white);
+  background-color: var(--blue);
+}
+
+/* Search */
+/* Search */
+.margin-top {
+  margin-top: 16px;
+}
+
+.searchHV {
+  display: flex;
+  font-size: 1.2em;
+  position: relative;
+  justify-content: space-between;
+  margin-left: 80px;
+}
+
+.searchHV-input {
+  display: inline-block;
+  position: relative;
+  margin: 16px;
+}
+
+.searchHV-input select,
+.searchHV-input input {
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 5px;
+  outline: none;
+}
+
+.select-none {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 5px;
+  outline: none;
+}
+
+.searchHV-input i {
+  position: absolute;
+  right: 5px;
+  padding: 15px;
+  pointer-events: none;
+}
+
+.formatButton {
+  position: relative;
+  margin: 12px 5px 0;
+  color: var(--white);
+  background: var(--blue);
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1em;
+  padding: 12px;
+}
+
+.linkStyle {
+  text-decoration: none;
+  color: inherit;
+}

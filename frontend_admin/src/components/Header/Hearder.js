@@ -10,8 +10,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {
     faRightFromBracket,
-    // faDownload,
-    // faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Header = () => {
@@ -64,15 +62,15 @@ const Header = () => {
 
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
+                        <Modal.Title>Đăng Xuất</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+                    <Modal.Body>Bạn có chắc muốn đăng xuất không?</Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
-                        </Button>
                         <Button variant="primary" onClick={confirmLogout}>
                             OK
+                        </Button>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Đóng
                         </Button>
                     </Modal.Footer>
                 </Modal>

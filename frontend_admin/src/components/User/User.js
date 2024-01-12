@@ -6,9 +6,11 @@ import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import {
     faPenToSquare,
-    faUserPlus
+    faUserPlus,
+    faChevronRight,
+    faChevronLeft,
+    faMagnifyingGlass
     // faDownload,
-    // faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import {
     laydshv, deleteHV
@@ -18,6 +20,9 @@ import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios";
 import ModalUpdateUser from "./ModalUpdateUser";
+
+
+
 
 function Them() {
     const [show, setShow] = useState(false);
@@ -39,22 +44,22 @@ function Them() {
     }
     const handleShow = () => setShow(true);
 
-    // const validateEmail = (email) => {
-    //     return String(email)
-    //         .toLowerCase()
-    //         .match(
-    //             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    //         );
-    // };
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
 
     const handleSave = async () => {
-        // const isValidEmail = validateEmail(email);
+        const isValidEmail = validateEmail(email);
 
-        // if (!isValidEmail) {
-        //     // alert('Email sai')
-        //     toast.error('Email không hợp lệ');
-        //     return;
-        // }
+        if (!isValidEmail) {
+            // alert('Email sai')
+            toast.error('Email không hợp lệ');
+            return;
+        }
         try {
             const formData = new FormData();
             formData.append('tenHV', tenHV);
@@ -159,6 +164,7 @@ function Them() {
     );
 }
 
+
 const User = (props) => {
     const [DSHocVien, setListHocVien] = useState([]);
     const { maHV } = useParams();
@@ -166,6 +172,12 @@ const User = (props) => {
     const [selectID, setselectID] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
     const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+
+    let [tukhoa, setTuKhoa] = useState("")
 
     const handleOpenModalUpdate = (user) => {
         setSelectedUser(user);
@@ -187,16 +199,20 @@ const User = (props) => {
 
     useEffect(() => {
         fetchDSHocVien();
-    }, []);
+    }, [currentPage, tukhoa]);
 
 
     const fetchDSHocVien = async () => {
         try {
-            let res = await laydshv();
-            console.log(res);
+
+            let tukhoa_ = localStorage.getItem("tukhoa")
+            // alert(tukhoa_)
+            let res = await laydshv(currentPage, tukhoa_);
+            // console.log(res);
 
             if (res.status === 200) {
                 setListHocVien(res.data.dataCD);
+                setTotalPages(res.data.totalPages);
             } else {
                 // Xử lý trường hợp lỗi
                 console.error("Lỗi khi gọi API:", res.statusText);
@@ -206,159 +222,58 @@ const User = (props) => {
         }
     };
 
-    // const fetchDSHV = async () => {
-    //     try {
-    //         let res = await laydshv();
-    //         if (res.status === 200) {
-    //             // setListKhoa(res.data.DSKhoa); // Cập nhật state với danh sách khóa học
-    //             const khoaData = res.data.dataCV;
+    const changePage = (newPage) => {
+        setCurrentPage(newPage);
+    };
 
-    //             // Kiểm tra nếu khoaData là mảng trước khi cập nhật state
-    //             if (Array.isArray(khoaData)) {
-    //                 setListChucVu(khoaData);
-    //             } else {
-    //                 console.error("Dữ liệu khóa không hợp lệ:", khoaData);
-    //             }
-    //         } else {
-    //             console.error("Lỗi khi gọi API:", res.statusText);
-    //         }
-    //     } catch (error) {
-    //         console.error("Lỗi khi gọi API:", error.message);
-    //     }
-    // };
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            // Chỉ tăng currentPage nếu không phải là trang cuối cùng
+            setCurrentPage(currentPage + 1);
+        }
+    };
 
-    // const handleSearch = async () => {
-    //     try {
-    //         const trimmedMSSV = searchData.MSSV.trim().toLowerCase();
-    //         const trimmedHoTen = searchData.HoTen.trim().toLowerCase();
+    // Hàm xử lý khi nhấn nút sang trái
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            // Chỉ giảm currentPage nếu không phải là trang đầu tiên
+            setCurrentPage(currentPage - 1);
+        }
+    };
 
-    //         let res = await searchDoanVien({
-    //             ...searchData,
-    //             MSSV: trimmedMSSV,
-    //             HoTen: trimmedHoTen,
-    //         }); // Assuming you have implemented the search API
-
-    //         console.log(res);
-    //         if (res.status === 200) {
-    //             setListDoanVien(res.data.dataCD);
-    //         } else {
-    //             console.error("Lỗi khi tìm kiếm:", res.statusText);
-    //         }
-    //     } catch (error) {
-    //         console.error("Lỗi khi tìm kiếm:", error.message);
-    //     }
-    // };
-
-    // const exportToExcel = () => {
-    //     // Tạo một mảng chứa dữ liệu bạn muốn xuất
-    //     const dataToExport = DSDoanVien.map((item) => {
-    //         return {
-    //             "Mã Chi Đoàn": item.MaLop,
-    //             "Tên Chi Đoàn": item.TenLop,
-    //             Khóa: item.Khoa,
-    //             MSSV: item.MSSV,
-    //             HoTen: item.HoTen,
-    //             Email: item.Email,
-    //             SoDT: item.SoDT,
-    //             GioiTinh:
-    //                 item.GioiTinh === 0 ? "Nữ" : item.GioiTinh === 1 ? "Nam" : "Khác",
-    //             QueQuan: item.QueQuan,
-    //             DanToc: item.TenDanToc,
-    //             TonGiao: item.TenTonGiao,
-    //             NgaySinh: format(new Date(item.NgaySinh), "dd/MM/yyyy"),
-    //             NgayVaoDoan: format(new Date(item.NgayVaoDoan), "dd/MM/yyyy"),
-    //             "Trạng thái": item.ttLop === 1 ? "Đang hoạt động" : "Đã tốt nghiệp",
-    //         };
-    //     });
-
-    //     // Tạo một đối tượng Workbook từ mảng dữ liệu
-    //     const ws = XLSX.utils.json_to_sheet(dataToExport);
-    //     const wb = XLSX.utils.book_new();
-    //     XLSX.utils.book_append_sheet(wb, ws, "DanhSachDoanVien");
-
-    //     // Xuất file Excel
-    //     XLSX.writeFile(wb, "DanhSachDoanVien.xlsx");
-    // };
+    const handleSearch = async () => {
+        // alert(tukhoa)
+        // alert(tukhoa)
+        if (tukhoa == "" || !tukhoa) {
+            tukhoa = "null"
+        }
+        localStorage.setItem("tukhoa", tukhoa)
+        await fetchDSHocVien();
+    };
 
     return (
         <>
             <div className="container-fluid app__content">
                 <h2 className="text-center">Danh Sách Học Viên</h2>
-                <Them />
-                {/* <div className="search">
-                    <div className="searchDV">
+                <div className="search">
+                    <div className="searchHV">
                         <div className="">
-                            <div className="searchDV-input">
+                            <div className="searchHV-input">
                                 <input
+                                    placeholder="Nhập giá trị tìm kiếm"
                                     type="text"
-                                    className="search_name"
-                                    placeholder="Mã đoàn viên"
-                                    value={searchData.MSSV}
-                                    onChange={(e) => {
-                                        setSearchData({ ...searchData, MSSV: e.target.value });
-                                    }}
+                                    value={tukhoa}
+                                    onChange={(e) => setTuKhoa(e.target.value)}
+
                                 />
-                            </div>
-                            <div className="searchDV-input">
-                                <input
-                                    type="text"
-                                    className="search_name"
-                                    placeholder="Tên đoàn viên"
-                                    value={searchData.HoTen}
-                                    onChange={(e) => {
-                                        setSearchData({ ...searchData, HoTen: e.target.value });
-                                    }}
-                                />
-                            </div>
-                            <div className="searchDV-input">
-                                <select
-                                    type="text"
-                                    className="search_name"
-                                    value={searchData.IDChucVu}
-                                    onChange={(e) => {
-                                        setSearchData({ ...searchData, IDChucVu: e.target.value });
-                                    }}
-                                >
-                                    <option value="Chức vụ">
-                                        Chọn chức vụ
-                                    </option>
-                                    {DSChucVu.map((item, index) => {
-                                        return (
-                                            <option key={index} value={item.IDChucVu}>
-                                                {item.TenCV}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-                            </div>
-                            <div className="searchDV-input">
-                                <select
-                                    type="text"
-                                    className="search_name"
-                                    value={searchData.GioiTinh}
-                                    onChange={(e) => {
-                                        setSearchData({ ...searchData, GioiTinh: e.target.value });
-                                    }}
-                                >
-                                    <option value="Giới tính">
-                                        Chọn giới tính
-                                    </option>
-                                    <option value="1">Nam</option>
-                                    <option value="0">Nữ</option>
-                                    <option value="2">Khác</option>
-                                </select>
                             </div>
                             <button className="formatButton" onClick={handleSearch}>
                                 <FontAwesomeIcon icon={faMagnifyingGlass} /> Tìm
                             </button>
-                        </div>
-                        <div className="buttonSearch">
-                            <button className="formatButton" onClick={exportToExcel}>
-                                <FontAwesomeIcon icon={faDownload} /> Tải
-                            </button>
+                            <Them />
                         </div>
                     </div>
-                </div> */}
+                </div>
 
                 <div className="listDV">
                     <div className="table-container">
@@ -383,26 +298,27 @@ const User = (props) => {
                                         return (
                                             <tr key={`table-doanvien-${index}`} className="tableRow">
                                                 <td className="table-item col-right">{index + 1}</td>
-                                                <td className="table-item">{item.tenHV}</td>
+                                                <td className="">{item.tenHV}</td>
                                                 <td className="table-item">
                                                     {format(new Date(item.ngaysinh), "dd/MM/yyyy")}
                                                 </td>
-                                                <td className="table-item">
+                                                <td className="">
                                                     {item.gioitinh === 0
                                                         ? "Nữ"
                                                         : item.gioitinh === 1
                                                             ? "Nam"
                                                             : "Khác"}
                                                 </td>
-                                                <td className="table-item">{item.noisinh}</td>
-                                                <td className="table-item">{item.email}</td>
-                                                <td className="table-item">{item.sdt}</td>
-                                                <td className="table-item">{item.hocphi ? item.hocphi : 0}</td>
+                                                <td className="">{item.noisinh}</td>
+                                                <td className="">{item.email}</td>
+                                                <td className="">{item.sdt}</td>
+                                                <td className="">{item.hocphi ? item.hocphi : 0}</td>
 
 
-                                                <td>
-                                                    <button className="btn btn-warning mx-3" onClick={() => handleOpenModalUpdate(item)}>
-                                                        <FontAwesomeIcon icon={faPenToSquare} /> Chỉnh sửa
+                                                <td className="table-item">
+                                                    <button className="btn btn-warning mx-2"
+                                                        onClick={() => handleOpenModalUpdate(item)}>
+                                                        Cập nhật
                                                     </button>
                                                     <button className="btn btn-danger" onClick={() => { setselectID(item.maHV); setShowModal(true) }}
                                                     >Xoá</button>
@@ -417,6 +333,28 @@ const User = (props) => {
                                 )}
                             </tbody>
                         </table>
+
+                        <div className="pagination">
+                            <button className="btn-footer" onClick={handlePrevPage}>
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </button>
+
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <div className="footer" key={index}>
+                                    <button
+                                        className={`btn-footer ${currentPage === index + 1 ? "active" : ""
+                                            }`}
+                                        onClick={() => changePage(index + 1)}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                </div>
+                            ))}
+
+                            <button className="btn-footer" onClick={handleNextPage}>
+                                <FontAwesomeIcon icon={faChevronRight} />
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <ModalUpdateUser

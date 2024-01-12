@@ -1,11 +1,14 @@
 import axios from "../utils/axiosUser";
 
-const laydshv = () => {
-    return axios.get("api/v1/laydshv");
+const laydshv = (page, tukhoa) => {
+    return axios.get(`api/v1/laydshv/${page}/${tukhoa}`);
 };
 
-const laydsgv = () => {
-    return axios.get("api/v1/laydsgv");
+// const laydsgv = () => {
+//     return axios.get("api/v1/laydsgv");
+// };
+const laydsgv = (page, tukhoa) => {
+    return axios.get(`api/v1/laydsgv/${page}/${tukhoa}`);
 };
 
 const loginadmin = async (formdata) => {
@@ -28,12 +31,20 @@ const deleteHV = (maHV) => {
     return axios.post(`api/v1/deleteHV/${maHV}`);
 };
 
-const laydskh = () => {
-    return axios.get("api/v1/laydskh");
+const laydskh = (page, tukhoa) => {
+    return axios.get(`api/v1/laydskh/${page}/${tukhoa}`);
 };
 
 const deleteKH = (maKH) => {
     return axios.post(`api/v1/deleteKH/${maKH}`);
 };
 
-export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH };
+const laymotKH = (maKH, page, tukhoa) => {
+    return axios.get(`api/v1/laymotKH/${maKH}/${page}/${tukhoa}`);
+};
+
+const deleteLH = (maLopHoc) => {
+    return axios.post(`api/v1/deleteLH/${maLopHoc}`);
+};
+
+export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laymotKH, deleteLH };

@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
     faPenToSquare,
-    faUserPlus
+    faUserPlus,
+    faChevronRight,
+    faChevronLeft,
+    faMagnifyingGlass,
+    faEye
 } from "@fortawesome/free-solid-svg-icons";
 import {
     laydskh, deleteKH
@@ -13,6 +17,7 @@ import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios";
 import ModalUpdateKH from "./ModalUpdateKH";
+import { Link } from "react-router-dom";
 
 function ThemKH() {
     const [show, setShow] = useState(false);
@@ -84,12 +89,12 @@ function ThemKH() {
                 <Modal.Body>
                     <form className="row g-3">
                         <div className="col-12">
-                            <label className="form-label">Tên Khoá Học</label>
+                            <label className="form-label">Tên khoá học</label>
                             <input type="text" className="form-control" value={tenKH}
                                 onChange={(event) => setTen(event.target.value)} />
                         </div>
                         <div className="col-12">
-                            <label className="form-label">hocphi</label>
+                            <label className="form-label">Học phí</label>
                             <input type="hocphi" className="form-control" value={hocphi}
                                 onChange={(event) => sethocphi(event.target.value)} />
                         </div>
@@ -132,6 +137,8 @@ const KhoaHoc = (props) => {
     const [selectedKH, setselectedKH] = useState(null);
     const [showModalUpdateKH, setshowModalUpdateKH] = useState(false);
 
+    let [tukhoa, setTuKhoa] = useState("")
+
     const handleOpenModalUpdate = (kh) => {
         setselectedKH(kh);
         setshowModalUpdateKH(true);
@@ -153,17 +160,41 @@ const KhoaHoc = (props) => {
         }
     };
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const changePage = (newPage) => {
+        setCurrentPage(newPage);
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            // Chỉ tăng currentPage nếu không phải là trang cuối cùng
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    // Hàm xử lý khi nhấn nút sang trái
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            // Chỉ giảm currentPage nếu không phải là trang đầu tiên
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
     useEffect(() => {
         fetchDSKhoaHoc();
-    }, []);
+    }, [currentPage, tukhoa]);
 
 
     const fetchDSKhoaHoc = async () => {
         try {
-            let res = await laydskh();
+            let tukhoa_ = localStorage.getItem("tukhoa")
+            let res = await laydskh(currentPage, tukhoa_);
             console.log(res);
 
             if (res.status === 200) {
+                setListKhoaHoc(res.data.dataCD);
                 setListKhoaHoc(res.data.dataCD);
             } else {
                 // Xử lý trường hợp lỗi
@@ -172,6 +203,14 @@ const KhoaHoc = (props) => {
         } catch (error) {
             console.error("Lỗi khi gọi API:", error.message);
         }
+    };
+
+    const handleSearch = async () => {
+        if (tukhoa == "" || !tukhoa) {
+            tukhoa = "null"
+        }
+        localStorage.setItem("tukhoa", tukhoa)
+        await fetchDSKhoaHoc();
     };
 
     // const fetchDSHV = async () => {
@@ -252,81 +291,26 @@ const KhoaHoc = (props) => {
         <>
             <div className="container-fluid app__content">
                 <h2 className="text-center">Danh Sách Khoá Học</h2>
-                <ThemKH />
-                {/* <div className="search">
-                    <div className="searchDV">
+
+                <div className="search">
+                    <div className="searchHV">
                         <div className="">
-                            <div className="searchDV-input">
+                            <div className="searchHV-input">
                                 <input
+                                    placeholder="Nhập giá trị tìm kiếm"
                                     type="text"
-                                    className="search_name"
-                                    placeholder="Mã đoàn viên"
-                                    value={searchData.MSSV}
-                                    onChange={(e) => {
-                                        setSearchData({ ...searchData, MSSV: e.target.value });
-                                    }}
+                                    value={tukhoa}
+                                    onChange={(e) => setTuKhoa(e.target.value)}
                                 />
-                            </div>
-                            <div className="searchDV-input">
-                                <input
-                                    type="text"
-                                    className="search_name"
-                                    placeholder="Tên đoàn viên"
-                                    value={searchData.HoTen}
-                                    onChange={(e) => {
-                                        setSearchData({ ...searchData, HoTen: e.target.value });
-                                    }}
-                                />
-                            </div>
-                            <div className="searchDV-input">
-                                <select
-                                    type="text"
-                                    className="search_name"
-                                    value={searchData.IDChucVu}
-                                    onChange={(e) => {
-                                        setSearchData({ ...searchData, IDChucVu: e.target.value });
-                                    }}
-                                >
-                                    <option value="Chức vụ">
-                                        Chọn chức vụ
-                                    </option>
-                                    {DSChucVu.map((item, index) => {
-                                        return (
-                                            <option key={index} value={item.IDChucVu}>
-                                                {item.TenCV}
-                                            </option>
-                                        );
-                                    })}
-                                </select>
-                            </div>
-                            <div className="searchDV-input">
-                                <select
-                                    type="text"
-                                    className="search_name"
-                                    value={searchData.GioiTinh}
-                                    onChange={(e) => {
-                                        setSearchData({ ...searchData, GioiTinh: e.target.value });
-                                    }}
-                                >
-                                    <option value="Giới tính">
-                                        Chọn giới tính
-                                    </option>
-                                    <option value="1">Nam</option>
-                                    <option value="0">Nữ</option>
-                                    <option value="2">Khác</option>
-                                </select>
                             </div>
                             <button className="formatButton" onClick={handleSearch}>
                                 <FontAwesomeIcon icon={faMagnifyingGlass} /> Tìm
                             </button>
-                        </div>
-                        <div className="buttonSearch">
-                            <button className="formatButton" onClick={exportToExcel}>
-                                <FontAwesomeIcon icon={faDownload} /> Tải
-                            </button>
+
+                            <ThemKH />
                         </div>
                     </div>
-                </div> */}
+                </div>
 
                 <div className="listDV">
                     <div className="table-container">
@@ -349,30 +333,59 @@ const KhoaHoc = (props) => {
                                         return (
                                             <tr key={`table-doanvien-${index}`} className="tableRow">
                                                 <td className="table-item col-right">{index + 1}</td>
-                                                <td className="table-item">{item.tenKH}</td>
-                                                <td className="table-item">{item.hocphi ? item.hocphi : 0}</td>
+                                                <td className="">{item.tenKH}</td>
+                                                <td className="">{item.hocphi ? item.hocphi : 0}</td>
                                                 {/* <td className="table-item">{item.mota}</td> */}
-                                                <td className="table-item">{item.monhoc}</td>
+                                                <td className="">{item.monhoc}</td>
                                                 {/* <td className="table-item">{item.so_gio}</td> */}
 
 
-                                                <td>
-                                                    <button className="btn btn-warning mx-3" onClick={() => handleOpenModalUpdate(item)}>
+                                                <td className="table-item">
+                                                    <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
                                                         <FontAwesomeIcon icon={faPenToSquare} /> Chỉnh sửa
                                                     </button>
-                                                    <button className="btn btn-danger" onClick={() => { setselectID(item.maKH); setShowModal(true) }}
+                                                    <button className="btn btn-danger mx-2" onClick={() => { setselectID(item.maKH); setShowModal(true) }}
                                                     >Xoá</button>
+
+                                                    <button className="btn btn-info">
+                                                        <Link to={`/lophoc/${item.maKH}`} className="navlink linkStyle">
+                                                            Xem
+                                                        </Link>
+                                                    </button>
                                                 </td>
+
                                             </tr>
                                         );
                                     })}
                                 {DSKhoaHoc && DSKhoaHoc.length === 0 && (
                                     <tr className="tablenone">
-                                        <td className="tablenone">Không có đoàn viên nào!</td>
+                                        <td className="tablenone">Không có khoá học nào!</td>
                                     </tr>
                                 )}
                             </tbody>
                         </table>
+
+                        <div className="pagination">
+                            <button className="btn-footer" onClick={handlePrevPage}>
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </button>
+
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <div className="footer" key={index}>
+                                    <button
+                                        className={`btn-footer ${currentPage === index + 1 ? "active" : ""
+                                            }`}
+                                        onClick={() => changePage(index + 1)}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                </div>
+                            ))}
+
+                            <button className="btn-footer" onClick={handleNextPage}>
+                                <FontAwesomeIcon icon={faChevronRight} />
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <ModalUpdateKH
