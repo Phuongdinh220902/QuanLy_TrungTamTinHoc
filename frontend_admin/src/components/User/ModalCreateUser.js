@@ -1,68 +1,77 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import { toast } from 'react-toastify';
-import { format } from "date-fns";
 
-
-const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
+const Them = ({ show, handleCloseModal, onUpdate }) => {
     const [tenHV, setTen] = useState('');
     const [email, setEmail] = useState('');
     const [sdt, setSdt] = useState('');
-    // const [ngaysinh, setNgaysinh] = useState('');
-    const [gioitinh, setGioitinh] = useState('Nam');
+    const [ngaysinh, setNgaysinh] = useState('');
     const [noisinh, setNoisinh] = useState('');
-    // const newns = format(new Date(ngaysinh), "dd/MM/yyyy");
+    const [gioitinh, setGioitinh] = useState('Nữ');
 
-    console.log(selectedUser)
-    useEffect(() => {
-        if (selectedUser) {
-            setTen(selectedUser.tenHV);
-            setEmail(selectedUser.email);
-            setSdt(selectedUser.sdt);
-            // setNgaysinh(selectedUser.ngaysinh);
-            setGioitinh(selectedUser.gioitinh == 1 ? 'Nam' : 'Nữ');
-            setNoisinh(selectedUser.noisinh);
-        }
-    }, [selectedUser]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [showModalCreateUser, setShowModalCreateUser] = useState(false);
 
-    const handleUpdate = async () => {
-        // const formattedNgaySinh = format(new Date(ngaysinh), 'yyyy-MM-dd');
+    const handleClose = () => {
+        setShowModalCreateUser(false);
+        setTen("");
+        setEmail("");
+        setSdt("");
+        setNgaysinh("");
+        setGioitinh("Nam");
+        setNoisinh("");
+        handleCloseModal();
+    };
+    const handleShow = () => {
+        setModalOpen(true);
+    };
 
-        const validateEmail = (email) => {
-            return String(email)
-                .toLowerCase()
-                .match(
-                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                );
-        };
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
 
-        const validatePhoneNumber = (sdt) => {
-            return String(sdt).match(/^(09|08|02|03|07|05)[0-9]{8}$/);
-        };
+    const validatePhoneNumber = (sdt) => {
+        return String(sdt).match(/^(09|08|02|03|07|05)[0-9]{8}$/);
+    };
 
-        const normalizeTenHV = (tenHV) => {
-            tenHV = tenHV.trim();
-            tenHV = tenHV.replace(/\s+/g, ' ');
-            console.log(tenHV)
-            return tenHV;
-        };
+    const normalizeTenHV = (tenHV) => {
+        // Loại bỏ khoảng trắng dư thừa ở đầu và cuối chuỗi
+        tenHV = tenHV.trim();
+        // Thay thế nhiều khoảng trắng ở giữa chuỗi bằng một khoảng trắng
+        tenHV = tenHV.replace(/\s+/g, ' ');
+        console.log(tenHV)
+        return tenHV;
+    };
+    const normalizeNoisinhHV = (noisinh) => {
+        // Loại bỏ khoảng trắng dư thừa ở đầu và cuối chuỗi
+        noisinh = noisinh.trim();
 
-        const normalizeNoisinhHV = (noisinh) => {
-            noisinh = noisinh.trim();
-            noisinh = noisinh.replace(/\s+/g, ' ');
-            console.log(noisinh)
-            return noisinh;
-        };
+        // Thay thế nhiều khoảng trắng ở giữa chuỗi bằng một khoảng trắng
+        noisinh = noisinh.replace(/\s+/g, ' ');
+        console.log(noisinh)
+        return noisinh;
+    };
 
+    const handleSave = async () => {
         const isValidEmail = validateEmail(email);
         const isValidPhone = validatePhoneNumber(sdt);
-
-        const normalizedTenHV = normalizeTenHV(tenHV);
         const normalizedNoisinhHV = normalizeNoisinhHV(noisinh);
 
-        if (!tenHV.trim() || !email || !sdt || !noisinh || !gioitinh) {
+        const ngaySinhDate = new Date(ngaysinh);
+        const today = new Date();
+        const ageDifferenceInMilliseconds = today - ngaySinhDate;
+        const ageDifferenceInYears = ageDifferenceInMilliseconds / (365.25 * 24 * 60 * 60 * 1000);
+
+        const normalizedTenHV = normalizeTenHV(tenHV);
+
+        if (!tenHV.trim() || !email || !sdt || !ngaysinh || !noisinh || !gioitinh) {
             toast.error('Vui lòng điền đầy đủ thông tin');
             return;
         }
@@ -86,66 +95,66 @@ const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
             toast.error('Số điện thoại không hợp lệ');
             return;
         }
-        // const ngaySinhDate = new Date(ngaysinh);
-        // const today = new Date();
-        // const ageDifferenceInMilliseconds = today - ngaySinhDate;
-        // const ageDifferenceInYears = ageDifferenceInMilliseconds / (365.25 * 24 * 60 * 60 * 1000);
-        // if (ageDifferenceInYears < 18) {
-        //     toast.error('Học viên phải có tuổi từ 16 trở lên');
-        //     return;
-        // }
+
+        if (ageDifferenceInYears < 18) {
+            toast.error('Học viên phải có tuổi từ 16 trở lên');
+            return;
+        }
 
         try {
             const formData = new FormData();
             formData.append('tenHV', normalizedTenHV);
             formData.append('email', email);
             formData.append('sdt', sdt);
-            // formData.append('ngaysinh', formattedNgaySinh);
+            formData.append('ngaysinh', ngaysinh);
+
             // Ánh xạ giới tính từ frontend sang backend
             const gioitinhValue = gioitinh == 'Nam' ? 1 : 0;
             formData.append('gioitinh', gioitinhValue);
             formData.append('noisinh', normalizedNoisinhHV);
+
             for (const value of formData.values()) {
                 console.log(value);
             }
 
+
             let mdata = {
-                maHV: selectedUser.maHV,
                 tenHV: normalizedTenHV,
                 email: email,
                 sdt: sdt,
-                // ngaysinh: formattedNgaySinh,
+                ngaysinh: ngaysinh,
                 gioitinh: gioitinhValue,
-                noisinh: normalizedNoisinhHV,
+                noisinh: normalizedNoisinhHV
             }
-            console.log(mdata)
-            await axios.post('http://localhost:2209/api/v1/updateHV', mdata, {
+
+            await axios.post('http://localhost:2209/api/v1/themHV', mdata, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
-
-            toast.success('Update người dùng thành công');
+            toast.success('Thêm thành công');
             onUpdate();
             handleClose();
         }
         catch (error) {
-            console.error("Lỗi khi gọi API cập nhật học viên:", error.message);
-            toast.error("Đã xảy ra lỗi khi cập nhật học viên");
+            console.error("Lỗi khi gọi API xoá giảng viên:", error.message);
+            toast.error("Đã xảy ra lỗi khi xoá giảng viên");
         }
-    };
-
+    }
 
     return (
-        <div>
-            <Modal show={show} onHide={handleClose} size="xl" backdrop='static' className="modal-add">
+        <>
+            <Modal show={show} onHide={handleClose}
+                size="xl"
+                backdrop='static'
+                className="modal-add">
                 <Modal.Header closeButton>
-                    <Modal.Title>Chỉnh sửa học viên</Modal.Title>
+                    <Modal.Title>Thêm mới học viên</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form className="row g-3">
                         <div className="col-12">
-                            <label className="form-label">Tên Học Viên</label>
+                            <label className="form-label">Tên học viên</label>
                             <input type="text" className="form-control" value={tenHV}
                                 onChange={(event) => setTen(event.target.value)} />
                         </div>
@@ -159,41 +168,38 @@ const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
                             <input type="text" className="form-control" value={sdt}
                                 onChange={(event) => setSdt(event.target.value)} />
                         </div>
-                        {/* <div className="col-12">
+                        <div className="col-12">
                             <label className="form-label">Ngày sinh</label>
-                            <input type="text" className="form-control" value={newns}
+                            <input type="date" className="form-control" value={ngaysinh}
                                 onChange={(event) => setNgaysinh(event.target.value)} />
-                        </div> */}
-                        <div className="col-md-4">
-                            <label className="form-label">Giới Tính</label>
-                            <select className="form-select"
-                                onChange={(event) => setGioitinh(event.target.value)}>
-                                <option value="Nam">Nam</option>
-                                <option value="Nữ">Nữ</option>
-                            </select>
                         </div>
                         <div className="col-12">
                             <label className="form-label">Nơi sinh</label>
                             <input type="text" className="form-control" value={noisinh}
                                 onChange={(event) => setNoisinh(event.target.value)} />
                         </div>
+                        <div className="col-md-4">
+                            <label className="form-label">Giới tính</label>
+                            <select className="form-select"
+                                onChange={(event) => setGioitinh(event.target.value)}>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
+                        </div>
+
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Đóng
                     </Button>
-                    <Button variant="primary" onClick={() => handleUpdate()}>
-                        Cập nhật
+                    <Button variant="primary" onClick={() => handleSave()}>
+                        Lưu
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-            {/* <ToastProvider /> */}
-        </div>
-
+        </>
     );
+}
 
-};
-
-export default ModalUpdateUser;
+export default Them;

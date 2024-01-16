@@ -3,45 +3,68 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import { toast } from 'react-toastify';
-// import ToastProvider from "../ToastContainer";
 import { format } from "date-fns";
 
 
 const ModalUpdateLopHoc = ({ show, handleClose, selectedLH, onUpdate }) => {
     const [tenLopHoc, setTenLopHoc] = useState('');
     const [maGV, setmaGV] = useState('');
+    const [thoigian, setThoiGian] = useState('');
+    const [diadiem, setDiaDiem] = useState('');
+    const [ngay_batdau, setNgayBatDau] = useState('');
+    const [dsGV, setDsGV] = useState([]);
+    const newns = format(new Date(ngay_batdau), "dd/MM/yyyy");
 
-    // Các biến khác nếu có
-    console.log(selectedLH)
+    useEffect(() => {
+        const fetchDSGV = async () => {
+            try {
+                const response = await axios.get('http://localhost:2209/api/v1/DSGiangVien');
+                setDsGV(response.data.dsGV);
+            } catch (error) {
+                console.error("Lỗi khi gọi API danh sách giảng viên:", error.message);
+            }
+        };
+
+        fetchDSGV();
+    }, []);
+
     useEffect(() => {
         if (selectedLH) {
             setTenLopHoc(selectedLH.tenLopHoc);
             setmaGV(selectedLH.maGV);
+            setThoiGian(selectedLH.thoigian);
+            setDiaDiem(selectedLH.diadiem);
+            setNgayBatDau(selectedLH.ngay_batdau);
         }
     }, [selectedLH]);
 
+    console.log(selectedLH)
+
     const handleUpdate = async () => {
+        const formattedNgayBatDau = format(new Date(ngay_batdau), 'yyyy-MM-dd');
+
         try {
             const formData = new FormData();
             formData.append('tenLopHoc', tenLopHoc);
             formData.append('maGV', maGV);
-
-            for (const value of formData.values()) {
-                console.log(value);
-            }
+            formData.append('thoigian', thoigian);
+            formData.append('diadiem', diadiem);
+            formData.append('ngay_batdau', formattedNgayBatDau);
 
             let mdata = {
                 maLopHoc: selectedLH.maLopHoc,
                 tenLopHoc: tenLopHoc,
                 maGV: maGV,
+                thoigian: thoigian,
+                diadiem: diadiem,
+                ngay_batdau: formattedNgayBatDau,
             }
-            console.log(mdata)
             await axios.post('http://localhost:2209/api/v1/updateLH', mdata, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
-
+            onUpdate();
             toast.success('Update thành công');
             handleClose();
         }
@@ -50,7 +73,6 @@ const ModalUpdateLopHoc = ({ show, handleClose, selectedLH, onUpdate }) => {
             toast.error("Đã xảy ra lỗi khi cập nhật lớp học");
         }
     };
-
 
     return (
         <div>
@@ -67,8 +89,29 @@ const ModalUpdateLopHoc = ({ show, handleClose, selectedLH, onUpdate }) => {
                         </div>
                         <div className="col-12">
                             <label className="form-label">Giảng Viên</label>
-                            <input type="text" className="form-control" value={maGV}
-                                onChange={(event) => setmaGV(event.target.value)} />
+                            <select className="form-select" value={maGV} onChange={(event) => setmaGV(event.target.value)}>
+                                <option value="">Chọn giảng viên</option>
+                                {dsGV.map((gv) => (
+                                    <option key={gv.maGV} value={gv.maGV}>
+                                        {gv.tenGV}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="col-12">
+                            <label className="form-label">Thời gian</label>
+                            <input type="text" className="form-control" value={thoigian}
+                                onChange={(event) => setThoiGian(event.target.value)} />
+                        </div>
+                        <div className="col-12">
+                            <label className="form-label">Địa điểm</label>
+                            <input type="text" className="form-control" value={diadiem}
+                                onChange={(event) => setDiaDiem(event.target.value)} />
+                        </div>
+                        <div className="col-12">
+                            <label className="form-label">Ngày bắt đầu</label>
+                            <input type="text" className="form-control" value={newns}
+                                onChange={(event) => setNgayBatDau(event.target.value)} />
                         </div>
                     </form>
                 </Modal.Body>
@@ -81,8 +124,6 @@ const ModalUpdateLopHoc = ({ show, handleClose, selectedLH, onUpdate }) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-            {/* <ToastProvider /> */}
         </div>
 
     );

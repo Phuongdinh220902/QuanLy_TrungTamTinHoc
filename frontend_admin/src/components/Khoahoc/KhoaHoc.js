@@ -6,8 +6,7 @@ import {
     faUserPlus,
     faChevronRight,
     faChevronLeft,
-    faMagnifyingGlass,
-    faEye
+    faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
 import {
     laydskh, deleteKH
@@ -17,117 +16,8 @@ import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios";
 import ModalUpdateKH from "./ModalUpdateKH";
+import ModalCreateKH from "./ModalCreateKH";
 import { Link } from "react-router-dom";
-
-function ThemKH() {
-    const [show, setShow] = useState(false);
-    const [tenKH, setTen] = useState('');
-    const [hocphi, sethocphi] = useState('');
-    const [mota, setmota] = useState('');
-    const [monhoc, setmonhoc] = useState('');
-    const [so_gio, setso_gio] = useState('');
-
-    const handleClose = () => {
-        setShow(false)
-        setTen("");
-        sethocphi("");
-        setmota("");
-        setmonhoc("");
-        setso_gio("");
-    }
-    const handleShow = () => setShow(true);
-
-
-    const handleSave = async () => {
-        try {
-            const formData = new FormData();
-            formData.append('tenKH', tenKH);
-            formData.append('hocphi', hocphi);
-            formData.append('mota', mota);
-            formData.append('monhoc', monhoc);
-            formData.append('so_gio', so_gio);
-            for (const value of formData.values()) {
-                console.log(value);
-            }
-
-            let mdata = {
-                tenKH: tenKH,
-                hocphi: hocphi,
-                mota: mota,
-                monhoc: monhoc,
-                so_gio: so_gio
-            }
-            console.log(mdata)
-            await axios.post('http://localhost:2209/api/v1/themKH', mdata, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
-
-            toast.success('Thêm thành công');
-            handleClose();
-        }
-        catch (error) {
-            console.error("Lỗi khi gọi API thêm giảng viên:", error.message);
-            toast.error("Đã xảy ra lỗi khi thêm giảng viên");
-        }
-    }
-
-    return (
-        <>
-            <Button variant="primary" onClick={handleShow} className="btn-lg bt-create">
-                <FontAwesomeIcon icon={faUserPlus} /> Thêm
-            </Button>
-
-            <Modal show={show} onHide={handleClose}
-                size="xl"
-                backdrop='static'
-                className="modal-add">
-                <Modal.Header closeButton>
-                    <Modal.Title>Thêm mới khoá học</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <form className="row g-3">
-                        <div className="col-12">
-                            <label className="form-label">Tên khoá học</label>
-                            <input type="text" className="form-control" value={tenKH}
-                                onChange={(event) => setTen(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Học phí</label>
-                            <input type="hocphi" className="form-control" value={hocphi}
-                                onChange={(event) => sethocphi(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Mô tả</label>
-                            <input type="text" className="form-control" value={mota}
-                                onChange={(event) => setmota(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Môn học</label>
-                            <input type="text" className="form-control" value={monhoc}
-                                onChange={(event) => setmonhoc(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Số giờ</label>
-                            <input type="text" className="form-control" value={so_gio}
-                                onChange={(event) => setso_gio(event.target.value)} />
-                        </div>
-
-                    </form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Đóng
-                    </Button>
-                    <Button variant="primary" onClick={() => handleSave()}>
-                        Lưu
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
-    );
-}
 
 const KhoaHoc = (props) => {
     const [DSKhoaHoc, setListKhoaHoc] = useState([]);
@@ -144,11 +34,20 @@ const KhoaHoc = (props) => {
         setshowModalUpdateKH(true);
     };
 
+    const [showModalCreateKH, setShowModalCreateKH] = useState(false);
+
+    const handleShowModalCreateKH = () => {
+        setShowModalCreateKH(true);
+    };
+
+    const handleCloseModalKH = () => {
+        setShowModalCreateKH(false);
+    };
+
     const handleDelete = async () => {
         try {
             await deleteKH(selectID);
             console.log(maKH)
-            // await axios.post(`http://localhost:2209/api/v1/deleteHV/${maKH}`);
             setShowModal(false);
             toast.success("Xoá khoá học thành công");
 
@@ -306,8 +205,10 @@ const KhoaHoc = (props) => {
                             <button className="formatButton" onClick={handleSearch}>
                                 <FontAwesomeIcon icon={faMagnifyingGlass} /> Tìm
                             </button>
+                            <button className="formatButton addButton" onClick={handleShowModalCreateKH}>
+                                Thêm
+                            </button>
 
-                            <ThemKH />
                         </div>
                     </div>
                 </div>
@@ -318,11 +219,9 @@ const KhoaHoc = (props) => {
                             <thead>
                                 <tr>
                                     <th className="table-item ">STT</th>
-                                    <th className="table-item ">Tên Khoá Học</th>
-                                    <th className="table-item ">Học Phí</th>
-                                    {/* <th className="table-item ">Mô tả</th> */}
-                                    <th className="table-item ">Môn Học</th>
-                                    {/* <th className="table-item ">Số giờ</th> */}
+                                    <th className="table-item ">Tên khoá học</th>
+                                    <th className="table-item ">Học phí</th>
+                                    <th className="table-item ">Môn học</th>
                                     <th> </th>
                                 </tr>
                             </thead>
@@ -335,14 +234,12 @@ const KhoaHoc = (props) => {
                                                 <td className="table-item col-right">{index + 1}</td>
                                                 <td className="">{item.tenKH}</td>
                                                 <td className="">{item.hocphi ? item.hocphi : 0}</td>
-                                                {/* <td className="table-item">{item.mota}</td> */}
                                                 <td className="">{item.monhoc}</td>
-                                                {/* <td className="table-item">{item.so_gio}</td> */}
 
 
                                                 <td className="table-item">
-                                                    <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
-                                                        <FontAwesomeIcon icon={faPenToSquare} /> Chỉnh sửa
+                                                    <button className="btn btn-warning " onClick={() => handleOpenModalUpdate(item)}>
+                                                        Cập nhật
                                                     </button>
                                                     <button className="btn btn-danger mx-2" onClick={() => { setselectID(item.maKH); setShowModal(true) }}
                                                     >Xoá</button>
@@ -392,8 +289,15 @@ const KhoaHoc = (props) => {
                     show={showModalUpdateKH}
                     handleClose={() => setshowModalUpdateKH(false)}
                     selectedKH={selectedKH}
-                    onUpdate={fetchDSKhoaHoc} // Callback to refresh the list after updating
+                    onUpdate={fetchDSKhoaHoc}
                 />
+
+                <ModalCreateKH
+                    show={showModalCreateKH}
+                    handleCloseModalKH={handleCloseModalKH}
+                    onUpdate={fetchDSKhoaHoc}
+                />
+
                 <ToastContainer
                     position="top-right"
                     autoClose={5000}

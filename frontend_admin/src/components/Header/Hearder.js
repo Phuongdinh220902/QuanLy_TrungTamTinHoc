@@ -35,7 +35,7 @@ const Header = () => {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <NavLink to='/giangvien' className='nav-link'>Giảng Viên</NavLink>
-                        <NavLink to='/user' className='nav-link'>Người Dùng</NavLink>
+                        <NavLink to='/user' className='nav-link'>Học Viên</NavLink>
                         <NavLink to='/khoahoc' className='nav-link'>Khoá Học</NavLink>
                         {/* <Nav>
                             <NavDropdown title="Khoá Học" id="basic-nav-dropdown">

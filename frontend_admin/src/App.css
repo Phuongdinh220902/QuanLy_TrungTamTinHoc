@@ -296,7 +296,7 @@ code {
   font-size: 1.2em;
   position: relative;
   justify-content: space-between;
-  margin-left: 80px;
+  margin-left: 90px;
 }
 
 .searchHV-input {
@@ -307,6 +307,7 @@ code {
 
 .searchHV-input select,
 .searchHV-input input {
+  width: 100%;
   border: none;
   border-bottom: 1px solid #ccc;
   padding: 5px;
@@ -328,6 +329,9 @@ code {
   pointer-events: none;
 }
 
+
+
+
 .formatButton {
   position: relative;
   margin: 12px 5px 0;
@@ -339,6 +343,10 @@ code {
   cursor: pointer;
   font-size: 1em;
   padding: 12px;
+}
+
+.addButton {
+  margin-left: 870px;
 }
 
 .linkStyle {

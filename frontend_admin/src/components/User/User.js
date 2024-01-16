@@ -5,11 +5,9 @@ import { useParams } from "react-router-dom";
 // import * as XLSX from "xlsx";
 import { format } from "date-fns";
 import {
-    faPenToSquare,
-    faUserPlus,
     faChevronRight,
     faChevronLeft,
-    faMagnifyingGlass
+    faMagnifyingGlass,
     // faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -17,152 +15,187 @@ import {
 } from "../../services/apiService";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { ToastContainer, toast } from 'react-toastify';
-import axios from "axios";
+import { ToastContainer } from 'react-toastify';
 import ModalUpdateUser from "./ModalUpdateUser";
+import ModalCreateUser from "./ModalCreateUser";
+
+// function Them() {
+//     const [show, setShow] = useState(false);
+//     const [tenHV, setTen] = useState('');
+//     const [email, setEmail] = useState('');
+//     const [sdt, setSdt] = useState('');
+//     const [ngaysinh, setNgaysinh] = useState('');
+//     const [noisinh, setNoisinh] = useState('');
+//     const [gioitinh, setGioitinh] = useState('Nữ');
+
+//     const handleClose = () => {
+//         setShow(false)
+//         setTen("");
+//         setEmail("");
+//         setSdt("");
+//         setNgaysinh("");
+//         setGioitinh("Nam");
+//         setNoisinh("");
+//     }
+//     const handleShow = () => setShow(true);
+
+//     const validateEmail = (email) => {
+//         return String(email)
+//             .toLowerCase()
+//             .match(
+//                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+//             );
+//     };
+
+//     const validatePhoneNumber = (sdt) => {
+//         return String(sdt).match(/^0[0-9]{9}$/);
+//     };
 
 
+//     const handleInputChange = (e) => {
+//         const inputValue = e.target.value;
+//         setSdt(inputValue);
+//         validatePhoneNumber(inputValue);
+//     };
 
 
-function Them() {
-    const [show, setShow] = useState(false);
-    const [tenHV, setTen] = useState('');
-    const [email, setEmail] = useState('');
-    const [sdt, setSdt] = useState('');
-    const [ngaysinh, setNgaysinh] = useState('');
-    const [noisinh, setNoisinh] = useState('');
-    const [gioitinh, setGioitinh] = useState('Nữ');
+//     const handleSave = async () => {
+//         const isValidEmail = validateEmail(email);
+//         const isValidPhone = validatePhoneNumber(sdt);
 
-    const handleClose = () => {
-        setShow(false)
-        setTen("");
-        setEmail("");
-        setSdt("");
-        setNgaysinh("");
-        setGioitinh("Nam");
-        setNoisinh("");
-    }
-    const handleShow = () => setShow(true);
+//         if (!isValidEmail) {
+//             toast.error('Email không hợp lệ');
+//             return;
+//         }
+//         if (!isValidPhone) {
+//             toast.error('Số điện thoại không hợp lệ');
+//             return;
+//         }
+//         try {
+//             const formData = new FormData();
+//             formData.append('tenHV', tenHV);
+//             formData.append('email', email);
+//             formData.append('sdt', sdt);
+//             formData.append('ngaysinh', ngaysinh);
 
-    const validateEmail = (email) => {
-        return String(email)
-            .toLowerCase()
-            .match(
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            );
-    };
+//             // Ánh xạ giới tính từ frontend sang backend
+//             const gioitinhValue = gioitinh === 'Nam' ? 1 : 0;
+//             formData.append('gioitinh', gioitinhValue);
+//             formData.append('noisinh', noisinh);
+//             for (const value of formData.values()) {
+//                 console.log(value);
+//             }
 
-    const handleSave = async () => {
-        const isValidEmail = validateEmail(email);
-
-        if (!isValidEmail) {
-            // alert('Email sai')
-            toast.error('Email không hợp lệ');
-            return;
-        }
-        try {
-            const formData = new FormData();
-            formData.append('tenHV', tenHV);
-            formData.append('email', email);
-            formData.append('sdt', sdt);
-            formData.append('ngaysinh', ngaysinh);
-
-            // Ánh xạ giới tính từ frontend sang backend
-            const gioitinhValue = gioitinh === 'Nam' ? 1 : 0;
-            formData.append('gioitinh', gioitinhValue);
-            formData.append('noisinh', noisinh);
-            for (const value of formData.values()) {
-                console.log(value);
-            }
-
-            let mdata = {
-                tenHV: tenHV,
-                email: email,
-                sdt: sdt,
-                ngaysinh: ngaysinh,
-                gioitinh: gioitinhValue,
-                noisinh: noisinh
-            }
-            console.log(mdata)
-            await axios.post('http://localhost:2209/api/v1/themHV', mdata, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
+//             let mdata = {
+//                 tenHV: tenHV,
+//                 email: email,
+//                 sdt: sdt,
+//                 ngaysinh: ngaysinh,
+//                 gioitinh: gioitinhValue,
+//                 noisinh: noisinh
+//             }
+//             console.log(mdata)
+//             await axios.post('http://localhost:2209/api/v1/themHV', mdata, {
+//                 headers: {
+//                     'Content-Type': 'application/x-www-form-urlencoded'
+//                 }
+//             });
 
 
-            toast.success('Thêm thành công');
-            handleClose();
-        }
-        catch (error) {
-            console.error("Lỗi khi gọi API xoá giảng viên:", error.message);
-            toast.error("Đã xảy ra lỗi khi xoá giảng viên");
-        }
-    }
+//             toast.success('Thêm thành công');
+//             fetchDSHocVien();
+//             handleClose();
+//         }
+//         catch (error) {
+//             console.error("Lỗi khi gọi API xoá giảng viên:", error.message);
+//             toast.error("Đã xảy ra lỗi khi xoá giảng viên");
+//         }
+//     }
+//     const [currentPage, setCurrentPage] = useState(1);
+//     const [totalPages, setTotalPages] = useState(1);
+//     const [DSHocVien, setListHocVien] = useState([]);
 
-    return (
-        <>
-            <Button variant="primary" onClick={handleShow} className="btn-lg bt-create">
-                <FontAwesomeIcon icon={faUserPlus} /> Thêm
-            </Button>
+//     const fetchDSHocVien = async () => {
+//         try {
 
-            <Modal show={show} onHide={handleClose}
-                size="xl"
-                backdrop='static'
-                className="modal-add">
-                <Modal.Header closeButton>
-                    <Modal.Title>Thêm mới học viên</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <form className="row g-3">
-                        <div className="col-12">
-                            <label className="form-label">Tên Học Viên</label>
-                            <input type="text" className="form-control" value={tenHV}
-                                onChange={(event) => setTen(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Email</label>
-                            <input type="email" className="form-control" value={email}
-                                onChange={(event) => setEmail(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Số điện thoại</label>
-                            <input type="text" className="form-control" value={sdt}
-                                onChange={(event) => setSdt(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Ngày sinh</label>
-                            <input type="date" className="form-control" value={ngaysinh}
-                                onChange={(event) => setNgaysinh(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Nơi sinh</label>
-                            <input type="text" className="form-control" value={noisinh}
-                                onChange={(event) => setNoisinh(event.target.value)} />
-                        </div>
-                        <div className="col-md-4">
-                            <label className="form-label">Giới Tính</label>
-                            <select className="form-select"
-                                onChange={(event) => setGioitinh(event.target.value)}>
-                                <option value="Nam">Nam</option>
-                                <option value="Nữ">Nữ</option>
-                            </select>
-                        </div>
+//             let tukhoa_ = localStorage.getItem("tukhoa")
+//             let res = await laydshv(currentPage, tukhoa_);
 
-                    </form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Đóng
-                    </Button>
-                    <Button variant="primary" onClick={() => handleSave()}>
-                        Lưu
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
-    );
-}
+//             if (res.status === 200) {
+//                 setListHocVien(res.data.dataCD);
+//                 setTotalPages(res.data.totalPages);
+//             } else {
+//                 // Xử lý trường hợp lỗi
+//                 console.error("Lỗi khi gọi API:", res.statusText);
+//             }
+//         } catch (error) {
+//             console.error("Lỗi khi gọi API:", error.message);
+//         }
+//     };
+
+//     return (
+//         <>
+//             <Button variant="primary" onClick={handleShow} className="btn-lg bt-create">
+//                 <FontAwesomeIcon icon={faUserPlus} /> Thêm
+//             </Button>
+
+//             <Modal show={show} onHide={handleClose}
+//                 size="xl"
+//                 backdrop='static'
+//                 className="modal-add">
+//                 <Modal.Header closeButton>
+//                     <Modal.Title>Thêm mới học viên</Modal.Title>
+//                 </Modal.Header>
+//                 <Modal.Body>
+//                     <form className="row g-3">
+//                         <div className="col-12">
+//                             <label className="form-label">Tên Học Viên</label>
+//                             <input type="text" className="form-control" value={tenHV}
+//                                 onChange={(event) => setTen(event.target.value)} />
+//                         </div>
+//                         <div className="col-12">
+//                             <label className="form-label">Email</label>
+//                             <input type="email" className="form-control" value={email}
+//                                 onChange={(event) => setEmail(event.target.value)} />
+//                         </div>
+//                         <div className="col-12">
+//                             <label className="form-label">Số điện thoại</label>
+//                             <input type="text" className="form-control" value={sdt}
+//                                 onChange={(event) => setSdt(event.target.value)} />
+//                         </div>
+//                         <div className="col-12">
+//                             <label className="form-label">Ngày sinh</label>
+//                             <input type="date" className="form-control" value={ngaysinh}
+//                                 onChange={(event) => setNgaysinh(event.target.value)} />
+//                         </div>
+//                         <div className="col-12">
+//                             <label className="form-label">Nơi sinh</label>
+//                             <input type="text" className="form-control" value={noisinh}
+//                                 onChange={(event) => setNoisinh(event.target.value)} />
+//                         </div>
+//                         <div className="col-md-4">
+//                             <label className="form-label">Giới Tính</label>
+//                             <select className="form-select"
+//                                 onChange={(event) => setGioitinh(event.target.value)}>
+//                                 <option value="Nam">Nam</option>
+//                                 <option value="Nữ">Nữ</option>
+//                             </select>
+//                         </div>
+
+//                     </form>
+//                 </Modal.Body>
+//                 <Modal.Footer>
+//                     <Button variant="secondary" onClick={handleClose}>
+//                         Đóng
+//                     </Button>
+//                     <Button variant="primary" onClick={() => handleSave()}>
+//                         Lưu
+//                     </Button>
+//                 </Modal.Footer>
+//             </Modal>
+//         </>
+//     );
+// }
 
 
 const User = (props) => {
@@ -176,6 +209,15 @@ const User = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
+    const [showModalCreateUser, setShowModalCreateUser] = useState(false);
+
+    const handleShowModalCreate = () => {
+        setShowModalCreateUser(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModalCreateUser(false);
+    };
 
     let [tukhoa, setTuKhoa] = useState("")
 
@@ -188,8 +230,8 @@ const User = (props) => {
         try {
             await deleteHV(selectID);
             console.log(maHV)
-            // await axios.post(`http://localhost:2209/api/v1/deleteHV/${maHV}`);
             setShowModal(false);
+            fetchDSHocVien();
 
             console.log("Xoá học viên thành công!");
         } catch (error) {
@@ -206,9 +248,7 @@ const User = (props) => {
         try {
 
             let tukhoa_ = localStorage.getItem("tukhoa")
-            // alert(tukhoa_)
             let res = await laydshv(currentPage, tukhoa_);
-            // console.log(res);
 
             if (res.status === 200) {
                 setListHocVien(res.data.dataCD);
@@ -242,9 +282,7 @@ const User = (props) => {
     };
 
     const handleSearch = async () => {
-        // alert(tukhoa)
-        // alert(tukhoa)
-        if (tukhoa == "" || !tukhoa) {
+        if (tukhoa === "" || !tukhoa) {
             tukhoa = "null"
         }
         localStorage.setItem("tukhoa", tukhoa)
@@ -270,9 +308,13 @@ const User = (props) => {
                             <button className="formatButton" onClick={handleSearch}>
                                 <FontAwesomeIcon icon={faMagnifyingGlass} /> Tìm
                             </button>
-                            <Them />
+                            <button className="formatButton addButton" onClick={handleShowModalCreate}>
+                                Thêm
+                            </button>
+                            {/* <Them /> */}
                         </div>
                     </div>
+
                 </div>
 
                 <div className="listDV">
@@ -281,7 +323,7 @@ const User = (props) => {
                             <thead>
                                 <tr>
                                     <th className="table-item ">STT</th>
-                                    <th className="table-item">Tên Học Viên</th>
+                                    <th className="table-item">Tên học viên</th>
                                     <th className="table-item ">Ngày sinh</th>
                                     <th className="table-item ">Giới tính</th>
                                     <th className="table-item ">Nơi sinh</th>
@@ -361,8 +403,15 @@ const User = (props) => {
                     show={showModalUpdateUser}
                     handleClose={() => setShowModalUpdateUser(false)}
                     selectedUser={selectedUser}
-                    onUpdate={fetchDSHocVien} // Callback to refresh the list after updating
+                    onUpdate={fetchDSHocVien}
                 />
+
+                <ModalCreateUser
+                    show={showModalCreateUser}
+                    handleCloseModal={handleCloseModal}
+                    onUpdate={fetchDSHocVien}
+                />
+
                 <ToastContainer
                     position="top-right"
                     autoClose={5000}

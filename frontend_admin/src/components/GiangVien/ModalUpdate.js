@@ -13,7 +13,7 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
     const [tenGV, setTen] = useState('');
     const [email, setEmail] = useState('');
     const [sdt, setSdt] = useState('');
-    const [ngaysinh, setNgaysinh] = useState('');
+    // const [ngaysinh, setNgaysinh] = useState('');
     const [gioitinh, setGioitinh] = useState('Nam');
     // Các biến khác nếu có
     console.log(selectedGiangVien)
@@ -24,20 +24,67 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
             setSdt(selectedGiangVien.sdt);
             // setNgaysinh(selectedGiangVien.ngaysinh);
             setGioitinh(selectedGiangVien.gioitinh === 1 ? 'Nam' : 'Nữ');
-            // Cài đặt các biến khác nếu có
         }
     }, [selectedGiangVien]);
 
     const handleUpdate = async () => {
+        const validateEmail = (email) => {
+            return String(email)
+                .toLowerCase()
+                .match(
+                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                );
+        };
+
+        const validatePhoneNumber = (sdt) => {
+            return String(sdt).match(/^(09|08|02|03|07|05)[0-9]{8}$/);
+        };
+
+        const normalizetenGV = (tenGV) => {
+            tenGV = tenGV.trim();
+            tenGV = tenGV.replace(/\s+/g, ' ');
+            console.log(tenGV)
+            return tenGV;
+        };
+
+        const isValidEmail = validateEmail(email);
+        const isValidPhone = validatePhoneNumber(sdt);
+
+        const normalizedtenGV = normalizetenGV(tenGV);
+
+        if (!tenGV.trim() || !email || !sdt || !gioitinh) {
+            toast.error('Vui lòng điền đầy đủ thông tin');
+            return;
+        }
+        // Kiểm tra tên có ít nhất 2 cụm từ
+        const words = tenGV.trim().split(/\s+/);
+        if (words.length < 2) {
+            toast.error('Tên phải có ít nhất 2 cụm từ.');
+            return;
+        }
+
+        if (!/^[^\d!@#$%^&*()_+={}\[\]:;<>,?~\\/`"\|]*$/.test(tenGV)) {
+            toast.error('Tên không được chứa các kí tự đặc biệt');
+            return;
+        }
+
+        if (!isValidEmail) {
+            toast.error('Email không hợp lệ');
+            return;
+        }
+        if (!isValidPhone) {
+            toast.error('Số điện thoại không hợp lệ');
+            return;
+        }
         try {
             const formData = new FormData();
-            formData.append('tenHV', tenGV);
+            formData.append('tenGV', normalizedtenGV);
             formData.append('email', email);
             formData.append('sdt', sdt);
             // formData.append('ngaysinh', ngaysinh);
 
             // Ánh xạ giới tính từ frontend sang backend
-            const gioitinhValue = gioitinh === 'Nam' ? 1 : 0;
+            const gioitinhValue = gioitinh == 'Nam' ? 1 : 0;
             formData.append('gioitinh', gioitinhValue);
             // formData.append('noisinh', noisinh);
             for (const value of formData.values()) {
@@ -46,7 +93,7 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
 
             let mdata = {
                 maGV: selectedGiangVien.maGV,
-                tenGV: tenGV,
+                tenGV: normalizedtenGV,
                 email: email,
                 sdt: sdt,
                 gioitinh: gioitinhValue,
@@ -59,6 +106,7 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
             });
 
             toast.success('Update thành công');
+            onUpdate();
             handleClose();
         }
         catch (error) {
@@ -77,7 +125,7 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
                 <Modal.Body>
                     <form className="row g-3">
                         <div className="col-12">
-                            <label className="form-label">Tên Giảng Viên</label>
+                            <label className="form-label">Tên giảng viên</label>
                             <input type="text" className="form-control" value={tenGV}
                                 onChange={(event) => setTen(event.target.value)} />
                         </div>
@@ -98,7 +146,7 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
                             />
                         </div> */}
                         <div className="col-md-4">
-                            <label className="form-label">Giới Tính</label>
+                            <label className="form-label">Giới tính</label>
                             <select className="form-select"
                                 onChange={(event) => setGioitinh(event.target.value)}>
                                 <option value="Nam">Nam</option>

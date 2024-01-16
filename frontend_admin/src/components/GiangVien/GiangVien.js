@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
 // import * as XLSX from "xlsx";
 import { format } from "date-fns";
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import {
-    faPenToSquare,
-    faFileImport,
-    faUserPlus,
     faChevronRight,
     faChevronLeft,
     faMagnifyingGlass,
@@ -21,154 +16,156 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ModalUpdateGV from "./ModalUpdate";
 import ModalDelete from "./ModalDelete";
+import ModalCreateGV from "./ModalCreateGV";
 
-function Example() {
-    const [show, setShow] = useState(false);
-    const [tenGV, setTen] = useState('');
-    const [email, setEmail] = useState('');
-    const [sdt, setSdt] = useState('');
-    const [ngaysinh, setNgaysinh] = useState('');
+// function Them() {
+//     const [show, setShow] = useState(false);
+//     const [tenGV, setTen] = useState('');
+//     const [email, setEmail] = useState('');
+//     const [sdt, setSdt] = useState('');
+//     const [ngaysinh, setNgaysinh] = useState('');
 
-    const [gioitinh, setGioitinh] = useState('Nữ');
-    const [image, setImage] = useState('');
-    const [previewImage, setPreviewImage] = useState('');
+//     const [gioitinh, setGioitinh] = useState('Nữ');
+//     const [image, setImage] = useState('');
+//     const [previewImage, setPreviewImage] = useState('');
 
-    const handleClose = () => {
-        setShow(false)
-        setTen("");
-        setEmail("");
-        setSdt("");
-        setNgaysinh("");
-        setGioitinh("Nam");
-        setImage("");
-        setPreviewImage("");
-    }
-    const handleShow = () => setShow(true);
+//     const handleClose = () => {
+//         setShow(false)
+//         setTen("");
+//         setEmail("");
+//         setSdt("");
+//         setNgaysinh("");
+//         setGioitinh("Nam");
+//         setImage("");
+//         setPreviewImage("");
+//     }
+//     const handleShow = () => setShow(true);
 
-    const handleUpLoadImage = (event) => {
-        if (event.target && event.target.files && event.target.files[0]) {
-            setPreviewImage(URL.createObjectURL(event.target.files[0]));
-            setImage(event.target.files[0]);
-        }
-    };
+//     const handleUpLoadImage = (event) => {
+//         if (event.target && event.target.files && event.target.files[0]) {
+//             setPreviewImage(URL.createObjectURL(event.target.files[0]));
+//             setImage(event.target.files[0]);
+//         }
+//     };
 
-    const validateEmail = (email) => {
-        return String(email)
-            .toLowerCase()
-            .match(
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            );
-    };
+//     const validateEmail = (email) => {
+//         return String(email)
+//             .toLowerCase()
+//             .match(
+//                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+//             );
+//     };
+//     const validatePhoneNumber = (sdt) => {
+//         return String(sdt).match(/^0[0-9]{9}$/);
+//     };
 
-    const handleSave = async () => {
-        const isValidEmail = validateEmail(email);
+//     const handleSave = async () => {
+//         const isValidEmail = validateEmail(email);
+//         const isValidsdt = validatePhoneNumber(sdt);
 
-        if (!isValidEmail) {
-            // alert('Email sai')
-            toast.error('Email không hợp lệ');
-            return;
-        }
-        const formData = new FormData();
-        formData.append('tenGV', tenGV);
-        formData.append('email', email);
-        formData.append('sdt', sdt);
-        formData.append('ngaysinh', ngaysinh);
-        // Ánh xạ giới tính từ frontend sang backend
-        const gioitinhValue = gioitinh === 'Nam' ? 1 : 0;
-        formData.append('gioitinh', gioitinhValue);
+//         if (!isValidEmail) {
+//             toast.error('Email không hợp lệ');
+//             return;
+//         }
+//         if (!isValidsdt) {
+//             toast.error('Số điện thoại không hợp lệ');
+//             return;
+//         }
+//         const formData = new FormData();
+//         formData.append('tenGV', tenGV);
+//         formData.append('email', email);
+//         formData.append('sdt', sdt);
+//         formData.append('ngaysinh', ngaysinh);
+//         // Ánh xạ giới tính từ frontend sang backend
+//         const gioitinhValue = gioitinh === 'Nam' ? 1 : 0;
+//         formData.append('gioitinh', gioitinhValue);
 
-        // formData.append('file', image);
-        formData.append('file', image, image.name);
-        let res = await axios.post('http://localhost:2209/api/v1/themgv', formData);
-        console.log("check", res.data)
-        if (res.data && res.data.EC === 0) {
-            toast.success(res.data.EM);
-            handleClose();
-        }
+//         // formData.append('file', image);
+//         formData.append('file', image, image.name);
+//         let res = await axios.post('http://localhost:2209/api/v1/themgv', formData);
+//         console.log("check", res.data)
+//         if (res.data && res.data.EC === 0) {
+//             toast.success(res.data.EM);
+//             handleClose();
+//         }
 
-        if (res.data && res.data.EC !== 0) {
-            toast.error(res.data.EM);
-        }
-    }
+//         if (res.data && res.data.EC !== 0) {
+//             toast.error(res.data.EM);
+//         }
+//     }
 
-    return (
-        <>
-            <Button variant="primary" onClick={handleShow} className="btn-lg bt-create">
-                <FontAwesomeIcon icon={faUserPlus} /> Thêm
-            </Button>
+//     return (
+//         <>
+//             <Button variant="primary" onClick={handleShow} className="btn-lg bt-create">
+//                 <FontAwesomeIcon icon={faUserPlus} /> Thêm
+//             </Button>
 
-            {/* <Button variant="primary" onClick={handleShow} className="btn-lg bt-sreach">
-                <FontAwesomeIcon icon={faUserPlus} /> Tìm
-            </Button> */}
+//             <Modal show={show} onHide={handleClose}
+//                 size="xl"
+//                 backdrop='static'
+//                 className="modal-add">
+//                 <Modal.Header closeButton>
+//                     <Modal.Title>Thêm mới giảng viên</Modal.Title>
+//                 </Modal.Header>
+//                 <Modal.Body>
+//                     <form className="row g-3">
+//                         <div className="col-12">
+//                             <label className="form-label">Tên Giảng Viên</label>
+//                             <input type="text" className="form-control" value={tenGV}
+//                                 onChange={(event) => setTen(event.target.value)} />
+//                         </div>
+//                         <div className="col-12">
+//                             <label className="form-label">Email</label>
+//                             <input type="email" className="form-control" value={email}
+//                                 onChange={(event) => setEmail(event.target.value)} />
+//                         </div>
+//                         <div className="col-12">
+//                             <label className="form-label">Số điện thoại</label>
+//                             <input type="text" className="form-control" value={sdt}
+//                                 onChange={(event) => setSdt(event.target.value)} />
+//                         </div>
+//                         <div className="col-12">
+//                             <label className="form-label">Ngày sinh</label>
+//                             <input type="date" className="form-control" value={ngaysinh}
+//                                 onChange={(event) => setNgaysinh(event.target.value)} />
+//                         </div>
+//                         <div className="col-md-4">
+//                             <label className="form-label">Giới Tính</label>
+//                             <select className="form-select"
+//                                 onChange={(event) => setGioitinh(event.target.value)}>
+//                                 <option value="Nam">Nam</option>
+//                                 <option value="Nữ">Nữ</option>
+//                             </select>
+//                         </div>
 
-            <Modal show={show} onHide={handleClose}
-                size="xl"
-                backdrop='static'
-                className="modal-add">
-                <Modal.Header closeButton>
-                    <Modal.Title>Thêm mới giảng viên</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <form className="row g-3">
-                        <div className="col-12">
-                            <label className="form-label">Tên Giảng Viên</label>
-                            <input type="text" className="form-control" value={tenGV}
-                                onChange={(event) => setTen(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Email</label>
-                            <input type="email" className="form-control" value={email}
-                                onChange={(event) => setEmail(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Số điện thoại</label>
-                            <input type="text" className="form-control" value={sdt}
-                                onChange={(event) => setSdt(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Ngày sinh</label>
-                            <input type="date" className="form-control" value={ngaysinh}
-                                onChange={(event) => setNgaysinh(event.target.value)} />
-                        </div>
-                        <div className="col-md-4">
-                            <label className="form-label">Giới Tính</label>
-                            <select className="form-select"
-                                onChange={(event) => setGioitinh(event.target.value)}>
-                                <option value="Nam">Nam</option>
-                                <option value="Nữ">Nữ</option>
-                            </select>
-                        </div>
+//                         <div className="col-md-12">
+//                             <label className="form-label label-upload" htmlFor="labelUpload">
+//                                 <FontAwesomeIcon icon={faFileImport} /> Tải ảnh lên </label>
+//                             <input type="file" id="labelUpload" hidden
+//                                 onChange={(event) => handleUpLoadImage(event)} />
+//                         </div>
 
-                        <div className="col-md-12">
-                            <label className="form-label label-upload" htmlFor="labelUpload">
-                                <FontAwesomeIcon icon={faFileImport} /> Tải ảnh lên </label>
-                            <input type="file" id="labelUpload" hidden
-                                onChange={(event) => handleUpLoadImage(event)} />
-                        </div>
-
-                        <div className="col-md-12 img-preview">
-                            {previewImage ?
-                                <img src={previewImage} />
-                                :
-                                <span>preview</span>
-                            }
-                        </div>
-                    </form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Đóng
-                    </Button>
-                    <Button variant="primary" onClick={() => handleSave()}>
-                        Lưu
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
-    );
-}
-
-
+//                         <div className="col-md-12 img-preview">
+//                             {previewImage ?
+//                                 <img src={previewImage} />
+//                                 :
+//                                 <span>preview</span>
+//                             }
+//                         </div>
+//                     </form>
+//                 </Modal.Body>
+//                 <Modal.Footer>
+//                     <Button variant="secondary" onClick={handleClose}>
+//                         Đóng
+//                     </Button>
+//                     <Button variant="primary" onClick={() => handleSave()}>
+//                         Lưu
+//                     </Button>
+//                 </Modal.Footer>
+//             </Modal>
+//         </>
+//     );
+// }
 
 
 const GiangVien = (props) => {
@@ -181,6 +178,16 @@ const GiangVien = (props) => {
     const [totalPages, setTotalPages] = useState(1);
 
     let [tukhoa, setTuKhoa] = useState("")
+
+    const [showModalCreateGV, setShowModalCreateGV] = useState(false);
+
+    const handleShowModalCreateGV = () => {
+        setShowModalCreateGV(true);
+    };
+
+    const handleCloseModalGV = () => {
+        setShowModalCreateGV(false);
+    };
 
     const handleDelete = (maGV) => {
         setDeleteGiangVienId(maGV);
@@ -305,8 +312,9 @@ const GiangVien = (props) => {
                             <button className="formatButton" onClick={handleSearch}>
                                 <FontAwesomeIcon icon={faMagnifyingGlass} /> Tìm
                             </button>
-
-                            <Example />
+                            <button className="formatButton addButton" onClick={handleShowModalCreateGV}>
+                                Thêm
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -317,7 +325,7 @@ const GiangVien = (props) => {
                             <thead>
                                 <tr>
                                     <th className="table-item ">STT</th>
-                                    <th className="table-item">Tên Giảng Viên</th>
+                                    <th className="table-item">Tên giảng viên</th>
                                     <th className="table-item">Ngày sinh</th>
                                     <th className="table-item">Giới tính</th>
                                     <th className="table-item">Email</th>
@@ -395,8 +403,15 @@ const GiangVien = (props) => {
                     show={showModalUpdateGV}
                     handleClose={() => setShowModalUpdateGV(false)}
                     selectedGiangVien={selectedGiangVien}
-                    onUpdate={fetchDSGiangVien} // Callback to refresh the list after updating
+                    onUpdate={fetchDSGiangVien}
                 />
+
+                <ModalCreateGV
+                    show={showModalCreateGV}
+                    handleCloseModalGV={handleCloseModalGV}
+                    onUpdate={fetchDSGiangVien}
+                />
+
                 <ModalDelete
                     show={deleteGiangVienId !== null}
                     handleClose={() => setDeleteGiangVienId(null)}

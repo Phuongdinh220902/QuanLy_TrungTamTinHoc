@@ -3,18 +3,18 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
     faPenToSquare,
-    faUserPlus,
     faChevronRight,
     faChevronLeft,
     faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
 import {
-    laymotKH, deleteLH
+    laydsLopHoc, deleteLH
 } from "../../services/apiService";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import ModalUpdateLopHoc from "./ModalUpdateLopHoc";
+import { format } from "date-fns";
 
 // function ThemKH() {
 //     const [show, setShow] = useState(false);
@@ -183,17 +183,15 @@ const LopHoc = (props) => {
         }
     };
 
-
     const fetchDSLopHoc = async () => {
         try {
             let tukhoa_ = localStorage.getItem("tukhoa")
-            let res = await laymotKH(maKH, currentPage, tukhoa_);
+            let res = await laydsLopHoc(maKH, currentPage, tukhoa_);
             console.log(res);
 
             if (res.status === 200) {
                 setListLopHoc(res.data.dataCD);
             } else {
-                // Xử lý trường hợp lỗi
                 console.error("Lỗi khi gọi API:", res.statusText);
             }
         } catch (error) {
@@ -201,7 +199,7 @@ const LopHoc = (props) => {
         }
     };
     const handleSearch = async () => {
-        if (tukhoa == "" || !tukhoa) {
+        if (tukhoa === "" || !tukhoa) {
             tukhoa = "null"
         }
         localStorage.setItem("tukhoa", tukhoa)
@@ -211,7 +209,7 @@ const LopHoc = (props) => {
 
     return (
         <>
-            <div className="container app__content">
+            <div className="container-fluid app__content">
                 <h2 className="text-center">Danh Sách Lớp Học</h2>
 
                 <div className="search">
@@ -239,8 +237,10 @@ const LopHoc = (props) => {
                             <thead>
                                 <tr>
                                     <th className="table-item">STT</th>
-                                    <th className="table-item ">Tên Lớp Học</th>
-                                    <th className="table-item ">Tên Giảng Viên</th>
+                                    <th className="table-item ">Tên lớp học</th>
+                                    <th className="table-item ">Tên giảng viên</th>
+                                    <th className="table-item ">Ngày bắt đầu</th>
+                                    <th className="table-item ">Lịch học</th>
                                     <th className="table-item ">  </th>
                                 </tr>
                             </thead>
@@ -253,13 +253,21 @@ const LopHoc = (props) => {
                                                 <td className="table-item col-right">{index + 1}</td>
                                                 <td className="">{item.tenLopHoc}</td>
                                                 <td className="">{item.tenGV}</td>
+                                                <td className="table-item">
+                                                    {format(new Date(item.ngay_batdau), "dd/MM/yyyy")}
+                                                </td>
+                                                <td className="">{item.thoigian}</td>
 
                                                 <td className="table-item">
+                                                    <button className="btn btn-danger" onClick={() => { setselectID(item.maLopHoc); setShowModal(true) }}
+                                                    >Xem </button>
+
                                                     <button className="btn btn-warning mx-3" onClick={() => handleOpenModalUpdate(item)}>
                                                         <FontAwesomeIcon icon={faPenToSquare} /> Chỉnh sửa
                                                     </button>
                                                     <button className="btn btn-danger" onClick={() => { setselectID(item.maLopHoc); setShowModal(true) }}
                                                     >Xoá</button>
+
                                                 </td>
                                             </tr>
                                         );
@@ -313,7 +321,7 @@ const LopHoc = (props) => {
                 show={showModalUpdateLopHoc}
                 handleClose={() => setshowModalUpdateLopHoc(false)}
                 selectedLH={selectedLH}
-                onUpdate={fetchDSLopHoc} // Callback to refresh the list after updating
+                onUpdate={fetchDSLopHoc}
             />
 
             <Modal
@@ -325,7 +333,7 @@ const LopHoc = (props) => {
                     <Modal.Title>Xác nhận xoá</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Bạn có chắc chắn muốn xoá khoá học này không?
+                    Bạn có chắc chắn muốn xoá lớp học này không?
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>

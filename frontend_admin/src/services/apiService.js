@@ -39,12 +39,12 @@ const deleteKH = (maKH) => {
     return axios.post(`api/v1/deleteKH/${maKH}`);
 };
 
-const laymotKH = (maKH, page, tukhoa) => {
-    return axios.get(`api/v1/laymotKH/${maKH}/${page}/${tukhoa}`);
+const laydsLopHoc = (maKH, page, tukhoa) => {
+    return axios.get(`api/v1/laydsLopHoc/${maKH}/${page}/${tukhoa}`);
 };
 
 const deleteLH = (maLopHoc) => {
     return axios.post(`api/v1/deleteLH/${maLopHoc}`);
 };
 
-export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laymotKH, deleteLH };
+export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH };
