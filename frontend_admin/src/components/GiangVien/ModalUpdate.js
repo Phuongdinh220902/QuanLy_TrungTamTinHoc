@@ -1,11 +1,8 @@
-
-
 import React, { useEffect, useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import { toast } from 'react-toastify';
-// import ToastProvider from "../ToastContainer";
 import { format } from "date-fns";
 
 
@@ -13,17 +10,17 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
     const [tenGV, setTen] = useState('');
     const [email, setEmail] = useState('');
     const [sdt, setSdt] = useState('');
-    // const [ngaysinh, setNgaysinh] = useState('');
+    const [ngaysinh, setNgaysinh] = useState('02/02/2002');
     const [gioitinh, setGioitinh] = useState('Nam');
-    // Các biến khác nếu có
-    console.log(selectedGiangVien)
+    const newns = format(new Date(ngaysinh), "dd/MM/yyyy");
+
     useEffect(() => {
         if (selectedGiangVien) {
             setTen(selectedGiangVien.tenGV);
             setEmail(selectedGiangVien.email);
             setSdt(selectedGiangVien.sdt);
-            // setNgaysinh(selectedGiangVien.ngaysinh);
-            setGioitinh(selectedGiangVien.gioitinh === 1 ? 'Nam' : 'Nữ');
+            setNgaysinh(selectedGiangVien.ngaysinh);
+            setGioitinh(selectedGiangVien.gioitinh == 1 ? 'Nam' : 'Nữ');
         }
     }, [selectedGiangVien]);
 
@@ -81,7 +78,9 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
             formData.append('tenGV', normalizedtenGV);
             formData.append('email', email);
             formData.append('sdt', sdt);
-            // formData.append('ngaysinh', ngaysinh);
+            const formattedNgaySinh = format(new Date(ngaysinh), 'yyyy-MM-dd');
+            formData.append('ngaysinh', formattedNgaySinh);
+
 
             // Ánh xạ giới tính từ frontend sang backend
             const gioitinhValue = gioitinh == 'Nam' ? 1 : 0;
@@ -96,6 +95,7 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
                 tenGV: normalizedtenGV,
                 email: email,
                 sdt: sdt,
+                ngaysinh: formattedNgaySinh,
                 gioitinh: gioitinhValue,
             }
             console.log(mdata)
@@ -139,12 +139,12 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
                             <input type="text" className="form-control" value={sdt}
                                 onChange={(event) => setSdt(event.target.value)} />
                         </div>
-                        {/* <div className="col-12">
+                        <div className="col-12">
                             <label className="form-label" >Ngày sinh</label>
-                            <input type="text" className="form-control" value={format(new Date(ngaysinh), 'dd-MM-yyyy')}
+                            <input type="text" className="form-control" value={newns}
                                 onChange={(event) => setNgaysinh(event.target.value)}
                             />
-                        </div> */}
+                        </div>
                         <div className="col-md-4">
                             <label className="form-label">Giới tính</label>
                             <select className="form-select"
@@ -165,7 +165,6 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
                 </Modal.Footer>
             </Modal>
 
-            {/* <ToastProvider /> */}
         </div>
 
     );

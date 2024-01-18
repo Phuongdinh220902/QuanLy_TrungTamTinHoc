@@ -289,6 +289,55 @@ const User = (props) => {
         await fetchDSHocVien();
     };
 
+    const formatCurrency = (value) => {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+
+    /* Tải file */
+    // const fileInputRef = useRef(null);
+
+    // const handleButtonClick = () => {
+    //     // Kích hoạt sự kiện click của thẻ input để mở hộp thoại chọn file
+    //     fileInputRef.current.click();
+    // };
+
+    // const handleFileChange = async (event) => {
+
+    //     try {
+    //         const selectedFile = event.target.files[0];
+    //         console.log("Selected File:", selectedFile);
+
+    //         const formData = new FormData();
+    //         formData.append("IDLop", IDLop)
+    //         formData.append("file", selectedFile);
+
+    //         // let res = await ThemDanhSachDoanVien(formData);
+    //         console.log(formData)
+    //         let res = await axios.post(
+    //             "http://localhost:8080/api/ThemDoanVienExcel",
+    //             formData
+    //         );
+
+    //         if (res.status === 200) {
+    //             // Thêm thành công
+    //             setSuccessMessage("Thêm thành công!");
+    //             setShowModal(true);
+    //             // Fetch updated data after successful addition
+    //             fetchDSDoanVien();
+    //         } else {
+    //             // Xử lý trường hợp lỗi
+    //             setErrorMessage("Thêm không thành công!");
+    //             setShowModal(true);
+    //         }
+    //     } catch (error) {
+    //         // Xử lý lỗi nếu có
+    //         console.error("Lỗi khi tải file:", error.message);
+    //         setErrorMessage("Lỗi khi tải file!");
+    //         setShowModal(true);
+    //     }
+    // };
+
     return (
         <>
             <div className="container-fluid app__content">
@@ -354,7 +403,7 @@ const User = (props) => {
                                                 <td className="">{item.noisinh}</td>
                                                 <td className="">{item.email}</td>
                                                 <td className="">{item.sdt}</td>
-                                                <td className="">{item.hocphi ? item.hocphi : 0}</td>
+                                                <td className="col-right">{formatCurrency(item.hocphi ? item.hocphi : 0)}</td>
 
 
                                                 <td className="table-item">

@@ -10,10 +10,10 @@ const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
     const [tenHV, setTen] = useState('');
     const [email, setEmail] = useState('');
     const [sdt, setSdt] = useState('');
-    // const [ngaysinh, setNgaysinh] = useState('');
+    const [ngaysinh, setNgaysinh] = useState('02/02/2000');
     const [gioitinh, setGioitinh] = useState('Nam');
     const [noisinh, setNoisinh] = useState('');
-    // const newns = format(new Date(ngaysinh), "dd/MM/yyyy");
+    const newns = format(new Date(ngaysinh), "dd/MM/yyyy");
 
     console.log(selectedUser)
     useEffect(() => {
@@ -21,14 +21,14 @@ const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
             setTen(selectedUser.tenHV);
             setEmail(selectedUser.email);
             setSdt(selectedUser.sdt);
-            // setNgaysinh(selectedUser.ngaysinh);
+            setNgaysinh(selectedUser.ngaysinh);
             setGioitinh(selectedUser.gioitinh == 1 ? 'Nam' : 'Nữ');
             setNoisinh(selectedUser.noisinh);
         }
     }, [selectedUser]);
 
     const handleUpdate = async () => {
-        // const formattedNgaySinh = format(new Date(ngaysinh), 'yyyy-MM-dd');
+        const formattedNgaySinh = format(new Date(ngaysinh), 'yyyy-MM-dd');
 
         const validateEmail = (email) => {
             return String(email)
@@ -62,7 +62,7 @@ const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
         const normalizedTenHV = normalizeTenHV(tenHV);
         const normalizedNoisinhHV = normalizeNoisinhHV(noisinh);
 
-        if (!tenHV.trim() || !email || !sdt || !noisinh || !gioitinh) {
+        if (!tenHV.trim() || !email || !sdt || !ngaysinh || !noisinh || !gioitinh) {
             toast.error('Vui lòng điền đầy đủ thông tin');
             return;
         }
@@ -86,21 +86,13 @@ const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
             toast.error('Số điện thoại không hợp lệ');
             return;
         }
-        // const ngaySinhDate = new Date(ngaysinh);
-        // const today = new Date();
-        // const ageDifferenceInMilliseconds = today - ngaySinhDate;
-        // const ageDifferenceInYears = ageDifferenceInMilliseconds / (365.25 * 24 * 60 * 60 * 1000);
-        // if (ageDifferenceInYears < 18) {
-        //     toast.error('Học viên phải có tuổi từ 16 trở lên');
-        //     return;
-        // }
 
         try {
             const formData = new FormData();
             formData.append('tenHV', normalizedTenHV);
             formData.append('email', email);
             formData.append('sdt', sdt);
-            // formData.append('ngaysinh', formattedNgaySinh);
+            formData.append('ngaysinh', formattedNgaySinh);
             // Ánh xạ giới tính từ frontend sang backend
             const gioitinhValue = gioitinh == 'Nam' ? 1 : 0;
             formData.append('gioitinh', gioitinhValue);
@@ -114,7 +106,7 @@ const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
                 tenHV: normalizedTenHV,
                 email: email,
                 sdt: sdt,
-                // ngaysinh: formattedNgaySinh,
+                ngaysinh: formattedNgaySinh,
                 gioitinh: gioitinhValue,
                 noisinh: normalizedNoisinhHV,
             }
@@ -159,11 +151,11 @@ const ModalUpdateUser = ({ show, handleClose, selectedUser, onUpdate }) => {
                             <input type="text" className="form-control" value={sdt}
                                 onChange={(event) => setSdt(event.target.value)} />
                         </div>
-                        {/* <div className="col-12">
+                        <div className="col-12">
                             <label className="form-label">Ngày sinh</label>
                             <input type="text" className="form-control" value={newns}
                                 onChange={(event) => setNgaysinh(event.target.value)} />
-                        </div> */}
+                        </div>
                         <div className="col-md-4">
                             <label className="form-label">Giới Tính</label>
                             <select className="form-select"

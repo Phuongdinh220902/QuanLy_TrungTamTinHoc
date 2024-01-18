@@ -4,9 +4,7 @@ const laydshv = (page, tukhoa) => {
     return axios.get(`api/v1/laydshv/${page}/${tukhoa}`);
 };
 
-// const laydsgv = () => {
-//     return axios.get("api/v1/laydsgv");
-// };
+
 const laydsgv = (page, tukhoa) => {
     return axios.get(`api/v1/laydsgv/${page}/${tukhoa}`);
 };
@@ -47,4 +45,9 @@ const deleteLH = (maLopHoc) => {
     return axios.post(`api/v1/deleteLH/${maLopHoc}`);
 };
 
-export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH };
+const laydsHocVien = (maLopHoc, page, tukhoa) => {
+    return axios.get(`api/v1/laydsHocVien/${maLopHoc}/${page}/${tukhoa}`);
+};
+
+
+export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH, laydsHocVien };

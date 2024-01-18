@@ -15,6 +15,7 @@ import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import ModalUpdateLopHoc from "./ModalUpdateLopHoc";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 // function ThemKH() {
 //     const [show, setShow] = useState(false);
@@ -145,8 +146,14 @@ const LopHoc = (props) => {
     }, [currentPage, tukhoa]);
 
     const handleOpenModalUpdate = (lh) => {
-        setselectedLH(lh);
-        setshowModalUpdateLopHoc(true);
+        try {
+            setselectedLH(lh);
+            setshowModalUpdateLopHoc(true);
+        }
+        catch (err) {
+            console.log(err)
+        }
+
     };
 
     const handleDelete = async () => {
@@ -259,11 +266,14 @@ const LopHoc = (props) => {
                                                 <td className="">{item.thoigian}</td>
 
                                                 <td className="table-item">
-                                                    <button className="btn btn-danger" onClick={() => { setselectID(item.maLopHoc); setShowModal(true) }}
-                                                    >Xem </button>
+                                                    <button className="btn btn-info">
+                                                        <Link to={`/dshocvien/${item.maLopHoc}`} className="navlink linkStyle">
+                                                            Xem
+                                                        </Link>
+                                                    </button>
 
-                                                    <button className="btn btn-warning mx-3" onClick={() => handleOpenModalUpdate(item)}>
-                                                        <FontAwesomeIcon icon={faPenToSquare} /> Chỉnh sửa
+                                                    <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
+                                                        Cập nhật
                                                     </button>
                                                     <button className="btn btn-danger" onClick={() => { setselectID(item.maLopHoc); setShowModal(true) }}
                                                     >Xoá</button>

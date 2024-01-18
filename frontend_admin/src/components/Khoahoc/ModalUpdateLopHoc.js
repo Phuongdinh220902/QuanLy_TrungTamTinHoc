@@ -11,9 +11,11 @@ const ModalUpdateLopHoc = ({ show, handleClose, selectedLH, onUpdate }) => {
     const [maGV, setmaGV] = useState('');
     const [thoigian, setThoiGian] = useState('');
     const [diadiem, setDiaDiem] = useState('');
-    const [ngay_batdau, setNgayBatDau] = useState('');
+    const [ngay_batdau, setNgayBatDau] = useState('02/02/2002');
     const [dsGV, setDsGV] = useState([]);
     const newns = format(new Date(ngay_batdau), "dd/MM/yyyy");
+
+    console.log(selectedLH);
 
     useEffect(() => {
         const fetchDSGV = async () => {
@@ -38,17 +40,16 @@ const ModalUpdateLopHoc = ({ show, handleClose, selectedLH, onUpdate }) => {
         }
     }, [selectedLH]);
 
-    console.log(selectedLH)
+
 
     const handleUpdate = async () => {
-        const formattedNgayBatDau = format(new Date(ngay_batdau), 'yyyy-MM-dd');
-
         try {
             const formData = new FormData();
             formData.append('tenLopHoc', tenLopHoc);
             formData.append('maGV', maGV);
             formData.append('thoigian', thoigian);
             formData.append('diadiem', diadiem);
+            const formattedNgayBatDau = format(new Date(ngay_batdau), 'yyyy-MM-dd');
             formData.append('ngay_batdau', formattedNgayBatDau);
 
             let mdata = {
@@ -74,11 +75,13 @@ const ModalUpdateLopHoc = ({ show, handleClose, selectedLH, onUpdate }) => {
         }
     };
 
+
+
     return (
         <div>
             <Modal show={show} onHide={handleClose} size="xl" backdrop='static' className="modal-add">
                 <Modal.Header closeButton>
-                    <Modal.Title>Chỉnh sửa lơp</Modal.Title>
+                    <Modal.Title>Chỉnh sửa lớp học</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form className="row g-3">
