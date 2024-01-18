@@ -1,6 +1,6 @@
 import express from 'express';
 import configViewEngine from './configs/viewEngine';
-import initWebRoute from './route/web';
+// import initWebRoute from './route/web';
 import initAPIRoute from './route/api';
 const cors = require('cors');
 // import connection from './configs/connectDB';
@@ -18,7 +18,7 @@ app.use(express.json());
 configViewEngine(app);
 
 //init web route
-initWebRoute(app);
+// initWebRoute(app);
 
 initAPIRoute(app);
 

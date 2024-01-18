@@ -696,8 +696,8 @@ let laydsLopHoc = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
-            const [sotrang, fields] = await pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH", [maKH]);
-
+            const [sotrang, fields] = await pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, ngay_batdau , lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH", [maKH]);
+            console.log(sotrang)
             const [result2, fields1] = await Promise.all([
                 pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH LIMIT ? OFFSET ?", [
                     maKH,
@@ -825,7 +825,89 @@ let themLH = async (req, res) => {
     }
 };
 
+
+let laydsHocVien = async (req, res) => {
+    const maLopHoc = req.params.maLopHoc;
+    console.log(maLopHoc);
+    try {
+        let tukhoa = req.params.tukhoa
+        // console.log(dsGV)
+        if (tukhoa == "null" || !tukhoa) {
+            const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+            const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+
+            const offset = (page - 1) * pageSize;
+
+            const [sotrang, fields] = await pool.execute("SELECT dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV", [maLopHoc]);
+            console.log(sotrang)
+            const [result2, fields1] = await Promise.all([
+                pool.execute("SELECT dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV LIMIT ? OFFSET ?", [
+                    maLopHoc,
+                    pageSize,
+                    offset,
+
+                ]),
+            ]);
+
+            if (result2[0] && result2[0].length > 0) {
+                return res.status(200).json({
+                    dataCD: result2[0],
+                    totalPages: Math.ceil(sotrang.length / pageSize),
+                    currentPage: page,
+                });
+            } else {
+                console.log("Không tìm thấy kết quả");
+                return res.status(200).json({
+                    dataCD: [],
+                    totalPages: 0,
+                    currentPage: 1,
+                    dsGV: dsGV
+                });
+            }
+        }
+        // console.log(tukhoa)
+        const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+        const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+        const offset = (page - 1) * pageSize;
+
+        const [sotrang, fields] = await pool.execute(
+            "SELECT dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
+            [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%"]
+        );
+        console.log(sotrang)
+
+        const [result2, fields1] = await Promise.all([
+            pool.execute(
+                "SELECT dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
+                [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%"]
+            ),
+        ]);
+
+        if (result2[0] && result2[0].length > 0) {
+            return res.status(200).json({
+                dataCD: result2[0],
+                totalPages: Math.ceil(sotrang.length / pageSize),
+                currentPage: page,
+            });
+        } else {
+            console.log("Không tìm thấy kết quả");
+            return res.status(200).json({
+                dataCD: [],
+                totalPages: 0,
+                currentPage: 1,
+            });
+        }
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, dangkytk, deleteGV, updateGV, themHV, deleteHV, updateHV,
-    laydskh, deleteKH, updateKH, themKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien
+    laydskh, deleteKH, updateKH, themKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien,
+    laydsHocVien
 }
