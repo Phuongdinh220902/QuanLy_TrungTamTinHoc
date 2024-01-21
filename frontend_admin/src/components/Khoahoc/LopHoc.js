@@ -214,6 +214,7 @@ const LopHoc = (props) => {
     };
 
 
+
     return (
         <>
             <div className="container-fluid app__content">
@@ -260,8 +261,7 @@ const LopHoc = (props) => {
                                                 <td className="table-item col-right">{index + 1}</td>
                                                 <td className="">{item.tenLopHoc}</td>
                                                 <td className="">{item.tenGV}</td>
-                                                <td className="table-item">
-                                                    {format(new Date(item.ngay_batdau), "dd/MM/yyyy")}
+                                                <td className="table-item">{item.ngay_batdau}
                                                 </td>
                                                 <td className="">{item.thoigian}</td>
 

@@ -160,7 +160,7 @@ const ModalCreateGV = ({ show, handleCloseModalGV, onUpdate }) => {
                                 onChange={(event) => setNgaysinh(event.target.value)} />
                         </div>
                         <div className="col-md-4">
-                            <label className="form-label">Giới Tính</label>
+                            <label className="form-label">Giới tính</label>
                             <select className="form-select"
                                 onChange={(event) => setGioitinh(event.target.value)}>
                                 <option value="Nữ">Nữ</option>

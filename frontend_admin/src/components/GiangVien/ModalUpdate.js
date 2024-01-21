@@ -12,14 +12,14 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
     const [sdt, setSdt] = useState('');
     const [ngaysinh, setNgaysinh] = useState('02/02/2002');
     const [gioitinh, setGioitinh] = useState('Nam');
-    const newns = format(new Date(ngaysinh), "dd/MM/yyyy");
+    // const newns = format(new Date(ngaysinh), "dd/MM/yyyy");
 
     useEffect(() => {
         if (selectedGiangVien) {
             setTen(selectedGiangVien.tenGV);
             setEmail(selectedGiangVien.email);
             setSdt(selectedGiangVien.sdt);
-            setNgaysinh(selectedGiangVien.ngaysinh);
+            // setNgaysinh(selectedGiangVien.ngaysinh);
             setGioitinh(selectedGiangVien.gioitinh == 1 ? 'Nam' : 'Nữ');
         }
     }, [selectedGiangVien]);
@@ -78,8 +78,8 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
             formData.append('tenGV', normalizedtenGV);
             formData.append('email', email);
             formData.append('sdt', sdt);
-            const formattedNgaySinh = format(new Date(ngaysinh), 'yyyy-MM-dd');
-            formData.append('ngaysinh', formattedNgaySinh);
+            // const formattedNgaySinh = format(new Date(ngaysinh), 'yyyy-MM-dd');
+            // formData.append('ngaysinh', formattedNgaySinh);
 
 
             // Ánh xạ giới tính từ frontend sang backend
@@ -95,7 +95,7 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
                 tenGV: normalizedtenGV,
                 email: email,
                 sdt: sdt,
-                ngaysinh: formattedNgaySinh,
+                // ngaysinh: formattedNgaySinh,
                 gioitinh: gioitinhValue,
             }
             console.log(mdata)
@@ -120,7 +120,7 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
         <div>
             <Modal show={show} onHide={handleClose} size="xl" backdrop='static' className="modal-add">
                 <Modal.Header closeButton>
-                    <Modal.Title>Chỉnh sửa giảng viên</Modal.Title>
+                    <Modal.Title>Cập nhật giảng viên</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form className="row g-3">
@@ -139,12 +139,12 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
                             <input type="text" className="form-control" value={sdt}
                                 onChange={(event) => setSdt(event.target.value)} />
                         </div>
-                        <div className="col-12">
+                        {/* <div className="col-12">
                             <label className="form-label" >Ngày sinh</label>
                             <input type="text" className="form-control" value={newns}
                                 onChange={(event) => setNgaysinh(event.target.value)}
                             />
-                        </div>
+                        </div> */}
                         <div className="col-md-4">
                             <label className="form-label">Giới tính</label>
                             <select className="form-select"
