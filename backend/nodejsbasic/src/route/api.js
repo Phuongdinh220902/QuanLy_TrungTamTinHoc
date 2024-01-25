@@ -4,16 +4,17 @@ import multer from "multer";
 import path from 'path'
 import pool from '../configs/connectDB';
 const formidable = require('formidable');
+import { autUser } from '../middleware/autuser'
 
 let router = express.Router();
 
 const initAPIRoute = (app) => {
-    router.post('/dangkytk', APIController.dangkytk)
+
     router.post('/createKhoaHoc', APIController.createKhoaHoc)
     router.get('/laydshv/:page/:tukhoa', APIController.laydshv)
     router.get('/laydsgv/:page/:tukhoa', APIController.laydsgv)
     router.post("/loginhv", APIController.loginhv)
-    router.post("/loginadmin", APIController.loginadmin)
+    router.post("/loginadmin", autUser, APIController.loginadmin)
     router.post('/updateGV', APIController.updateGV)
     router.post("/deleteGV/:maGV", APIController.deleteGV)
     router.post('/themHV', APIController.themHV)
@@ -29,12 +30,18 @@ const initAPIRoute = (app) => {
     router.get('/DSGiangVien', APIController.DSGiangVien)
     router.get('/laydsHocVien/:maLopHoc/:page/:tukhoa', APIController.laydsHocVien)
 
+    router.get('/layTrangChu', APIController.layTrangChu)
+    router.get('/layTrangChuKhoaHoc', APIController.layTrangChuKhoaHoc)
+    router.get('/layTrangChuGiangVien', APIController.layTrangChuGiangVien)
+
+    router.post("/dangnhapnguoidung", APIController.dangnhapnguoidung)
+    router.post('/dangkyTKNguoiDung', APIController.dangkyTKNguoiDung)
 
 
     var filename = ''
     const upload = multer({
         storage: multer.diskStorage({
-            destination: './src/public/ungtuyen',
+            destination: './src/public/giangvien',
             filename: (req, file, cb) => {
                 // tạo tên file duy nhất
                 const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -91,6 +98,7 @@ const initAPIRoute = (app) => {
             res.status(500).json({ message: 'Lỗi server' });
         }
     });
+
 
     return app.use('/api/v1/', router)
 }

@@ -1,0 +1,838 @@
+/* @-webkit-keyframes pulsate {
+    0% {
+        -webkit-transform: scale(.1, .1);
+        opacity: 0
+    }
+
+    50% {
+        opacity: 1
+    }
+
+    100% {
+        -webkit-transform: scale(1.2, 1.2);
+        opacity: 0
+    }
+} */
+
+.pl-10 {
+    padding-left: 10px;
+}
+
+.pl-25 {
+    padding-left: 25px;
+}
+
+.khoa-hoc-container {
+    padding-top: 20px;
+    padding-bottom: 30px;
+    background-color: #FBFBFB;
+}
+
+.khoa-hoc-container .section-title {
+    margin-bottom: 40px
+}
+
+.khoa-hoc-container .tieu-de-muc {
+    text-align: center;
+    font-size: 40px;
+}
+
+.khoa-hoc-container .double-line-bottom {
+    width: 280px;
+    margin: auto;
+}
+
+.khoa-hoc-container .tranning-list {
+    max-width: 1720px;
+    margin: 0 auto;
+}
+
+.khoa-hoc-container .tranning-inner {
+    box-sizing: border-box;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 100%;
+}
+
+.tranning-list-terms {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 15px 0 40px;
+    justify-content: center;
+}
+
+.heading-font {
+    font-family: "Open Sans", sans-serif;
+    color: #273044;
+}
+
+.tranning-list-term {
+    padding: 2px 10px;
+    margin: 5px;
+    line-height: 30px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: .5s ease;
+    color: #0082c8;
+    font-size: 16px;
+    background-color: #f4f4f4;
+}
+
+.tranning-list-term.active {
+    background-color: #ee8306;
+    color: #fff !important;
+}
+
+.tranning-list-term:hover {
+    background-color: #ee8306;
+    color: #fff !important
+}
+
+.tranning-list-grid {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    /*margin: 0 -10px;*/
+    font-family: "Open Sans", sans-serif;
+    padding: 10px;
+}
+
+.tranning-list-grid .tranning-single {
+    position: relative;
+    width: 16.6666%;
+    margin: 0 0 15px;
+    transition: .3s ease;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    padding: 0 2px;
+    height: 100%;
+    min-width: 280px;
+}
+
+.tranning-list .tranning-list-grid.loading .tranning-single {
+    -webkit-transform: translateY(10px);
+    transform: translateY(10px);
+    opacity: 0;
+}
+
+.tranning-list-grid .tranning-single-inner {
+    height: 100%;
+    background-color: #fff;
+    margin: 3px 10px;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4);
+    position: relative;
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.tranning-list-grid .tranning-single-inner .border-overlay {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 0px;
+    height: 0px;
+    transition: all 0.3s linear;
+    border: 0px solid #ff6600;
+    border-radius: 10px;
+}
+
+.tranning-list-grid .tranning-single-inner:hover .border-overlay {
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    border-width: 3px;
+}
+
+.tranning-list-grid .tranning-single-inner-image {
+    width: auto;
+    min-width: 100%;
+    position: relative;
+    padding: 0px 0px 15px;
+    background-color: #fff;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.tranning-list-grid .tranning-single-inner-image .new-trainning {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 50px;
+    z-index: 10;
+    /* background-image: url("/template/frontend/images/new2.png"); */
+    height: 50px;
+    background-size: contain;
+}
+
+.tranning-list-grid .tranning-single-inner-image-container {
+    overflow: hidden;
+    /*
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    */
+}
+
+.tranning_lazy_image {
+    position: relative;
+    display: block;
+    height: 0;
+    width: 100%;
+    padding-bottom: 59.6667%;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.tranning_lazy_image img {
+    width: 100%;
+    border-radius: 6px;
+}
+
+.tranning-single-inner-info {
+    padding: 0 10px 10px;
+    position: relative;
+    background-color: #fff;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.tranning-single-title h5 {
+    margin: 0 0 15px;
+    padding: 0 0 15px;
+    font-size: 15px;
+    line-height: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #273044;
+    height: 60px;
+    overflow: hidden;
+}
+
+.tranning-single-title h5:hover {
+    color: #FD6504;
+}
+
+.tranning-single-meta {
+    display: flex;
+    align-items: center;
+    min-height: 28px;
+    font-size: 13px;
+}
+
+.tranning-single-meta .average-rating-stars-top {
+    width: 66%;
+    display: flex;
+}
+
+.tranning-single .star-rating {
+    margin-top: 4px;
+    width: 75px;
+    height: 13px;
+    margin-top: 4px;
+    /* background: url(/template/frontend/images/star_empty.svg) left top repeat-x; */
+}
+
+.tranning-single .star-rating>span {
+    display: block;
+    text-indent: -9999px;
+    line-height: 1;
+    /* background: url(/template/frontend/images/star_full.svg) left top repeat-x; */
+}
+
+.tranning-single-meta .duration {
+    flex: 0 0 auto;
+    font-weight: bold;
+    color: #555;
+    width: 110px;
+}
+
+.tranning-single-meta .duration:before {
+    /* content: url(/template/frontend/images/clock-icon.svg); */
+    display: inline-block;
+    height: 16px;
+    margin-right: 0.5rem;
+    vertical-align: text-bottom;
+}
+
+.tranning-single-meta .prices {
+    flex: 1 0 auto;
+    text-align: left;
+    font-weight: bold;
+}
+
+.tranning-single-meta .prices .price {
+    color: #555;
+}
+
+.tranning-single-meta .prices .price:before {
+    /* content: url(/template/frontend/images/price-icon-white.png); */
+    display: inline-block;
+    height: 16px;
+    margin-right: 0.5rem;
+    vertical-align: text-bottom;
+}
+
+.tranning-single-meta .prices .price.old {
+    font-weight: normal;
+}
+
+.tranning-single-meta .prices .price.old-gach {
+    text-decoration: line-through;
+    font-weight: normal;
+}
+
+.tranning-single-meta .prices .price.none {
+    padding: 11px 0;
+    text-align: right;
+}
+
+.tranning-single-meta .prices .price-special {
+    color: #ee8306;
+    padding-top: 4px;
+}
+
+.tranning-single-meta .prices .price-special a {
+    color: #ee8306;
+    cursor: pointer;
+}
+
+.tranning-single-meta .prices .price-special a:hover {
+    color: #0082c8;
+}
+
+.tranning-single-meta .prices .price-special:before {
+    /* content: url(/template/frontend/images/home/price-special-icon.png); */
+    display: inline-block;
+    height: 17px;
+    margin-right: 0.5rem;
+    vertical-align: text-bottom;
+}
+
+.stm_lms_courses__single--price {
+    margin-left: auto;
+    text-align: right;
+}
+
+.tranning-list .tranning-all-courses a.btn.btn-default {
+    background-color: #ee8306;
+    border-color: #ee8306;
+    font-family: Montserrat, "Open Sans", sans-serif;
+    line-height: 14px;
+    font-size: 16px;
+    color: #fff;
+    min-width: 135px;
+    padding: 15px 20px;
+    font-weight: 600;
+    border-radius: 40px;
+}
+
+.tranning-list .tranning-all-courses a.btn.btn-default:hover {
+    background-color: #0082c8;
+    border-color: #0082c8;
+}
+
+.thong-bao-chung-container {
+    /* background-image: url(../images/news-background.png); */
+    background-size: cover;
+    padding: 60px 0 30px;
+    font-family: "Open Sans", sans-serif;
+}
+
+.thong-bao-chung-container .khung-thong-bao {
+    height: 100%;
+    position: relative;
+    padding: 30px;
+    overflow: hidden;
+    /* background-image: url('/template/frontend/images/home/thong-bao-khai-giang-bg.png'); */
+    background-repeat: no-repeat;
+    background-position: top center;
+}
+
+.thong-bao-chung-container .khoa-hoc,
+.thong-bao-chung-container .khoa-hoc h1,
+.thong-bao-chung-container .khoa-hoc h2,
+.thong-bao-chung-container .khoa-hoc h3 {
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+}
+
+.thong-bao-chung-container .khoa-hoc span {
+    color: #ee8306;
+    line-height: 40px;
+}
+
+.thong-bao-chung-container .dang-ky {
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 7px;
+}
+
+.thong-bao-chung-container .dang-ky .btn {
+    font-size: 18px;
+    padding: 8px 40px;
+    border-radius: 40px;
+    background-color: #0583f2;
+    border-color: #0583f2;
+}
+
+.thong-bao-chung-container .dang-ky .btn:hover {
+    background-color: #ee8306;
+    border-color: #ee8306;
+    color: #fff;
+}
+
+.loading {
+    min-height: 100px;
+    position: relative;
+}
+
+.loading::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    margin-left: -15px;
+    border: 2px solid rgba(0, 0, 0, .5);
+    border-radius: 30px;
+    height: 30px;
+    width: 30px;
+    -webkit-animation: pulsate 1.5s ease-out;
+    animation: pulsate 1.5s ease-out;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    opacity: 0;
+    z-index: 99;
+}
+
+.lazy {
+    opacity: 0;
+    transform: translate(0, 10vh);
+    transition: all 1.5s;
+}
+
+.lazy.visible {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+div:has(> .lazy),
+div:has(> .lazy-down) {
+    overflow: hidden;
+}
+
+.lazy-down {
+    opacity: 0;
+    transform: translate(0, -10vh);
+    transition: all 1.5s;
+}
+
+.lazy-down.visible {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+/* Image zoom */
+/* The Image container */
+.giang-vien-item img {
+    width: 100%;
+}
+
+.giang-vien-item .img-hover-zoom {
+    width: 180px;
+    height: 180px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.lien-he .img-hover-zoom {
+    /*height: 580px; */
+    /* Modify this according to your need */
+    overflow: hidden;
+    /* Removing this will break the effects */
+    border-radius: 6px;
+}
+
+/* Point-zoom Container */
+.giang-vien-item .img-hover-zoom--point-zoom img {
+    transform-origin: 55% 35%;
+    transition: transform 1s, filter .5s ease-out;
+}
+
+.lien-he .img-hover-zoom--point-zoom img {
+    transform-origin: 45% 40%;
+    transition: transform 1s, filter .5s ease-out;
+}
+
+/* The Transformation */
+.giang-vien-item .img-hover-zoom--point-zoom:hover img {
+    transform: scale(1.5);
+}
+
+.lien-he .img-hover-zoom--point-zoom:hover img {
+    transform: scale(2);
+}
+
+/* End Image zoom */
+.footer img {
+    max-width: 200px;
+}
+
+.tien-ich .tien-ich-mo-ta {
+    min-height: 120px;
+    padding: 20px 0 20px 20px;
+    border: 3px solid #0080c5;
+    border-radius: 15px;
+    padding-left: 50px;
+    text-align: center;
+    margin: 32px 50px 0 150px;
+    padding-right: 5px;
+}
+
+.tien-ich-mo-ta>a>img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-height: 200px;
+}
+
+.tien-ich-mo-ta h3 {
+    font-size: 20px;
+    margin-top: 0;
+}
+
+.tien-ich a {
+    color: #ee8306;
+}
+
+.tien-ich a:hover {
+    color: #0082c8;
+}
+
+.tien-ich .canh-le {
+    /*max-height: 175px;*/
+    overflow: hidden;
+    margin-top: 20px;
+    padding: 0 5px;
+    min-height: 210px;
+}
+
+.lich-thi {
+    margin-top: 50px;
+    margin-bottom: 30px;
+    font-size: 16px;
+    position: relative;
+    /* background-image: url("/template/frontend/images/home/lich-thi-CCTHQG-bg.png"); */
+    background-repeat: no-repeat;
+    padding: 20px 0;
+    background-position: top center;
+}
+
+.lich-thi .tieu-de {
+    font-size: 38px;
+    padding: 5px 20px;
+    background-color: #fff;
+    margin: auto;
+    position: absolute;
+    top: -30px;
+    left: calc(50% - 150px);
+    width: 300px;
+    color: #ee8306;
+    border-radius: 20px;
+    font-weight: 700;
+    border: 2px solid #fff;
+}
+
+.lich-thi:hover .tieu-de {
+    border: 2px solid #ee8306;
+}
+
+.lich-thi .thong-bao-thi {
+    font-size: 32px;
+    font-weight: bold;
+    padding: 10px;
+    margin-top: 25px;
+    line-height: 120%;
+    margin-bottom: 0
+}
+
+.lich-thi p {
+    font-size: 26px;
+    margin: 0 0 10px;
+}
+
+.hoc-vien-container .tieu-de-muc img {
+    height: 30px;
+    vertical-align: text-top;
+}
+
+.hoc-vien-container .cam-nhan-wrap .user-img {
+    border: 5px solid #fff;
+}
+
+.gioi-thieu .bieu-tuong {
+    font-size: 40px;
+    line-height: 66px;
+    letter-spacing: -.05em;
+    white-space: nowrap;
+}
+
+.gioi-thieu .bieu-tuong span {
+    font-size: 40px;
+    line-height: 70px;
+    display: inline-block;
+    vertical-align: top;
+    font-weight: 300;
+}
+
+.gioi-thieu .tieu-de-thong-ke {
+    font-size: 22px;
+    text-align: center;
+    line-height: 34px;
+    margin: 20px auto 50px;
+    font-weight: 700;
+    color: #167ce9;
+}
+
+.gioi-thieu .tieu-de-thong-ke img {
+    margin: 0 5px;
+}
+
+.gioi-thieu .tieu-de-thong-ke span {
+    margin: 0 15px;
+}
+
+.gioi-thieu .group-thong-ke {
+    margin: 20px auto;
+    font-family: sans-serif;
+}
+
+.gioi-thieu .group-thong-ke img {
+    height: 90px;
+}
+
+.gioi-thieu .noi-dung-thong-ke {
+    font-size: 16px;
+    color: #0080c5;
+    font-weight: 600;
+}
+
+#lien-he>div {
+    padding: 10px;
+}
+
+#lien-he .col1 {
+    float: left;
+    width: 30%;
+}
+
+.col1 p {
+    display: inline;
+}
+
+#lien-he .col2 {
+    float: left;
+    width: 70%;
+}
+
+#lien-he .co-so ul {
+    padding-left: 25px;
+    list-style-type: square;
+}
+
+#lien-he .co-so ul ul {
+    list-style-type: disc;
+}
+
+#lien-he .ban-do {
+    display: block;
+    width: 100%;
+}
+
+.ban-do-mobile {
+    display: none;
+}
+
+@media screen and (max-width: 480px) {
+    .khoa-hoc-container .tieu-de-muc {
+        font-size: 28px;
+    }
+
+    .khoa-hoc-container .tieu-de-muc img {
+        width: 50px;
+    }
+
+    .category-search .border-textbox {
+        border: 1px solid #888;
+        border-radius: 6px;
+    }
+
+    .khoa-hoc-container .section-title {
+        margin-bottom: 20px
+    }
+
+    .tranning-list-grid .tranning-single {
+        width: 100%;
+    }
+
+    .tranning-list-grid .tranning-single {
+        margin: 0 0 30px;
+    }
+
+    .tranning-single-inner-image-container img {
+        width: 100%;
+    }
+
+    .section-title {
+        padding: 0 15px;
+    }
+
+    .dich-vu .canh-le {
+        margin-bottom: 20px;
+    }
+
+    .dich-vu h3 {
+        font-size: 20px;
+    }
+
+    .lien-he {
+        padding: 0 15px;
+    }
+
+    .footer img {
+        margin-right: 20px;
+    }
+
+    .thong-bao-chung-container {
+        padding: 10px !important;
+    }
+
+    .thong-bao-chung-container .khung-thong-bao {
+        background-image: none;
+        border: 4px solid #fff;
+    }
+
+    .lich-thi .tieu-de {
+        font-size: 28px;
+    }
+
+    .lich-thi .tieu-de img {
+        width: 40px;
+    }
+
+    .lich-thi .thong-bao-thi {
+        font-size: 26px;
+    }
+
+    .lich-thi p {
+        font-size: 22px;
+    }
+
+    section-title p {
+        font-size: 15px;
+    }
+
+    .hoc-vien-container .tieu-de-muc img {
+        height: 20px;
+    }
+
+    .gioi-thieu .tieu-de-thong-ke span {
+        display: block;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    .thong-bao-chung-container {
+        padding: 20px 10px 0px;
+    }
+
+    .section-title {
+        padding-left: 15px
+    }
+
+    .section-title .tieu-de-muc {
+        margin: 0;
+    }
+
+    .thong-bao-chung-container .khung-thong-bao {
+        background-size: contain;
+    }
+
+    .thong-bao-chung-container .dang-ky {
+        margin-top: 30px;
+    }
+
+    .tien-ich .canh-le {
+        min-height: unset;
+        max-width: 500px;
+        margin: 20px auto;
+    }
+
+    .tien-ich .tien-ich-mo-ta {
+        padding: 10px;
+        border: 3px solid #0080c5;
+        border-radius: 15px;
+        text-align: center;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    .tien-ich-mo-ta h3>img {
+        height: 50px;
+        position: relative;
+        display: inline-block !important;
+    }
+
+    .lich-thi {
+        background-image: none;
+        border: 3px solid #fff;
+    }
+
+    .section-title p {
+        font-size: 15px;
+    }
+
+    .gioi-thieu .noi-dung-thong-ke {
+        font-size: 15px;
+        margin-bottom: 20px;
+    }
+
+    #lien-he>div {
+        padding: 0;
+        margin: 15px 0;
+    }
+
+    #lien-he .col1 {
+        float: none;
+        width: 100%;
+    }
+
+    #lien-he .col2 {
+        float: none;
+        width: 100%;
+        padding-left: 0;
+    }
+
+    #lien-he .ban-do {
+        display: none;
+    }
+
+    #lien-he .ban-do-mobile {
+        display: block;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:960px) {
+    .lazy {
+        opacity: 1;
+        transform: none;
+    }
+
+    .thong-bao-chung-container .khung-thong-bao {
+        background-size: contain;
+    }
+
+    .thong-bao-chung-container .dang-ky {
+        margin-top: 30px;
+    }
+}

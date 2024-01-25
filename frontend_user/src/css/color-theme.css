@@ -1,0 +1,33 @@
+/* Color Theme */
+.blue {background:#0082c8; color:#fff;}
+.blue > .wsmenu-list > li > a{color:#424242; border-right:1px solid rgba(0,0,0,0.10); }
+.blue > .wsmenu-list > li > a{background-color:#fff !important;}
+.blue > .wsmenu-list > li > a > .arrow:after{ border-top-color:#E5E5E5 !important;}
+.blue > .wsmenu-list > li:hover>a{background:#4A89DC !important; color:#fff !important;}
+.blue > .wsmenu-list > li > a:hover {background:#4A89DC !important; color:#fff !important;}
+.blue > .wsmenu-list > li > a.active{background:#4A89DC !important; color:#fff !important;}
+.blue > .wsmenu-submenu li > a:hover {background:#4A89DC !important; border-radius:0px!important; color:#fff !important;}
+.blue .wsmenu-list li a:hover .arrow:after{ border-top-color:#fff;}
+.blue .wsmenu-list li a.active .arrow:after{ border-top-color:#fff;}
+.blue .wsmenu-list li:hover>a .arrow:after{ border-top-color:#fff;}
+
+/* Gradient Theme */
+.tranbg{background-color:transparent !important;}
+.whitebg{ background-color:#fff !important; }
+.whitebg:hover{ color:#000 !important; }
+.blue-grdt{
+	background-color: #0082c8;
+	color:#fff;}
+
+.blue-grdt > .wsmenu-list > li > a{color:#fff !important;}
+.blue-grdt > .wsmenu-list > li > a{background-color:transparent !important;}
+.blue-grdt > .wsmenu-list > li > a > .arrow:after{ border-top-color:#fff !important;}
+ 
+@media only screen and (max-width: 780px) {
+.blue-grdt > .wsmenu-list > li > a > .fa{ color:#fff !important; }
+
+.blue > .wsmenu-submenu > li:hover>a{ background-color:#4A89DC !important; color:#fff;}
+.blue > .wsmenu > .wsmenu-list > li > a.active{color: #fff; background-color: #0082c8;}
+.blue > .wsmenu > .wsmenu-list > li > a:hover{ color: #fff; background-color: #0082c8;}	
+
+}

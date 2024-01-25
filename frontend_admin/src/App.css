@@ -353,3 +353,17 @@ code {
   text-decoration: none;
   color: inherit;
 }
+
+.logo {
+  width: 50px;
+  /* Điều chỉnh kích thước của ảnh */
+  height: auto;
+  /* Giữ tỷ lệ khung hình */
+  margin-right: 10px;
+  /* Điều chỉnh khoảng cách giữa logo và tiêu đề */
+}
+
+.admin-title {
+  font-size: 20px;
+  /* Điều chỉnh kích thước của tiêu đề "Admin" */
+}

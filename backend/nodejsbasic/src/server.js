@@ -8,8 +8,17 @@ require('dotenv').config()
 
 const app = express()
 
+const corsOptions = {
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    optionsSuccessStatus: 204,
+};
+
 app.use(cors());
 const port = process.env.PORT || 2209;
+
+app.use(cors(corsOptions));
+app.use(express.static("./src/public/"));
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());

@@ -198,7 +198,8 @@ const KhoaHoc = (props) => {
                                                 {/* <td className="col-right">{item.hocphi ? item.hocphi : 0}</td> */}
                                                 <td className="col-right">{formatCurrency(item.hocphi ? item.hocphi : 0)}</td>
                                                 <td className="">{item.monhoc}</td>
-                                                <td className="">{item.so_gio}</td>
+                                                <td className="">{item.so_gio} giờ </td>
+
 
 
                                                 <td className="table-item">

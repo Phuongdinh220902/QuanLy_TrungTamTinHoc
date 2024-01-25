@@ -1,0 +1,170 @@
+.countdown-container {
+    position: relative;
+    top: 66%;
+    left: 0%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.clock-item .inner {
+    height: 0px;
+    padding-bottom: 100%;
+    position: relative;
+    width: 90%;
+}
+
+.clock-canvas {
+    background-color: rgba(255, 255, 255, .1);
+    border-radius: 50%;
+    height: 0px;
+    padding-bottom: 100%;
+}
+
+.text {
+    color: #ffffff;
+    font-size: 26px;
+    margin-top: -55px;
+    position: absolute;
+    top: 70%;
+    text-align: center;
+    width: 100%;
+    line-height: 24px;
+}
+
+.text .val {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.text .type-time {
+    font-size: 18px;
+}
+
+@media screen and (max-width:960px) {
+    .countdown-container {
+        position: relative;
+        top: 66%;
+        left: 0%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+
+    .clock-item .inner {
+        height: 0px;
+        padding-bottom: 100%;
+        position: relative;
+        width: 90%;
+    }
+
+    .clock-item {
+        margin-bottom: 5px;
+    }
+
+    .text {
+        color: #ffffff;
+        font-size: 16px;
+        margin-top: -50px;
+        position: absolute;
+        top: 70%;
+        text-align: center;
+
+        width: 100%;
+        line-height: 20px;
+    }
+
+    .text .val {
+        font-size: 30px;
+    }
+
+    .text .type-time {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width:760px) {
+    .countdown-container {
+        position: relative;
+        top: 68%;
+        left: 5%;
+        width: 80%;
+        margin: auto;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+
+    .clock-item .inner {
+        height: 0px;
+        padding-bottom: 100%;
+        position: relative;
+        width: 80%;
+    }
+
+    .clock-item {
+        margin-bottom: 5px;
+    }
+
+    .text {
+        color: #ffffff;
+        font-size: 16px;
+        margin-top: -55px;
+        position: absolute;
+        top: 78%;
+        text-align: center;
+        width: 100%;
+        line-height: 16px;
+    }
+
+    .text .val {
+        font-size: 26px;
+    }
+
+    .text .type-time {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width:480px) {
+    .countdown-container {
+        position: relative;
+        top: 66%;
+        left: 0%;
+        width: 100%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+
+    .clock-item .inner {
+        height: 0px;
+        padding-bottom: 100%;
+        position: relative;
+        width: 90%;
+    }
+
+    .clock-item {
+        margin-bottom: 5px;
+    }
+
+    .text {
+        color: #ffffff;
+        font-size: 12px;
+        margin-top: -30px;
+        position: absolute;
+        top: 70%;
+        text-align: center;
+
+        width: 100%;
+        line-height: 12px;
+    }
+
+    .text .val {
+        font-size: 22px;
+    }
+
+    .text .type-time {
+        font-size: 12px;
+    }
+}

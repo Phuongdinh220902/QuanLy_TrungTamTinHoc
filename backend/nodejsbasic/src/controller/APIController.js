@@ -3,156 +3,7 @@ import pool from '../configs/connectDB';
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-
-// let filtertenHB = async (req, res) => {
-//     let { tenHB } = req.body;
-//     const [rows, fields] = await pool.execute("SELECT * FROM hoc_bong WHERE tenHB = ?", [tenHB])
-//     const [rows2, fields2] = await pool.execute("SELECT DISTINCT tenHB FROM hoc_bong")
-//     const [rows3, fields3] = await pool.execute("SELECT DISTINCT donVi FROM hoc_bong")
-//     const [rows4, fields4] = await pool.execute("SELECT DISTINCT hanDK FROM hoc_bong")
-//     return res.status(200).json({
-//         thongtin: rows,
-//         tk2: rows2,
-//         tk3: rows3,
-//         tk4: rows4
-//     })
-// }
-
-// let tthb = async (req, res) => {
-//     let { maHB } = req.body;
-//     console.log(maHB);
-//     try {
-//         const [rows, fields] = await pool.execute("SELECT * FROM hoc_bong WHERE maHB = ?", [maHB])
-//         if (rows.length > 0) {
-//             const info = rows[0];
-//             return res.status(200).json({ info });
-//         } else {
-//             return res.status(404).json({ message: "Không tìm thấy thông tin học bổng" });
-//         }
-//     } catch (error) {
-//         return res.status(500).json({ message: "Lỗi server" });
-//     }
-// }
-
-
-// let trangchusv = async (req, res) => {
-//     const currentDate = new Date().toISOString().slice(0, 10); // Lấy ngày hiện tại (định dạng YYYY-MM-DD)
-
-//     const [rows, fields] = await pool.execute("SELECT * FROM hoc_bong WHERE hanDK >= ? ORDER BY hanDK DESC", [currentDate])
-
-//     return res.status(200).json({
-//         thongtin: rows,
-//     })
-// }
-
-
-
-// let getMaXacNhan = async (req, res) => {
-//     let email = req.body.email
-//     // let testAccount = await nodemailer.createTestAccount();
-//     const generateVerificationCode = (length) => {
-//         // return Math.floor(1000 + Math.random() * 9000).toString();
-//         var result = '';
-//         var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-//         var charactersLength = characters.length;
-//         for (var i = 0; i < length; i++) {
-//             result += characters.charAt(Math.floor(Math.random() * charactersLength));
-//         }
-//         return result;
-//     };
-
-//     const verificationCode = generateVerificationCode(6);
-
-//     // console.log(verificationCode)
-
-//     const transporter = nodemailer.createTransport({
-//         host: "smtp.gmail.com",
-//         port: 587,
-//         secure: false,
-//         service: 'gmail',
-//         auth: {
-//             user: "ld7941682@gmail.com",
-//             pass: "ijippjqyfxuyqgxs",
-//         },
-//     });
-
-//     const [r1, f1] = await pool.execute("SELECT * FROM sinh_vien WHERE email = ?", [email])
-
-//     if (r1.length == 0) {
-//         console.log("em mail ko ton tai")
-//         return res.status(200).json({
-//             check: "0",
-//             msg: "Email không tồn tại"
-//         })
-//     }
-
-//     // const [r2, f2] = await pool.execute("UPDATE users set maxacnhan=? where email = ?", [verificationCode, email])
-//     const [r2, f2] = await pool.execute('SELECT password FROM sinh_vien WHERE email = ?', [email])
-
-//     const old_password = r2[0].password
-//     // console.log(old_password)
-//     await pool.execute("UPDATE sinh_vien SET password = ? WHERE email = ?", [verificationCode, email])
-//     const mailOptions = {
-//         from: 'ld7941682@gmail.com',
-//         to: email,
-//         subject: 'New Password',
-//         text: `Your new password is: ${verificationCode}`,
-//     };
-
-//     await transporter.sendMail(mailOptions, async function (error, info) {
-//         if (error) {
-//             console.log(error);
-//             await pool.execute("UPDATE sinh_vien SET password = ? WHERE email = ?", [
-//                 old_password,
-//                 email,
-//             ]);
-//             return res.status(200).json({ check: "0" });
-//         } else {
-//             console.log("Ok")
-//             return res.status(200).json({ check: "1" });
-//         }
-//     });
-// }
-// let hsungtuyen = async (req, res) => {
-//     try {
-//         // Kiểm tra xem trường maHB có trong req.body không
-//         if (!req.body.maHB) {
-//             return res.status(400).json({ message: "Thiếu thông tin mã học bổng" });
-//         }
-
-//         const maHB = req.body.maHB; // Giả sử trường mã học bổng là maHB
-//         console.log(req.body);
-//         const [rows, fields] = await pool.execute("SELECT id_sv, ten_file FROM ung_tuyen WHERE maHB = ?", [maHB]);
-//         if (rows.length > 0) {
-//             console.log(rows)
-//             return res.status(200).json({ sv: rows });
-//         } else {
-//             return res.status(404).json({ message: "Không tìm thấy thông tin học bổng" });
-//         }
-//     } catch (error) {
-//         console.error("Error occurred: ", error);
-//         return res.status(500).json({ message: "Internal Server Error" });
-//     }
-// }
-
-// let getfile = async (req, res) => {
-//     const fileId = req.params.id;
-
-//     try {
-//         const [rows, fields] = await pool.execute('SELECT ten_file FROM ung_tuyen WHERE id = ?', [fileId]);
-//         if (rows.length > 0) {
-//             const fileUrl = rows[0].ten_file; // Đường dẫn tới file trong cơ sở dữ liệu
-//             // Code để trả về file tại đây
-//             res.download(fileUrl); // Hoặc sử dụng res.sendFile(fileUrl);
-//         } else {
-//             res.status(404).json({ error: 'File not found' });
-//         }
-//     } catch (error) {
-//         console.error('Internal Server Error:', error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// };
-
+import autUser from '../middleware/autuser'
 
 let loginhv = async (req, res) => {
     let { email, password } = req.body;
@@ -340,34 +191,6 @@ let laydsgv = async (req, res) => {
         });
     }
 };
-
-let dangkytk = async (req, res) => {
-    let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password } = req.body;
-
-    const [existingRows, existingFields] = await pool.execute("SELECT * FROM hoc_vien WHERE email = ?", [email]);
-
-    if (existingRows.length > 0) {
-        return res.status(400).json({
-            message: "Email đã tồn tại",
-        });
-    }
-
-    try {
-        const [rows, fields] = await pool.execute(
-            "INSERT INTO hoc_vien (tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password]
-        );
-
-        return res.status(200).json({
-            check: "1",
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(200).json({
-            check: "0",
-        });
-    }
-}
 
 
 let updateGV = async (req, res) => {
@@ -696,10 +519,10 @@ let laydsLopHoc = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
-            const [sotrang, fields] = await pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, ngay_batdau , lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH", [maKH]);
+            const [sotrang, fields] = await pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau , lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH", [maKH]);
             console.log(sotrang)
             const [result2, fields1] = await Promise.all([
-                pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH LIMIT ? OFFSET ?", [
+                pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc,DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau , lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH LIMIT ? OFFSET ?", [
                     maKH,
                     pageSize,
                     offset,
@@ -730,14 +553,14 @@ let laydsLopHoc = async (req, res) => {
         const offset = (page - 1) * pageSize;
 
         const [sotrang, fields] = await pool.execute(
-            "SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH AND (UPPER(lop_hoc.tenLopHoc) LIKE UPPER(?) OR UPPER(giang_vien.tenGV) LIKE UPPER(?))",
+            "SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH AND (UPPER(lop_hoc.tenLopHoc) LIKE UPPER(?) OR UPPER(giang_vien.tenGV) LIKE UPPER(?))",
             [maKH, "%" + tukhoa + "%", "%" + tukhoa + "%"]
         );
         console.log(sotrang)
 
         const [result2, fields1] = await Promise.all([
             pool.execute(
-                "SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH AND (UPPER(lop_hoc.tenLopHoc) LIKE UPPER(?) OR UPPER(giang_vien.tenGV) LIKE UPPER(?))",
+                "SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH AND (UPPER(lop_hoc.tenLopHoc) LIKE UPPER(?) OR UPPER(giang_vien.tenGV) LIKE UPPER(?))",
                 [maKH, "%" + tukhoa + "%", "%" + tukhoa + "%"]
             ),
         ]);
@@ -785,10 +608,10 @@ let deleteLH = async (req, res) => {
 }
 
 let updateLH = async (req, res) => {
-    let { maLopHoc, tenLopHoc, maGV, diadiem, thoigian, ngay_batdau } = req.body;
+    let { maLopHoc, tenLopHoc, maGV, diadiem, ngay_batdau, thoigian } = req.body;
     console.log(req.body);
     try {
-        const [rows, fields] = await pool.execute("UPDATE lop_hoc, lich_hoc SET tenLopHoc = ?, maGV = ?,  diadiem=?, thoigian=?, ngay_batdau = STR_TO_DATE(?, '%Y-%m-%d') WHERE maLopHoc=? and lop_hoc.maLH = lich_hoc.maLH", [tenLopHoc, maGV, diadiem, thoigian, ngay_batdau, maLopHoc])
+        const [rows, fields] = await pool.execute("UPDATE lop_hoc, lich_hoc SET tenLopHoc = ?, maGV = ?,  diadiem=?, thoigian=?, ngay_batdau=STR_TO_DATE(?, '%Y-%m-%d') WHERE maLopHoc=? and lop_hoc.maLH = lich_hoc.maLH", [tenLopHoc, maGV, diadiem, thoigian, ngay_batdau, maLopHoc])
         return res.status(200).json({
             "message": "Cập nhật thành công",
         })
@@ -905,9 +728,117 @@ let laydsHocVien = async (req, res) => {
     }
 };
 
+let layTrangChu = async (req, res) => {
+
+    try {
+        const [dsKH, a] = await pool.execute("SELECT maKH, tenKH FROM khoa_hoc where khoa_hoc.trang_thai = 1");
+        for (let i = 0; i < dsKH.length; i++) {
+            const [dsLH, a] = await pool.execute("SELECT maLopHoc, tenLopHoc FROM lop_hoc where lop_hoc.trang_thai = 1 and lop_hoc.maKH=?", [dsKH[i]['maKH']]);
+            dsKH[i]['dsLH'] = dsLH
+        }
+        return res.status(200).json({
+            dsKH: dsKH
+        });
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let layTrangChuKhoaHoc = async (req, res) => {
+
+    try {
+        const [TCKH, a] = await pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi, so_gio,tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH");
+        return res.status(200).json({
+            TCKH: TCKH
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let layTrangChuGiangVien = async (req, res) => {
+    try {
+        const [TCGV, a] = await pool.execute("SELECT giang_vien.maGV, tenGV, tenHA, maHA FROM giang_vien, hinh_anh where giang_vien.trang_thai = 1 and giang_vien.maGV = hinh_anh.maGV");
+        return res.status(200).json({
+            TCGV: TCGV
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let dangkyTKNguoiDung = async (req, res) => {
+    let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password } = req.body;
+
+    const [existingRows, existingFields] = await pool.execute("SELECT * FROM hoc_vien WHERE email = ? ", [email]);
+    const [existingRows1, existingFields1] = await pool.execute("SELECT * FROM hoc_vien WHERE sdt = ? ", [sdt]);
+
+    if (existingRows.length > 0) {
+        return res.status(400).json({
+            message: "Email đã tồn tại",
+        });
+    }
+    if (existingRows1.length > 0) {
+        return res.status(400).json({
+            message: "Số điện thoại đã tồn tại",
+        });
+    }
+
+    try {
+        const [rows, fields] = await pool.execute(
+            "INSERT INTO hoc_vien (tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password]
+        );
+
+        return res.status(200).json({
+            message: "Đăng ký thành công"
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(200).json({
+            message: "Có lỗi xảy ra trong quá trình đăng ký",
+        });
+    }
+}
+
+let dangnhapnguoidung = async (req, res) => {
+    let { email, password } = req.body;
+    // Thực hiện truy vấn để kiểm tra thông tin đăng nhập
+    const [rows, fields] = await pool.execute("SELECT tenHV FROM hoc_vien WHERE email = ? and password = ?", [email, password]);
+
+    if (rows.length > 0) {
+        const tenHV = rows[0].tenHV;
+        // Tạo JWT token nếu thông tin đăng nhập chính xác
+        const token = jwt.sign({ email }, 'your-secret-key', { expiresIn: '1h' });
+
+        return res.status(200).json({
+            tenHV: tenHV,
+            token: token
+        });
+    } else {
+        return res.status(500).json({
+            error: "Thông tin đăng nhập không đúng",
+        });
+    }
+}
+
+
 
 module.exports = {
-    laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, dangkytk, deleteGV, updateGV, themHV, deleteHV, updateHV,
-    laydskh, deleteKH, updateKH, themKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien,
-    laydsHocVien
+    laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, updateGV, themHV, deleteHV, updateHV,
+    laydskh, deleteKH, updateKH, themKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien, laydsHocVien,
+    layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
+    dangnhapnguoidung, dangkyTKNguoiDung
 }

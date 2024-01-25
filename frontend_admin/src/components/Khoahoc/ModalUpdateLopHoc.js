@@ -160,10 +160,6 @@ const ModalUpdateLopHoc = ({ show, handleClose, selectedLH, onUpdate }) => {
         }
     }, [selectedLH]);
 
-
-
-
-
     const handleUpdate = async () => {
         if (!isValidDate(ngay_batdau)) {
             toast.error('Ngày không hợp lệ');

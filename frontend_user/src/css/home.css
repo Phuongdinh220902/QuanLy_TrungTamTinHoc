@@ -1,0 +1,325 @@
+.section-title .tieu-de-muc {
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    text-align: center;
+}
+
+.section-title p {
+    font-size: 16px;
+    font-family: "Open Sans", sans-serif;
+    line-height: 1.5;
+    padding-top: 5px;
+    text-align: center;
+}
+
+/* Tin tức */
+.tin-tuc .tin-chinh {
+    max-height: 420px;
+    width: 100%;
+}
+
+.tin-chinh img {
+    width: 100%;
+}
+
+.tin-tuc .tieu_de {
+    bottom: 0px;
+    /*transition: none;*/
+    margin: 0;
+    display: none;
+}
+
+.tin-tuc .tin-phu {
+    max-height: 205px;
+    width: 100%;
+}
+
+.tin-tuc .tin-chinh:hover,
+.tin-tuc .tin-phu:hover {
+    cursor: pointer;
+}
+
+.tin-tuc .tin-chinh:hover .tieu_de {
+    transform: none;
+}
+
+.tin-tuc .tieu_de_phu {
+    bottom: 0px;
+    margin: 0;
+    height: 0px;
+    padding: 0;
+    display: block;
+}
+
+.tin-tuc .tin-phu:hover .tieu_de_phu {
+    height: 50px;
+    padding: 5px;
+    bottom: 0px;
+}
+
+.tin-tuc .tin-chinh .overlay,
+.tin-tuc .tin-phu .overlay {
+    background: rgba(0, 129, 200, 0.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0px;
+    display: block;
+    transition: all 0.3s ease;
+    z-index: 3;
+}
+
+/*
+.tin-tuc .tin-chinh:hover .overlay, .tin-tuc .tin-phu:hover .overlay {
+    height: 100%;
+}
+    */
+/* End Tin tức*/
+
+/*Tin tức new*/
+.d-flex {
+    display: flex !important;
+}
+
+.flex-column {
+    flex-direction: column !important;
+}
+
+.bg-light {
+    background-color: #ffffff !important;
+}
+
+.pl-0,
+.px-0 {
+    padding-left: 0 !important
+}
+
+.pl-3,
+.px-3 {
+    padding-left: 1rem !important;
+}
+
+.pr-0,
+.px-0 {
+    padding-right: 0 !important
+}
+
+.pr-3,
+.px-3 {
+    padding-right: 1rem !important;
+}
+
+.pt-5,
+.py-5 {
+    padding-top: 5px !important;
+}
+
+.pb-5,
+.py-5 {
+    padding-bottom: 5px !important;
+}
+
+.m-0 {
+    margin: 0 !important;
+}
+
+.mb-2,
+.my-2 {
+    margin-bottom: 0.5rem !important;
+}
+
+.mb-3,
+.my-3 {
+    margin-bottom: 1rem !important;
+}
+
+.mt-2,
+.my-2 {
+    margin-top: 0.5rem !important;
+}
+
+.justify-content-center {
+    justify-content: center !important;
+}
+
+.tin-tuc {
+    font-family: "Open Sans", sans-serif;
+}
+
+.ngay-dang {
+    color: #6c757d;
+    font-size: 13px;
+    margin: 0;
+}
+
+.tin-tuc h4,
+.tin-tuc .h4 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 5px 0 10px;
+    line-height: 1.3;
+}
+
+.tin-tuc h6,
+.tin-tuc .h6 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 5px 0 8px;
+    line-height: 1.3;
+}
+
+.tin-tuc .mo-ta {
+    line-height: 1.5;
+    max-height: 215px;
+    overflow: hidden;
+}
+
+.tin-tuc .mo-ta-sub {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 10px 15px;
+    font-size: 13px;
+}
+
+.tin-tuc img {
+    border: 1px solid #eee;
+    object-fit: cover;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.tin-tuc-container {
+    padding-top: 20px;
+    padding-bottom: 30px;
+    background-color: #F9F9F6;
+    position: relative;
+    /* background-image: url("/template/frontend/images/news-background.jpg"); */
+    background-position: center;
+}
+
+.thong-bao-khai-giang {
+    padding: 30px;
+}
+
+.thong-bao-khai-giang:hover h2,
+.thong-bao-khai-giang:hover h2 {
+    color: #f78900 !important;
+}
+
+/*end Tin tức new*/
+/* Giảng viên */
+.giang-vien-container {
+    /* background-image: url("frontend_admin\src\images\giang-vien-bg.png"); */
+    width: 100%;
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+.giang-vien-items {
+    padding-top: 20px;
+}
+
+.giang-vien-items .giang-vien-col {
+    margin-bottom: 40px;
+}
+
+.giang-vien-items .giang-vien-col .giang-vien-item {
+    padding-left: 6px;
+    padding-right: 6px;
+    width: 100%;
+    text-align: center;
+}
+
+.giang-vien-items .giang-vien-col:first-child .giang-vien-item {
+    padding-left: 0;
+    padding-right: 6px;
+}
+
+.giang-vien-items .giang-vien-col:nth-child(4n) .giang-vien-item {
+    padding-left: 6px;
+    padding-right: 0;
+}
+
+.giang-vien-items .giang-vien-col .giang-vien-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: -86px;
+    z-index: 5;
+}
+
+.giang-vien-image img {
+    max-width: 100%;
+    border: 1px solid #eee;
+}
+
+.giang-vien-body {
+    width: 100%;
+    padding-top: 108px;
+    padding-bottom: 24px;
+    background: #FFFFFF;
+    border-radius: 6px;
+    box-shadow: 0px 1px 10px rgba(29, 34, 47, 0.1);
+    text-align: center;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+}
+
+.giang-vien-item:hover .giang-vien-body {
+    box-shadow: 0px 5px 40px rgba(29, 34, 47, 0.15);
+}
+
+.giang-vien-title a {
+    font-family: 'Roboto Slab', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #384158;
+    -webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -ms-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
+}
+
+.giang-vien-title a:hover {
+    color: #0082c8;
+}
+
+.giang-vien-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: #76777a;
+    margin-top: 6px;
+}
+
+.gv-image {
+    border-radius: 50%;
+    width: 180px;
+    height: 180px;
+}
+
+.gv-image.gv1 {
+    box-shadow: 0px 0px 16px #0082c8;
+    border: 2px solid #0082c8;
+}
+
+.gv-image.gv2 {
+    box-shadow: 0px 0px 16px #944868;
+    border: 2px solid #944868;
+}
+
+.gv-body {
+    padding: 15px 0;
+}
+
+/* End Giảng viên */
