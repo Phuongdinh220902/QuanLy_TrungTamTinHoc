@@ -1,35 +1,3 @@
-
-
-// function submitData() {
-//     const formData = {
-//         tenSV: document.getElementById('tenSV').value,
-//         mssv: document.getElementById('mssv').value,
-//         email: document.getElementById('emailsv').value,
-//         password: document.getElementById('passwordsv').value,
-//         nganh_hoc: document.getElementById('nganh_hoc').value,
-//     };
-
-//     axios.post('http://localhost:2209/api/v1/registersv', formData)
-//         .then(response => {
-//             console.log('Dữ liệu đã được gửi thành công!', response);
-//             // Xử lý thêm logic ở đây nếu cần
-//             alert("Đăng ký tài khoản thành công!")
-//             window.location.href = "homesv.html";
-//         })
-//         .catch(error => {
-//             console.error('Lỗi khi gửi dữ liệu:', error);
-//         });
-// }
-
-// const DangNhap = (props) => {
-//     const [showPassword, setShowPassword] = useState(false);
-
-//     const [formdata, setFormdata] = useState({
-//         email: "",
-//         password: "",
-//     });
-
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { dangnhapnguoidung } from "../../services/apiService";
@@ -37,6 +5,15 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { Link } from "react-router-dom";
+
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import {
+//     faEyeSlash,
+//     faEye
+// } from "@fortawesome/free-solid-svg-icons";
+
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
 const DangKyDangNhap = () => {
 
     const [tenHV, setTen] = useState('');
@@ -219,6 +196,13 @@ const DangKyDangNhap = () => {
         const container = document.getElementById('container');
         container.classList.remove('right-panel-active');
     };
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleTogglePassword = () => {
+        setShowPassword(!showPassword);
+    };
+
 
     const styles = `
         @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
@@ -479,6 +463,32 @@ const DangKyDangNhap = () => {
                 color: #3c97bf;
                 text-decoration: none;
             }
+
+
+            .input-container {
+                position: relative;
+                display: flex;
+                align-items: center; /* Căn giữa theo trục dọc */
+            }
+
+            .form-control {
+                padding-right: 35px; /* Để tạo chỗ cho icon */
+            }
+
+            .password-toggle {
+                position: absolute;
+                right: 5px;
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            .eye-icon {
+                color: black; /* Màu đen cho icon */
+                font-size:16px;
+            }
+
+
         `;
 
     return (
@@ -494,7 +504,9 @@ const DangKyDangNhap = () => {
                         <input type="email" placeholder="Email" className="form-control" value={email}
                             onChange={(event) => setEmail(event.target.value)} />
 
-                        <input type="text" placeholder="Password" className="form-control" value={password}
+                        <input type={showPassword ? "text" : "password"}
+                            placeholder="Password" className="form-control" value={password}
+
                             onChange={(event) => setPassword(event.target.value)} />
 
                         <input type="text" placeholder="Số điện thoại" className="form-control" value={sdt}
@@ -528,17 +540,21 @@ const DangKyDangNhap = () => {
                             required
                         />
                         <input
-                            // className="login-pass"
                             placeholder="Password"
                             name="password"
-                            // type={showPassword ? "text" : "password"}
+                            type={showPassword ? "text" : "password"}
                             value={formdata.password}
                             onChange={(e) => setFormdata({ ...formdata, password: e.target.value })}
                             required
                         />
+                        {/* Thêm icon để thay đổi trạng thái mật khẩu */}
+                        <button onClick={handleTogglePassword} type="button" className="password-toggle">
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+
                         {/* <input type="password" id="password" name="password" placeholder="Password" /> */}
                         <Link to="/quenmk">
-                            <a>Forgot your password?</a>
+                            Forgot your password?
                         </Link>
 
                         <button

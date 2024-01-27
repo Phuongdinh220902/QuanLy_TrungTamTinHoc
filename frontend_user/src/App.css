@@ -750,7 +750,9 @@ h2,
 .khoa-hoc-title {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: orange;
+  font-size: 33px;
+  font-weight: bold;
 }
 
 .khoa-hoc-details {
@@ -762,4 +764,100 @@ h2,
   color: #555;
   font-size: 24px;
   margin-bottom: 10px;
+}
+
+/* CSS cho nút */
+.button-dk {
+  background-color: #007bff;
+  /* Màu nền */
+  color: white;
+  /* Màu chữ */
+  border: none;
+  /* Không viền */
+  padding: 5px 10px;
+  /* Kích thước lề */
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* CSS cho hiệu ứng hover */
+.button-dk:hover {
+  background-color: #0056b3;
+  /* Màu nền khi di chuột qua */
+}
+
+
+/* người dùng */
+
+.user-info-container {
+  display: flex;
+  align-items: center;
+}
+
+.user-info-container img {
+  width: 40px;
+  /* Điều chỉnh kích thước của hình ảnh */
+  height: 40px;
+  border-radius: 50%;
+  /* Làm tròn góc cho hình ảnh */
+  margin-right: 10px;
+  /* Tạo khoảng cách giữa hình ảnh và tên */
+}
+
+
+/* Trang liên hệ */
+
+.contact-info {
+  font-family: Arial, sans-serif;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  /* Thay đổi màu nền thành màu trắng */
+  position: relative;
+  /* Tạo một ngữ cảnh tương đối cho phần tử con */
+}
+
+.contact-info h2 {
+  font-size: 33px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: orange;
+  margin-left: 80px;
+}
+
+.contact-info p {
+  margin-bottom: 10px;
+}
+
+.contact-person {
+  margin-top: 30px;
+}
+
+.contact-person h3 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.contact-person p {
+  margin-bottom: 5px;
+}
+
+.contact-info .contact-person:last-child {
+  margin-bottom: 0;
+}
+
+.contact-info img {
+  position: absolute;
+  /* Đặt vị trí tuyệt đối */
+  top: 150px;
+  /* Điều chỉnh vị trí từ trên xuống */
+  left: 700px;
+  /* Điều chỉnh vị trí từ phải qua */
+  width: 350px;
+  /* Đảm bảo kích thước ảnh */
+  height: 250px;
+  /* Đảm bảo kích thước ảnh */
 }

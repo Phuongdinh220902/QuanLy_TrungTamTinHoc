@@ -41,6 +41,7 @@ const initAPIRoute = (app) => {
     router.post('/dangkyTKNguoiDung', APIController.dangkyTKNguoiDung)
     router.get('/layKhoaHoc/:maKH', APIController.layKhoaHoc)
     router.get('/layLopHoc/:maKH', APIController.layLopHoc)
+
     var filename = ''
     const upload = multer({
         storage: multer.diskStorage({

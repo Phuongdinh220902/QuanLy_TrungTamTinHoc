@@ -52,9 +52,9 @@ const laydsHocVien = (maLopHoc, page, tukhoa) => {
 const dangnhapnguoidung = async (formdata) => {
     try {
         const response = await axios.post("/api/v1/dangnhapnguoidung", formdata);
-        const { check, token } = response.data;
+        const { token } = response.data;
 
-        if (check === "1" && token) {
+        if (response.status == 200 && token) {
             // Lưu token vào localStorage hoặc cookie để sử dụng sau này
             localStorage.setItem("token", token);
         }

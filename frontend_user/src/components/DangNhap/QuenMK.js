@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const KhoaHoc = () => {
+const QuenMK = () => {
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
 
@@ -27,34 +27,39 @@ const KhoaHoc = () => {
 
     const style = `
         #forgetform {
-            width: 300px; /* Điều chỉnh kích thước của form */
+            max-width: 400px; /* Điều chỉnh kích thước tối đa của form */
             margin: auto; /* Để căn giữa form */
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
+            display: flex; /* Sử dụng flexbox để căn giữa phần tử */
+            flex-direction: column; /* Hiển thị phần tử theo chiều dọc */
+            align-items: center; /* Căn giữa các phần tử theo trục ngang */
+            height: 280px;
         }
 
         input[type="text"] {
-            width: 100%;
+            width: calc(100% - 20px); /* Để input rộng hơn để không bị lệch ra ngoài */
             padding: 10px;
             margin-bottom: 15px;
+            margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            font-size: 16px; /* Kích thước font cho input */
         }
 
+
+
         button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
+            width: auto; /* Đặt chiều rộng của nút tự động theo nội dung */
+            padding: 10px 20px; /* Điều chỉnh khoảng cách bên trong nút */
+            background-color: #0F7771;
+            color: #FFFFFF;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px; /* Kích thước font cho button */
+            margin-top: 15px;
         }
 
         button:hover {
@@ -63,16 +68,28 @@ const KhoaHoc = () => {
 
         #error-container {
             margin-top: 10px;
+            font-size: 16px; /* Kích thước font cho error container */
         }
-
+        h2, h3 {
+            margin: 0 0 10px; 
+        }
+        h3{
+            color: black;
+            font-size: 16px;
+            padding: 14px;
+        }
+        h2{
+            font-size: 30px;
+        }
     `;
 
     return (
         <>
             <style>{style}</style>
             <div id="space"></div>
-            <form id="forgetform">
-                <label >Quên Mật Khẩu</label>
+            <form id="forgetform" style={{ 'marginTop': '200px' }}>
+                <h2>Quên mật khẩu?</h2>
+                <h3> Điền vào email gắn với tài khoản của bạn để nhận mật khẩu mới</h3>
                 <input
                     type="text"
                     id="username"
@@ -91,4 +108,4 @@ const KhoaHoc = () => {
     );
 };
 
-export default KhoaHoc;
+export default QuenMK;

@@ -1,76 +1,3 @@
-// const TrangChuGV = () => {
-//     return (
-//         <>
-//             <div className="giang-vien-container">
-//                 <div className="container">
-//                     <div style="overflow: visible;">
-//                         <div className="col lazy">
-//                             <div className="section-title" style="margin-bottom: 30px;">
-//                                 <h2 className="tieu-de-muc">
-//                                     <span>Đội ngũ</span>
-//                                     Giáo viên
-//                                 </h2>
-//                                 <p>Những chuyên gia giàu kinh nghiệm thực tế và chuyên nghiệp</p>
-//                             </div>
-//                         </div>
-//                     </div>
-//                     <div className="row giang-vien-items">
-//                         <div className='col-lg-3 col-md-6 col-sm-6 giang-vien-col lazy'>
-//                             <div className='giang-vien-item'>
-//                                 <div className='gv-image img-hover-zoom gv1'>
-//                                     <a href='/giao-vien~16'>
-//                                         <img src='/data/images/giao-vien/do-hoa/Dohoa-huynh-van-phuoc.jpg'
-//                                             alt='Huỳnh Văn Phước'>
-//                                     </a>
-//                                 </div>
-//                                 <div className='gv-body'>
-//                                     <div className='giang-vien-title'>
-//                                         <a href='/giao-vien~16'>Huỳnh Văn Phước</a>
-//                                     </div>
-//                                     <div className='giang-vien-subtitle'>Đồ hoạ Đa truyền thông</div>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className='col-lg-3 col-md-6 col-sm-6 giang-vien-col lazy'>
-//                             <div className='giang-vien-item'>
-//                                 <div className='gv-image img-hover-zoom gv1'>
-//                                     <a href='/giao-vien~70'>
-//                                         <img src='/data/images/giao-vien/lap-trinh-va-csdl/Tran-Hong-Vinh.png'
-//                                             alt='Trần Hồng Vinh'>
-//                                     </a>
-//                                 </div>
-//                                 <div className='gv-body'>
-//                                     <div className='giang-vien-title'>
-//                                         <a href='/giao-vien~70'>Trần Hồng Vinh</a>
-//                                     </div>
-//                                     <div className='giang-vien-subtitle'>Data Science & Machine Learning</div>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className='col-lg-3 col-md-6 col-sm-6 giang-vien-col lazy'>
-//                             <div className='giang-vien-item'>
-//                                 <div className='gv-image img-hover-zoom gv2'>
-//                                     <a href='/giao-vien~59'>
-//                                         <img src='/data/images/giao-vien/tin-hoc-van-phong/DTHP.png'
-//                                             alt='Đặng Thị Hồng Phấn'>
-//                                     </a>
-//                                 </div>
-//                                 <div className='gv-body'>
-//                                     <div className='giang-vien-title'>
-//                                         <a href='/giao-vien~59'>Đặng Thị Hồng Phấn</a>
-//                                     </div>
-//                                     <div className='giang-vien-subtitle'>Tin học văn phòng</div>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </>
-//     )
-// }
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logoImage1 from '../../images/lien-he-tu-van-ghi-danh.png';
@@ -183,8 +110,8 @@ const TrangChuGV = () => {
                                 <img src={logoImage2} alt=""
                                     className="img-responsive ban-do" />
                             </div>
-                            {/* <img src="../../images/ban-do.png" alt=""
-                                className="img-responsive ban-do-mobile" /> */}
+                            <img src={logoImage2} alt=""
+                                className="img-responsive ban-do-mobile" />
                         </a>
                     </div>
                 </div>

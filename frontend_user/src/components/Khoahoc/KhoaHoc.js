@@ -334,7 +334,7 @@ const KhoaHoc = ({ match }) => {
         <>
 
             <div className="khoa-hoc-container1">
-                <h2 className="khoa-hoc-title">Thông tin khoá học {khoaHoc.tenKH}</h2>
+                <h2 className="khoa-hoc-title">Thông Tin Khoá Học</h2>
                 <div className="khoa-hoc-details">
                     <h3></h3>
                     <p>Học phí: {formatCurrency(khoaHoc.hocphi)}đ</p>
@@ -353,6 +353,7 @@ const KhoaHoc = ({ match }) => {
                             <th>Giáo viên</th>
                             <th>Ngày bắt đầu</th>
                             <th>Địa điểm</th>
+                            <th> </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -364,6 +365,10 @@ const KhoaHoc = ({ match }) => {
                                 <td>{lop.tenGV}</td>
                                 <td>{lop.ngay_batdau}</td>
                                 <td>{lop.diadiem}</td>
+                                <td>
+                                    <button className="button-dk"> Đăng ký</button>
+                                </td>
+
                             </tr>
                         ))}
                     </tbody>

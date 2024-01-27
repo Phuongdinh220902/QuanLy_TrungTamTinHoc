@@ -14,6 +14,9 @@ import logoImage5 from '../../images/291-data-excel.png';
 import logoImage1 from '../../images/291-mos-word.png';
 import logoImage2 from '../../images/291-tin-hoc-van-phong.png';
 import logoImage3 from '../../images/291-ud-cntt-co-ban.png';
+import namImg from '../../images/nam.jpg';
+import nuImg from '../../images/nu.jpg';
+import { Link } from "react-router-dom";
 
 function MyCarousel() {
     const [index, setIndex] = useState(0);
@@ -85,9 +88,6 @@ const Header = () => {
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [showLogout, setShowLogout] = useState(false);
     const handleClose = () => setShow(false);
-    // const confirmLogout = () => {
-    //     navigate('/');
-    // };
 
     const confirmLogout = () => {
         localStorage.removeItem('user');
@@ -112,6 +112,8 @@ const Header = () => {
         setMenuOpen(false);
         setSelectedCourse(null);
     };
+
+
 
     const handleLogout = () => {
         localStorage.removeItem('user');
@@ -138,57 +140,25 @@ const Header = () => {
                     </div>
                     {/* <input type="text" placeholder="Tìm kiếm" className="noi-dung-tim" /> */}
                     {/* <span className="glyphicon glyphicon-search nut-tim" aria-hidden="true"></span> */}
-                    {/* <div className="user-info">
-                        {user && (
-                            <div
-                                onMouseOver={() => setShowLogout(true)}
-                                onMouseLeave={() => setShowLogout(false)}
-                            >
-                                Xin chào, {user.tenHV} 
-                                {showLogout && (
-                                    <Button variant="link" onClick={handleLogout}>Đăng xuất</Button>
-                                )}
-                            </div>
-                        )}
-                        {!user && (
-                            <>
-                                <Button variant="primary mx-2" onClick={DangNhap}>Đăng nhập</Button>
-                                <Button variant="secondary">Đăng ký</Button>
-                            </>
-                        )}
-                    </div> */}
-
                     <div className="user-info">
                         {user && (
-                            <div className="user-name">
-                                {user.tenHV}
-                            </div>
-                        )}
-                        {user && (
-                            <div className="logout-button">
-                                <Button variant="link" onClick={handleLogout}>Đăng xuất</Button>
+                            <div className="user-info-container">
+                                <img src={user.gioitinh === 1 ? namImg : nuImg} alt={user.gioitinh === 1 ? 'Nam' : 'Nữ'} />
+                                <div className="user-details">
+                                    <div className="user-name" style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                                        {user.tenHV}
+                                    </div>
+                                    <div className="logout-button">
+                                        <Button variant="link" onClick={handleLogout}>Đăng xuất</Button>
+                                    </div>
+                                </div>
                             </div>
                         )}
                         {!user && (
-                            <>
-                                <Button variant="primary mx-2" onClick={DangNhap}>Đăng nhập</Button>
-                                {/* <Button variant="secondary">Đăng ký</Button> */}
-                            </>
+                            <Button variant="primary mx-2" onClick={DangNhap}>Đăng nhập</Button>
                         )}
                     </div>
-                    {/* {user ? (
-                        <div className="user-info">
-                            Xin chào, {user.tenHV}
-                        </div>
-                    ) : (
-                        <>
-                            <Button variant="primary mx-2" onClick={DangNhap}>Đăng nhập</Button>
-                            <Button variant="secondary">Đăng ký</Button>
-                        </>
-                    )} */}
-                    {/* <Button variant="primary mx-2" onClick={DangNhap}>Đăng nhập</Button>
 
-                    <Button variant="secondary">Đăng ký</Button> */}
                 </div>
             </div>
             <Navbar expand="lg" className="header-menu">
@@ -199,9 +169,31 @@ const Header = () => {
                             <NavLink to='/' className='nav-link text-white' style={{ marginLeft: '30px' }}>
                                 <FontAwesomeIcon icon={faHouse} />
                             </NavLink>
-                            <NavLink to='/ctdt' className='nav-link text-white' style={{ marginLeft: '30px' }}>
-
+                            <NavLink className='nav-link text-white' style={{ marginLeft: '30px' }}>
                                 <div className="menu-wrapper">
+                                    <div
+                                        className="menu text-white"
+                                        onMouseOver={handleMouseOver}
+                                        onMouseLeave={handleMouseLeave}
+                                    >
+                                        Chương trình đào tạo
+                                        {isMenuOpen && (
+                                            <div className="submenu text-dark">
+                                                <ul>
+                                                    {dsKH.map((khoaHoc) => (
+                                                        <li key={khoaHoc.maKH} onMouseOver={(e) => handleShow(e, khoaHoc)}>
+                                                            <Link to={`/khoahoc/${khoaHoc.maKH}`} style={{ color: 'black' }}>{khoaHoc.tenKH}</Link>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+
+                                        )}
+                                    </div>
+                                </div>
+
+
+                                {/* <div className="menu-wrapper">
                                     <div
                                         className="menu text-white"
                                         onMouseOver={handleMouseOver}
@@ -227,7 +219,7 @@ const Header = () => {
                                             </div>
                                         )}
                                     </div>
-                                </div>
+                                </div> */}
                             </NavLink>
                             <NavLink to='/tintuc' className='nav-link text-white' style={{ marginLeft: '30px' }}>Tin tức</NavLink>
                             <NavLink to='/thanhtoan' className='nav-link text-white' style={{ marginLeft: '30px' }}>Hướng dẫn thanh toán</NavLink>

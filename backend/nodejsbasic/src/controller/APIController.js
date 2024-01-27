@@ -921,8 +921,6 @@ let getMaXacNhan = async (req, res) => {
     const pwdHash = await bcrypt.hash(verificationCode, 10);
 
 
-    // console.log(verificationCode)
-
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
@@ -974,12 +972,12 @@ let getMaXacNhan = async (req, res) => {
 let dangnhapnguoidung = async (req, res) => {
     let { email, password } = req.body;
     // Thực hiện truy vấn để lấy mật khẩu đã hash từ cơ sở dữ liệu
-    const [rows, fields] = await pool.execute("SELECT tenHV, password FROM hoc_vien WHERE email = ?", [email]);
-
+    const [rows, fields] = await pool.execute("SELECT tenHV, password, gioitinh FROM hoc_vien WHERE email = ?", [email]);
+    console.log(password)
     if (rows.length > 0) {
         const hashedPassword = rows[0].password;
         const tenHV = rows[0].tenHV;
-
+        const gioitinh = rows[0].gioitinh;
         // So sánh mật khẩu đã hash với mật khẩu người dùng nhập vào
         const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
@@ -989,6 +987,7 @@ let dangnhapnguoidung = async (req, res) => {
 
             return res.status(200).json({
                 tenHV: tenHV,
+                gioitinh: gioitinh,
                 token: token
             });
         } else {
@@ -997,6 +996,7 @@ let dangnhapnguoidung = async (req, res) => {
             });
         }
     } else {
+        console.log('a')
         return res.status(401).json({
             error: "Thông tin đăng nhập không đúng",
         });
@@ -1035,44 +1035,6 @@ let layLopHoc = async (req, res) => {
     }
 };
 
-
-// let themLopHoc = async (req, res) => {
-//     let { maKH, tenLopHoc, slHVToiDa, ngay_batdau, diadiem, maGV, thoigian, hanDK } = req.body;
-
-//     try {
-//         console.log(req.body); // Kiểm tra dữ liệu nhận được từ request
-
-//         // Thêm thông tin vào bảng NgayHoc
-//         await pool.execute("INSERT INTO lich_hoc(ngay_batdau, thoigian, diadiem)  VALUES (?, ?, ?) RETURNING maLH", [ngay_batdau, thoigian, diadiem]);
-//         const maLH = result.rows[0].maLH;
-//         // Lấy mã lịch học vừa thêm
-//         // const [ngayHocRow] = await pool.execute("SELECT LAST_INSERT_ID() AS maLH");
-//         console.log(maLH)
-//         // Thêm thông tin vào bảng LopHoc
-//         await pool.execute("INSERT INTO lop_hoc(maKH, tenLopHoc, slHVToiDa, slHVDaDK, maGV, maLH, hanDK) VALUES (?, ?, ?, 0, ?, ?, ?)",
-//             [maKH, tenLopHoc, slHVToiDa, maGV, maLH, hanDK]);
-
-//         res.status(200).json({
-//             'DT': {
-//                 'maKH': maKH,
-//                 'tenLopHoc': tenLopHoc,
-//                 'slHVToiDa': slHVToiDa,
-//                 'maGV': maGV,
-//                 'ngay_batdau': ngay_batdau,
-//                 'diadiem': diadiem,
-//                 'thoigian': thoigian,
-//                 'hanDK': hanDK,
-//             },
-//             'EC': 0,
-//             'EM': 'Tạo lớp học thành công'
-//         });
-//     } catch (error) {
-//         const [ngayHocRow] = await pool.execute("SELECT LAST_INSERT_ID() AS maLH");
-//         console.log("Lỗi khi thêm lớp học: ", error);
-//         await pool.execute("DELETE FROM lich_hoc WHERE maLH = ?", [ngayHocRow.maLH]);
-//         return res.status(500).json({ error: "Lỗi khi thêm lớp học" });
-//     }
-// };
 
 let themLopHoc = async (req, res) => {
     let { maKH, tenLopHoc, slHVToiDa, ngay_batdau, diadiem, maGV, thoigian, hanDK } = req.body;
