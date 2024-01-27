@@ -7,6 +7,7 @@ import "../../css/color-theme.css"
 import "../../css/home.css"
 import "../../css/home2.css"
 import axios from 'axios';
+import { Link } from "react-router-dom";
 
 const KhoaHoc = () => {
     const [courses, setCourses] = useState([]);
@@ -48,7 +49,7 @@ const KhoaHoc = () => {
                                         <div className="tranning-single-inner">
                                             <div className="border-overlay"></div>
                                             <div className="tranning-single-inner-image">
-                                                <a href={`/do-hoa-da-truyen-thong/${course.tenKH}_${course.maKH}`} className="heading-font" data-preview={`Xem nội dung khóa học ${course.tenKH}`}>
+                                                <Link to={`/khoahoc/${course.maKH}`} className="heading-font" data-preview={`Xem nội dung khóa học ${course.tenKH}`}>
                                                     <div className="tranning-single-inner-image-container">
                                                         <div className="tranning_lazy_image">
                                                             <img
@@ -61,12 +62,15 @@ const KhoaHoc = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                </a>
+                                                </Link>
                                             </div>
                                             <div className="tranning-single-inner-info">
                                                 <div className="tranning-single-title">
                                                     {/* <a href={`/do-hoa-da-truyen-thong/${course.tenKH}_${course.maKH}`}> */}
-                                                    <h5>{course.tenKH}</h5>
+                                                    <Link to={`/khoahoc/${course.maKH}`}>
+                                                        <h5>{course.tenKH}</h5>
+                                                    </Link>
+
                                                     {/* </a> */}
                                                 </div>
                                                 <div className="tranning-single-meta">

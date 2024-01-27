@@ -49,5 +49,9 @@ const laydsHocVien = (maLopHoc, page, tukhoa) => {
     return axios.get(`api/v1/laydsHocVien/${maLopHoc}/${page}/${tukhoa}`);
 };
 
+const deleteHVLopHoc = (maDSHV) => {
+    return axios.post(`api/v1/deleteHVLopHoc/${maDSHV}`);
+};
 
-export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH, laydsHocVien };
+
+export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH, laydsHocVien, deleteHVLopHoc };

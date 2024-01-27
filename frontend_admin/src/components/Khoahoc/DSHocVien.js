@@ -8,7 +8,7 @@ import {
     faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
 import {
-    laydsHocVien, deleteLH
+    laydsHocVien, deleteHVLopHoc
 } from "../../services/apiService";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -33,29 +33,29 @@ const DSHocVien = (props) => {
         fetchDSHocVien();
     }, [currentPage, tukhoa]);
 
-    const handleOpenModalUpdate = (lh) => {
-        try {
-            setselectedLH(lh);
-            setshowModalUpdateLopHoc(true);
-        }
-        catch (err) {
-            console.log(err)
-        }
+    // const handleOpenModalUpdate = (lh) => {
+    //     try {
+    //         setselectedLH(lh);
+    //         setshowModalUpdateLopHoc(true);
+    //     }
+    //     catch (err) {
+    //         console.log(err)
+    //     }
 
-    };
+    // };
 
     const handleDelete = async () => {
         try {
-            await deleteLH(selectID);
+            await deleteHVLopHoc(selectID);
             console.log(maLopHoc)
             setShowModal(false);
-            toast.success("Xoá lớp học thành công");
+            toast.success("Xoá học viên thành công");
 
             fetchDSHocVien();
-            console.log("Xoá lớp học thành công!");
+            console.log("Xoá học viên thành công!");
         } catch (error) {
-            toast.error("Lỗi khi xoá lớp học")
-            console.error("Lỗi khi xóa lớp học:", error);
+            toast.error("Lỗi khi xoá học viên")
+            console.error("Lỗi khi xóa học viên:", error);
         }
     };
 
@@ -149,10 +149,10 @@ const DSHocVien = (props) => {
                                                 <td className="">{item.tenHV}</td>
                                                 <td className="">{item.email}</td>
                                                 <td className="table-item">
-                                                    <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
+                                                    {/* <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
                                                         Cập nhật
-                                                    </button>
-                                                    <button className="btn btn-danger" onClick={() => { setselectID(item.maLopHoc); setShowModal(true) }}
+                                                    </button> */}
+                                                    <button className="btn btn-danger" onClick={() => { setselectID(item.maDSHV); setShowModal(true) }}
                                                     >Xoá</button>
 
                                                 </td>
@@ -220,7 +220,7 @@ const DSHocVien = (props) => {
                     <Modal.Title>Xác nhận xoá</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Bạn có chắc chắn muốn xoá lớp học này không?
+                    Bạn có chắc chắn muốn xoá học viên khỏi lớp này không?
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>

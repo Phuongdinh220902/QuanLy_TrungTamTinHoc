@@ -5,6 +5,59 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import logoImage from '../../images/logoctu.png';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Carousel } from 'react-bootstrap';
+import {
+    faHouse
+} from "@fortawesome/free-solid-svg-icons";
+import logoImage5 from '../../images/291-data-excel.png';
+import logoImage1 from '../../images/291-mos-word.png';
+import logoImage2 from '../../images/291-tin-hoc-van-phong.png';
+import logoImage3 from '../../images/291-ud-cntt-co-ban.png';
+
+function MyCarousel() {
+    const [index, setIndex] = useState(0);
+
+    const handleSelect = (selectedIndex) => {
+        setIndex(selectedIndex);
+    };
+
+    return (
+        <Carousel className="custom-carousel" interval={4000} controls={false} indicators onSelect={handleSelect}>
+            <Carousel.Item>
+                <img
+                    className="d-block w-100"
+                    src={logoImage5}
+                    alt=""
+                />
+            </Carousel.Item>
+
+            <Carousel.Item>
+                <img
+                    className="d-block w-100"
+                    src={logoImage1}
+                    alt=""
+                />
+            </Carousel.Item>
+
+            <Carousel.Item>
+                <img
+                    className="d-block w-100"
+                    src={logoImage2}
+                    alt=""
+                />
+            </Carousel.Item>
+
+            <Carousel.Item>
+                <img
+                    className="d-block w-100"
+                    src={logoImage3}
+                    alt=""
+                />
+            </Carousel.Item>
+        </Carousel>
+    );
+};
 
 const Header = () => {
     const [dsKH, setDsKH] = useState([]);
@@ -108,7 +161,7 @@ const Header = () => {
                     <div className="user-info">
                         {user && (
                             <div className="user-name">
-                                {user.tenHV} {/* Thay 'tenHV' bằng tên trường chứa tên của người dùng trong đối tượng user */}
+                                {user.tenHV}
                             </div>
                         )}
                         {user && (
@@ -119,7 +172,7 @@ const Header = () => {
                         {!user && (
                             <>
                                 <Button variant="primary mx-2" onClick={DangNhap}>Đăng nhập</Button>
-                                <Button variant="secondary">Đăng ký</Button>
+                                {/* <Button variant="secondary">Đăng ký</Button> */}
                             </>
                         )}
                     </div>
@@ -143,7 +196,11 @@ const Header = () => {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto" >
-                            <NavLink to='/tintuc' className='nav-link text-white' style={{ marginLeft: '30px' }}>
+                            <NavLink to='/' className='nav-link text-white' style={{ marginLeft: '30px' }}>
+                                <FontAwesomeIcon icon={faHouse} />
+                            </NavLink>
+                            <NavLink to='/ctdt' className='nav-link text-white' style={{ marginLeft: '30px' }}>
+
                                 <div className="menu-wrapper">
                                     <div
                                         className="menu text-white"
@@ -180,6 +237,8 @@ const Header = () => {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
+
+            <MyCarousel />
         </>
 
     );

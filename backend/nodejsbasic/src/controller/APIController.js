@@ -321,6 +321,7 @@ let laydskh = async (req, res) => {
             }
         }
         console.log(tukhoa)
+        console.log(sotrang)
         const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
         const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
 
@@ -661,10 +662,10 @@ let laydsHocVien = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
-            const [sotrang, fields] = await pool.execute("SELECT dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV", [maLopHoc]);
+            const [sotrang, fields] = await pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV", [maLopHoc]);
             console.log(sotrang)
             const [result2, fields1] = await Promise.all([
-                pool.execute("SELECT dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV LIMIT ? OFFSET ?", [
+                pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV LIMIT ? OFFSET ?", [
                     maLopHoc,
                     pageSize,
                     offset,
@@ -694,14 +695,14 @@ let laydsHocVien = async (req, res) => {
         const offset = (page - 1) * pageSize;
 
         const [sotrang, fields] = await pool.execute(
-            "SELECT dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
+            "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
             [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%"]
         );
         console.log(sotrang)
 
         const [result2, fields1] = await Promise.all([
             pool.execute(
-                "SELECT dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
+                "SELECT dshv.maDSHV,dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
                 [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%"]
             ),
         ]);
@@ -727,6 +728,24 @@ let laydsHocVien = async (req, res) => {
         });
     }
 };
+
+let deleteHVLopHoc = async (req, res) => {
+    console.log("ok");
+
+    let maDSHV = req.params.maDSHV;
+    console.log("Mã lớp học để xoá:", maDSHV);
+
+    try {
+        await pool.execute(
+            "update dshv set dshv.trang_thai = 0 where dshv.maDSHV = ?", [maDSHV]);
+
+        return res.status(200).json({
+            message: "Xóa thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+    }
+}
 
 let layTrangChu = async (req, res) => {
 
@@ -779,66 +798,325 @@ let layTrangChuGiangVien = async (req, res) => {
     }
 };
 
+// let dangkyTKNguoiDung = async (req, res) => {
+//     let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password } = req.body;
+
+//     const [existingRows, existingFields] = await pool.execute("SELECT * FROM hoc_vien WHERE email = ? ", [email]);
+//     const [existingRows1, existingFields1] = await pool.execute("SELECT * FROM hoc_vien WHERE sdt = ? ", [sdt]);
+
+//     if (existingRows.length > 0) {
+//         return res.status(400).json({
+//             message: "Email đã tồn tại",
+//         });
+//     }
+//     if (existingRows1.length > 0) {
+//         return res.status(400).json({
+//             message: "Số điện thoại đã tồn tại",
+//         });
+//     }
+
+//     try {
+//         const [rows, fields] = await pool.execute(
+//             "INSERT INTO hoc_vien (tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
+//             [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password]
+//         );
+
+//         return res.status(200).json({
+//             message: "Đăng ký thành công"
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         return res.status(200).json({
+//             message: "Có lỗi xảy ra trong quá trình đăng ký",
+//         });
+//     }
+// }
+
+// let dangkyTKNguoiDung = async (req, res) => {
+//     console.log("ok")
+//     let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password } = req.body;
+//     console.log(req.body);
+//     try {
+//         await pool.execute("insert into hoc_vien(tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password) values (?, ?, ?, ?, ?, ?, ?)",
+//             [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password]
+//         );
+
+//         return res.status(200).json({
+//             // 'DT': {
+//             //     'tenHV': tenHV,
+//             //     'email': email,
+//             //     'sdt': sdt,
+//             //     'ngaysinh': ngaysinh,
+//             //     'gioitinh': gioitinh,
+//             //     'noisinh': noisinh,
+//             //     'password': password,
+//             // },
+//             // 'EC': 0,
+//             // 'EM': 'Tạo thành công'
+//         });
+//     } catch (error) {
+//         console.log("Lỗi khi thêm học viên: ", error);
+//         return res.status(500).json({ error: "Lỗi khi thêm học viên" });
+//     }
+// };
+
+const bcrypt = require('bcrypt');
+
 let dangkyTKNguoiDung = async (req, res) => {
+    console.log("d v ao")
     let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password } = req.body;
 
     const [existingRows, existingFields] = await pool.execute("SELECT * FROM hoc_vien WHERE email = ? ", [email]);
     const [existingRows1, existingFields1] = await pool.execute("SELECT * FROM hoc_vien WHERE sdt = ? ", [sdt]);
 
     if (existingRows.length > 0) {
+        console.log("Email đã tồn tại")
         return res.status(400).json({
             message: "Email đã tồn tại",
         });
     }
     if (existingRows1.length > 0) {
+        console.log("Số điện thoại đã tồn tại")
         return res.status(400).json({
             message: "Số điện thoại đã tồn tại",
         });
     }
 
     try {
+        // Hash mật khẩu trước khi lưu vào cơ sở dữ liệu
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const [rows, fields] = await pool.execute(
             "INSERT INTO hoc_vien (tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password]
+            [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, hashedPassword]
         );
+        console.log("ok thanh cong")
 
         return res.status(200).json({
             message: "Đăng ký thành công"
         });
     } catch (error) {
         console.error(error);
-        return res.status(200).json({
+        return res.status(500).json({
             message: "Có lỗi xảy ra trong quá trình đăng ký",
         });
     }
 }
 
+let getMaXacNhan = async (req, res) => {
+    let email = req.body.email
+    // let testAccount = await nodemailer.createTestAccount();
+    const generateVerificationCode = (length) => {
+        // return Math.floor(1000 + Math.random() * 9000).toString();
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    };
+
+    const verificationCode = generateVerificationCode(6);
+    const pwdHash = await bcrypt.hash(verificationCode, 10);
+
+
+    // console.log(verificationCode)
+
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        service: 'gmail',
+        auth: {
+            user: "ld7941682@gmail.com",
+            pass: "ijippjqyfxuyqgxs",
+        },
+    });
+
+    const [r1, f1] = await pool.execute("SELECT * FROM hoc_vien WHERE email = ?", [email])
+    console.log(email)
+    if (r1.length == 0) {
+        console.log("email ko ton tai")
+        return res.status(404).json({
+            msg: "Email không tồn tại"
+        })
+    }
+
+    // const [r2, f2] = await pool.execute("UPDATE users set maxacnhan=? where email = ?", [verificationCode, email])
+    const [r2, f2] = await pool.execute('SELECT password FROM hoc_vien WHERE email = ?', [email])
+
+    const old_password = r2[0].password
+    // console.log(old_password)
+    await pool.execute("UPDATE hoc_vien SET password = ? WHERE email = ?", [pwdHash, email])
+    const mailOptions = {
+        from: 'ld7941682@gmail.com',
+        to: email,
+        subject: 'New Password',
+        text: `Your new password is: ${verificationCode}`,
+    };
+
+    await transporter.sendMail(mailOptions, async function (error, info) {
+        if (error) {
+            console.log(error);
+            await pool.execute("UPDATE hoc_vien SET password = ? WHERE email = ?", [
+                old_password,
+                email,
+            ]);
+            return res.status(404).json({ msg: "Gui mat khau that bai" });
+        } else {
+            console.log("Ok")
+            return res.status(200).json({ msg: "Thanh cong" });
+        }
+    });
+}
+
 let dangnhapnguoidung = async (req, res) => {
     let { email, password } = req.body;
-    // Thực hiện truy vấn để kiểm tra thông tin đăng nhập
-    const [rows, fields] = await pool.execute("SELECT tenHV FROM hoc_vien WHERE email = ? and password = ?", [email, password]);
+    // Thực hiện truy vấn để lấy mật khẩu đã hash từ cơ sở dữ liệu
+    const [rows, fields] = await pool.execute("SELECT tenHV, password FROM hoc_vien WHERE email = ?", [email]);
 
     if (rows.length > 0) {
+        const hashedPassword = rows[0].password;
         const tenHV = rows[0].tenHV;
-        // Tạo JWT token nếu thông tin đăng nhập chính xác
-        const token = jwt.sign({ email }, 'your-secret-key', { expiresIn: '1h' });
 
-        return res.status(200).json({
-            tenHV: tenHV,
-            token: token
-        });
+        // So sánh mật khẩu đã hash với mật khẩu người dùng nhập vào
+        const passwordMatch = await bcrypt.compare(password, hashedPassword);
+
+        if (passwordMatch) {
+            // Tạo JWT token nếu thông tin đăng nhập chính xác
+            const token = jwt.sign({ email }, 'your-secret-key', { expiresIn: '1h' });
+
+            return res.status(200).json({
+                tenHV: tenHV,
+                token: token
+            });
+        } else {
+            return res.status(401).json({
+                error: "Thông tin đăng nhập không đúng",
+            });
+        }
     } else {
-        return res.status(500).json({
+        return res.status(401).json({
             error: "Thông tin đăng nhập không đúng",
         });
     }
 }
 
+let layKhoaHoc = async (req, res) => {
+    const maKH = req.params.maKH;
+    try {
+        const [TCKH, a] = await pool.execute("SELECT * FROM khoa_hoc where khoa_hoc.maKH = ? and khoa_hoc.trang_thai = 1", [maKH]);
+        return res.status(200).json({
+            TCKH: TCKH,
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let layLopHoc = async (req, res) => {
+    const maKH = req.params.maKH;
+    console.log(maKH);
+    try {
+        const [LH, fields] = await pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau , lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH", [maKH]);
+        return res.status(200).json({
+            LH: LH,
+        })
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+
+// let themLopHoc = async (req, res) => {
+//     let { maKH, tenLopHoc, slHVToiDa, ngay_batdau, diadiem, maGV, thoigian, hanDK } = req.body;
+
+//     try {
+//         console.log(req.body); // Kiểm tra dữ liệu nhận được từ request
+
+//         // Thêm thông tin vào bảng NgayHoc
+//         await pool.execute("INSERT INTO lich_hoc(ngay_batdau, thoigian, diadiem)  VALUES (?, ?, ?) RETURNING maLH", [ngay_batdau, thoigian, diadiem]);
+//         const maLH = result.rows[0].maLH;
+//         // Lấy mã lịch học vừa thêm
+//         // const [ngayHocRow] = await pool.execute("SELECT LAST_INSERT_ID() AS maLH");
+//         console.log(maLH)
+//         // Thêm thông tin vào bảng LopHoc
+//         await pool.execute("INSERT INTO lop_hoc(maKH, tenLopHoc, slHVToiDa, slHVDaDK, maGV, maLH, hanDK) VALUES (?, ?, ?, 0, ?, ?, ?)",
+//             [maKH, tenLopHoc, slHVToiDa, maGV, maLH, hanDK]);
+
+//         res.status(200).json({
+//             'DT': {
+//                 'maKH': maKH,
+//                 'tenLopHoc': tenLopHoc,
+//                 'slHVToiDa': slHVToiDa,
+//                 'maGV': maGV,
+//                 'ngay_batdau': ngay_batdau,
+//                 'diadiem': diadiem,
+//                 'thoigian': thoigian,
+//                 'hanDK': hanDK,
+//             },
+//             'EC': 0,
+//             'EM': 'Tạo lớp học thành công'
+//         });
+//     } catch (error) {
+//         const [ngayHocRow] = await pool.execute("SELECT LAST_INSERT_ID() AS maLH");
+//         console.log("Lỗi khi thêm lớp học: ", error);
+//         await pool.execute("DELETE FROM lich_hoc WHERE maLH = ?", [ngayHocRow.maLH]);
+//         return res.status(500).json({ error: "Lỗi khi thêm lớp học" });
+//     }
+// };
+
+let themLopHoc = async (req, res) => {
+    let { maKH, tenLopHoc, slHVToiDa, ngay_batdau, diadiem, maGV, thoigian, hanDK } = req.body;
+
+    try {
+        console.log(req.body); // Kiểm tra dữ liệu nhận được từ request
+
+        // Thêm thông tin vào bảng NgayHoc
+        await pool.execute("INSERT INTO lich_hoc(ngay_batdau, thoigian, diadiem) VALUES (?, ?, ?)", [ngay_batdau, thoigian, diadiem]);
+        // Lấy mã lịch học vừa thêm
+        const [ngayHocRow] = await pool.execute("SELECT LAST_INSERT_ID() AS maLH");
+        const maLH = ngayHocRow[0].maLH;
+
+        console.log(maLH);
+
+        // Thêm thông tin vào bảng LopHoc
+        await pool.execute("INSERT INTO lop_hoc(maKH, tenLopHoc, slHVToiDa, maGV, maLH, hanDK) VALUES (?, ?, ?, ?, ?, ?)",
+            [maKH, tenLopHoc, slHVToiDa, maGV, maLH, hanDK]);
+
+        res.status(200).json({
+            'DT': {
+                'maKH': maKH,
+                'tenLopHoc': tenLopHoc,
+                'slHVToiDa': slHVToiDa,
+                'maGV': maGV,
+                'ngay_batdau': ngay_batdau,
+                'diadiem': diadiem,
+                'thoigian': thoigian,
+                'hanDK': hanDK,
+            },
+            'EC': 0,
+            'EM': 'Tạo lớp học thành công',
+        });
+    } catch (error) {
+        console.log("Lỗi khi thêm lớp học: ", error);
+        return res.status(500).json({ error: "Lỗi khi thêm lớp học" });
+    }
+};
 
 
 module.exports = {
-    laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, updateGV, themHV, deleteHV, updateHV,
-    laydskh, deleteKH, updateKH, themKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien, laydsHocVien,
+    laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, updateGV, themHV, deleteHV, updateHV, getMaXacNhan,
+    laydskh, deleteKH, updateKH, themKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien, laydsHocVien, deleteHVLopHoc, themLopHoc,
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
-    dangnhapnguoidung, dangkyTKNguoiDung
+    dangnhapnguoidung, dangkyTKNguoiDung,
+    layKhoaHoc, layLopHoc
 }

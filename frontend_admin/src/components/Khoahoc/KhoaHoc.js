@@ -94,7 +94,7 @@ const KhoaHoc = (props) => {
 
             if (res.status === 200) {
                 setListKhoaHoc(res.data.dataCD);
-                setListKhoaHoc(res.data.dataCD);
+                setTotalPages(res.data.totalPages);
             } else {
                 // Xử lý trường hợp lỗi
                 console.error("Lỗi khi gọi API:", res.statusText);

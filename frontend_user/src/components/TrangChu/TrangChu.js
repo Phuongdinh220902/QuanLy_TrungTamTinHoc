@@ -1,57 +1,53 @@
 import React, { useState } from 'react';
-import { Carousel } from 'react-bootstrap';
-import logoImage from '../../images/291-data-excel.png';
-import logoImage1 from '../../images/291-mos-word.png';
-import logoImage2 from '../../images/291-tin-hoc-van-phong.png';
-import logoImage3 from '../../images/291-ud-cntt-co-ban.png';
+
 import KhoaHoc from './TrangChuKhoaHoc'
 import DichVu from './TrangChuDichVu'
 import TrangChuGV from './TrangChuGiangVien'
 
 
-function MyCarousel() {
-    const [index, setIndex] = useState(0);
+// function MyCarousel() {
+//     const [index, setIndex] = useState(0);
 
-    const handleSelect = (selectedIndex) => {
-        setIndex(selectedIndex);
-    };
+//     const handleSelect = (selectedIndex) => {
+//         setIndex(selectedIndex);
+//     };
 
-    return (
-        <Carousel className="custom-carousel" interval={4000} controls={false} indicators onSelect={handleSelect}>
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={logoImage}
-                    alt=""
-                />
-            </Carousel.Item>
+//     return (
+//         <Carousel className="custom-carousel" interval={4000} controls={false} indicators onSelect={handleSelect}>
+//             <Carousel.Item>
+//                 <img
+//                     className="d-block w-100"
+//                     src={logoImage}
+//                     alt=""
+//                 />
+//             </Carousel.Item>
 
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={logoImage1}
-                    alt=""
-                />
-            </Carousel.Item>
+//             <Carousel.Item>
+//                 <img
+//                     className="d-block w-100"
+//                     src={logoImage1}
+//                     alt=""
+//                 />
+//             </Carousel.Item>
 
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={logoImage2}
-                    alt=""
-                />
-            </Carousel.Item>
+//             <Carousel.Item>
+//                 <img
+//                     className="d-block w-100"
+//                     src={logoImage2}
+//                     alt=""
+//                 />
+//             </Carousel.Item>
 
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={logoImage3}
-                    alt=""
-                />
-            </Carousel.Item>
-        </Carousel>
-    );
-};
+//             <Carousel.Item>
+//                 <img
+//                     className="d-block w-100"
+//                     src={logoImage3}
+//                     alt=""
+//                 />
+//             </Carousel.Item>
+//         </Carousel>
+//     );
+// };
 
 
 // function KhoaHoc() {
@@ -570,53 +566,12 @@ function MyCarousel() {
 const TrangChu = () => {
     return (
         <div>
-            <MyCarousel />
+            {/* <MyCarousel /> */}
             <KhoaHoc />
             <DichVu />
             <TrangChuGV />
         </div>
     );
-    // const [index, setIndex] = useState(0);
-
-    // const handleSelect = (selectedIndex) => {
-    //     setIndex(selectedIndex);
-    // };
-
-    // return (
-    //     <Carousel className="custom-carousel" interval={4000} controls={false} indicators onSelect={handleSelect}>
-    //         <Carousel.Item>
-    //             <img
-    //                 className="d-block w-100"
-    //                 src={logoImage}
-    //                 alt=""
-    //             />
-    //         </Carousel.Item>
-
-    //         <Carousel.Item>
-    //             <img
-    //                 className="d-block w-100"
-    //                 src={logoImage1}
-    //                 alt=""
-    //             />
-    //         </Carousel.Item>
-
-    //         <Carousel.Item>
-    //             <img
-    //                 className="d-block w-100"
-    //                 src={logoImage2}
-    //                 alt=""
-    //             />
-    //         </Carousel.Item>
-
-    //         <Carousel.Item>
-    //             <img
-    //                 className="d-block w-100"
-    //                 src={logoImage3}
-    //                 alt=""
-    //             />
-    //         </Carousel.Item>
-    //     </Carousel>
-    // );
 }
 
 export default TrangChu;

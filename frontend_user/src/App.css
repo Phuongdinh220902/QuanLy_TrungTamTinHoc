@@ -734,3 +734,32 @@ h2,
 .user-info:hover .logout-button {
   display: block;
 }
+
+.user-info .logout-button button {
+  text-decoration: none;
+
+}
+
+.khoa-hoc-container1 {
+  margin: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.khoa-hoc-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.khoa-hoc-details {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.khoa-hoc-details h3 {
+  color: #555;
+  font-size: 24px;
+  margin-bottom: 10px;
+}

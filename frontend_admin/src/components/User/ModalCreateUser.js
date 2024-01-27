@@ -12,6 +12,7 @@ const Them = ({ show, handleCloseModal, onUpdate }) => {
     const [noisinh, setNoisinh] = useState('');
     const [gioitinh, setGioitinh] = useState('Nữ');
 
+
     const [modalOpen, setModalOpen] = useState(false);
     const [showModalCreateUser, setShowModalCreateUser] = useState(false);
 
@@ -21,8 +22,9 @@ const Them = ({ show, handleCloseModal, onUpdate }) => {
         setEmail("");
         setSdt("");
         setNgaysinh("");
-        setGioitinh("Nam");
+        setGioitinh("Nữ");
         setNoisinh("");
+
         handleCloseModal();
     };
     const handleShow = () => {
@@ -117,14 +119,13 @@ const Them = ({ show, handleCloseModal, onUpdate }) => {
                 console.log(value);
             }
 
-
             let mdata = {
                 tenHV: normalizedTenHV,
                 email: email,
                 sdt: sdt,
                 ngaysinh: ngaysinh,
                 gioitinh: gioitinhValue,
-                noisinh: normalizedNoisinhHV
+                noisinh: normalizedNoisinhHV,
             }
 
             await axios.post('http://localhost:2209/api/v1/themHV', mdata, {
@@ -182,8 +183,9 @@ const Them = ({ show, handleCloseModal, onUpdate }) => {
                             <label className="form-label">Giới tính</label>
                             <select className="form-select"
                                 onChange={(event) => setGioitinh(event.target.value)}>
-                                <option value="Nam">Nam</option>
                                 <option value="Nữ">Nữ</option>
+                                <option value="Nam">Nam</option>
+
                             </select>
                         </div>
 

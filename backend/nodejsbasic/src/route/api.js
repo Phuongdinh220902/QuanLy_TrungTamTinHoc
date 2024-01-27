@@ -5,8 +5,9 @@ import path from 'path'
 import pool from '../configs/connectDB';
 const formidable = require('formidable');
 import { autUser } from '../middleware/autuser'
-
+const XLSX = require("xlsx");
 let router = express.Router();
+const { parse, format } = require("date-fns");
 
 const initAPIRoute = (app) => {
 
@@ -15,6 +16,7 @@ const initAPIRoute = (app) => {
     router.get('/laydsgv/:page/:tukhoa', APIController.laydsgv)
     router.post("/loginhv", APIController.loginhv)
     router.post("/loginadmin", autUser, APIController.loginadmin)
+    router.post('/getMaXacNhan', APIController.getMaXacNhan)
     router.post('/updateGV', APIController.updateGV)
     router.post("/deleteGV/:maGV", APIController.deleteGV)
     router.post('/themHV', APIController.themHV)
@@ -25,19 +27,20 @@ const initAPIRoute = (app) => {
     router.post('/updateKH', APIController.updateKH)
     router.post('/themKH', APIController.themKH)
     router.get('/laydsLopHoc/:maKH/:page/:tukhoa', APIController.laydsLopHoc)
+    router.post('/themLopHoc', APIController.themLopHoc)
     router.post("/deleteLH/:maLopHoc", APIController.deleteLH)
     router.post('/updateLH', APIController.updateLH)
+    router.post("/deleteHVLopHoc/:maDSHV", APIController.deleteHVLopHoc)
     router.get('/DSGiangVien', APIController.DSGiangVien)
     router.get('/laydsHocVien/:maLopHoc/:page/:tukhoa', APIController.laydsHocVien)
-
     router.get('/layTrangChu', APIController.layTrangChu)
     router.get('/layTrangChuKhoaHoc', APIController.layTrangChuKhoaHoc)
     router.get('/layTrangChuGiangVien', APIController.layTrangChuGiangVien)
 
     router.post("/dangnhapnguoidung", APIController.dangnhapnguoidung)
     router.post('/dangkyTKNguoiDung', APIController.dangkyTKNguoiDung)
-
-
+    router.get('/layKhoaHoc/:maKH', APIController.layKhoaHoc)
+    router.get('/layLopHoc/:maKH', APIController.layLopHoc)
     var filename = ''
     const upload = multer({
         storage: multer.diskStorage({
@@ -103,7 +106,28 @@ const initAPIRoute = (app) => {
     return app.use('/api/v1/', router)
 }
 
+
+// const storage = multer.memoryStorage();
 // const upload1 = multer({ storage: storage });
+
+// function ExcelDateToJSDate(serial) {
+//     var utc_days = Math.floor(serial - 25569);
+//     var utc_value = utc_days * 86400;
+//     var date_info = new Date(utc_value * 1000);
+
+//     var fractional_day = serial - Math.floor(serial) + 0.0000001;
+
+//     var total_seconds = Math.floor(86400 * fractional_day);
+
+//     var seconds = total_seconds % 60;
+
+//     total_seconds -= seconds;
+
+//     var hours = Math.floor(total_seconds / (60 * 60));
+//     var minutes = Math.floor(total_seconds / 60) % 60;
+
+//     return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
+// }
 
 // router.post(
 //     "/ThemHocVienExcel",
@@ -111,8 +135,6 @@ const initAPIRoute = (app) => {
 //     async (req, res) => {
 //         let { maLopHoc } = req.body;
 //         console.log(req.body);
-
-//         maLopHoc = parseInt(maLopHoc, 10);
 
 //         if (isNaN(maLopHoc)) {
 //             console.error("Invalid maLopHoc:", req.body.maLopHoc);
@@ -128,125 +150,97 @@ const initAPIRoute = (app) => {
 
 //             for (const row of data) {
 //                 const {
-//                     MSSV,
-//                     HoTen,
-//                     Email,
-//                     SoDienThoai,
-//                     GioiTinh: GioiTinhFromRow,
-//                     QueQuan,
-//                     DanToc,
-//                     TonGiao,
-//                     NgaySinh,
-//                     NgayVaoDoan,
-//                     ChucVu,
+//                     tenHV,
+//                     email,
+//                     sdt,
+//                     ngaysinh,
+//                     gioitinh,
+//                     hocphi,
+//                     noisinh,
 //                 } = row;
 
 //                 console.log(row);
 
-//                 const trimmedMSSV = String(MSSV).trim();
-//                 const trimmedHoTen = String(HoTen).trim();
-//                 const trimmedEmail = String(Email).trim();
-//                 const trimmedSoDienThoai = String(SoDienThoai).trim();
-//                 const trimmedGioiTinhFromRow = String(GioiTinhFromRow).trim();
-//                 const trimmedQueQuan = String(QueQuan).trim();
-//                 const trimmedDanToc = String(DanToc).trim();
-//                 const trimmedTonGiao = String(TonGiao).trim();
-//                 const trimmedChucVu = String(ChucVu).trim();
+//                 console.log(typeof ngaysinh)
+//                 console.log(ExcelDateToJSDate(ngaysinh))
 
-//                 const parsedNgaySinh = format(
-//                     parse(NgaySinh, "dd/MM/yyyy", new Date()),
-//                     "yyyy/MM/dd"
-//                 );
-//                 const parsedNgayVaoDoan = format(
-//                     parse(NgayVaoDoan, "dd/MM/yyyy", new Date()),
-//                     "yyyy/MM/dd"
-//                 );
+//                 const trimmedHoten = String(tenHV).trim();
+//                 const trimmedHocphi = String(hocphi).trim();
+//                 const trimmedEmail = String(email).trim();
+//                 const trimmedSdt = String(sdt).trim();
+//                 const trimmedGioiTinhFromRow = String(gioitinh).trim();
+//                 const trimmednoisinh = String(noisinh).trim();
 
-//                 console.log(row);
-//                 try {
-//                     let GioiTinh;
+//                 // const parsedNgaySinh = format(
+//                 //     parse(ngaysinh, "dd/MM/yyyy", new Date()),
+//                 //     "yyyy/MM/dd"
+//                 // );
 
-//                     if (trimmedGioiTinhFromRow === "Nữ") {
-//                         GioiTinh = 0;
-//                     } else if (trimmedGioiTinhFromRow === "Nam") {
-//                         GioiTinh = 1;
-//                     } else {
-//                         GioiTinh = 2;
-//                     }
+//                 // console.log(row);
 
-//                     const [dantoc, fieldsdantoc] = await pool.execute(
-//                         "SELECT * FROM dantoc WHERE dantoc.tendantoc like ?",
-//                         ["%" + trimmedDanToc + "%"]
-//                     );
+//                 // try {
+//                 //     let GioiTinh;
 
-//                     const [tongiao, fieldsTongiao] = await pool.execute(
-//                         "SELECT * FROM tongiao WHERE tongiao.tentongiao like ?",
-//                         ["%" + trimmedTonGiao + "%"]
-//                     );
+//                 //     if (trimmedGioiTinhFromRow === "Nữ") {
+//                 //         GioiTinh = 0;
+//                 //     } else if (trimmedGioiTinhFromRow === "Nam") {
+//                 //         GioiTinh = 1;
+//                 //     } 
 
-//                     const [chucvu, fieldsChucvu] = await pool.execute(
-//                         "SELECT * FROM chucvu WHERE chucvu.tencv like ?",
-//                         ["%" + trimmedChucVu + "%"]
-//                     );
+//                 //     const [existingRows1, existingFields1] = await pool.execute(
+//                 //         "SELECT * FROM hoc_vien WHERE hoc_vien.email = ?",
+//                 //         [trimmedEmail]
+//                 //     );
 
-//                     const [existingRows1, existingFields1] = await pool.execute(
-//                         "SELECT * FROM doanvien WHERE doanvien.MSSV = ?",
-//                         [trimmedMSSV]
-//                     );
+//                 //     if (existingRows1.length > 0) {
+//                 //         const [existedNamHoc, existingNamHocFields1] = await pool.execute(
+//                 //             "SELECT * FROM dshv WHERE dshv.maHV = ? and dshv.maLopHoc = ?",
+//                 //             [existingRows1[0].maHV, maLopHoc]
+//                 //         );
 
-//                     if (existingRows1.length > 0) {
-//                         const [existedNamHoc, existingNamHocFields1] = await pool.execute(
-//                             "SELECT * FROM chitietnamhoc WHERE chitietnamhoc.IDDoanVien = ? and chitietnamhoc.idnamhoc = ?",
-//                             [existingRows1[0].IDDoanVien, idnamhoc]
-//                         );
+//                 //         if (existedNamHoc.length > 0) {
+//                 //             console.log("da ton tai");
+//                 //             res.status(500).json({ message: "da ton tai" });
+//                 //             return;
+//                 //         } else {
+//                 //             await pool.execute(
+//                 //                 "INSERT INTO dshv ( maHV, maLopHoc) VALUES (?, ?)",
+//                 //                 [existingRows1[0].maHV, lop_hoc.maLopHoc, ]
+//                 //             );
+//                 //         }
+//                 //     } else {
+//                 //         const password = trimmedMSSV;
+//                 //         const saltRounds = 10;
+//                 //         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-//                         if (existedNamHoc.length > 0) {
-//                             console.log("Nam Hoc va MSSV da ton tai");
-//                             res.status(500).json({ message: "Nam Hoc va MSSV da ton tai" });
-//                             return;
-//                         } else {
-//                             await pool.execute(
-//                                 "INSERT INTO chitietnamhoc (IDDoanVien, IDChucVu, IDNamHoc) VALUES (?, ?, ?)",
-//                                 [existingRows1[0].IDDoanVien, chucvu[0].IDChucVu, idnamhoc]
-//                             );
-//                         }
-//                     } else {
-//                         const [resultDoanVien] = await pool.execute(
-//                             "INSERT INTO doanvien (maLopHoc, MSSV, HoTen, Email, SoDT, GioiTinh, QueQuan, IDDanToc, IDTonGiao, NgaySinh, NgayVaoDoan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-//                             [
-//                                 maLopHoc,
-//                                 trimmedMSSV,
-//                                 trimmedHoTen,
-//                                 trimmedEmail,
-//                                 trimmedSoDienThoai,
-//                                 GioiTinh,
-//                                 trimmedQueQuan,
-//                                 dantoc[0].IDDanToc,
-//                                 tongiao[0].IDTonGiao,
-//                                 parsedNgaySinh,
-//                                 parsedNgayVaoDoan,
-//                             ]
-//                         );
+//                 //         const [resultDoanVien] = await pool.execute(
+//                 //             "INSERT INTO hoc_vien (tenHV, email, sdt, ngaysinh, gioitinh, hocphi, noisinh) VALUES (?, ?, ?, ?, ?, ?, ?)",
+//                 //             [
+//                 //                 trimmedHoten,
+//                 //                 trimmedEmail,
+//                 //                 trimmedSdt,
+//                 //                 parsedNgaySinh,
+//                 //                 GioiTinh,
+//                 //                 trimmedHocphi ,                            
+//                 //                 trimmednoisinh,
+//                 //                 // hashedPassword,
+//                 //             ]
+//                 //         );
 
-//                         let IDDoanVien = resultDoanVien.insertId;
+//                 //         let IDDoanVien = resultDoanVien.insertId;
 
-//                         await pool.execute(
-//                             "INSERT INTO chitietnamhoc (IDDoanVien, IDChucVu, IDNamHoc) VALUES (?, ?, ?)",
-//                             [IDDoanVien, chucvu[0].IDChucVu, idnamhoc]
-//                         );
+//                 //         await pool.execute(
+//                 //             "INSERT INTO chitietnamhoc (IDDoanVien, IDChucVu, IDNamHoc) VALUES (?, ?, ?)",
+//                 //             [IDDoanVien, chucvu[0].IDChucVu, idnamhoc]
+//                 //         );
 
-//                         await pool.execute(
-//                             "INSERT INTO anh (TenAnh, IDDoanVien) VALUES (?, ?)",
-//                             ["logo.jpg", IDDoanVien]
-//                         );
-
-//                         console.log("them thanh cong");
-//                     }
-//                 } catch (error) {
-//                     console.error(error);
-//                     res.status(500).json({ message: "Có lỗi xảy ra" });
-//                     return;
-//                 }
+//                 //         console.log("them thanh cong");
+//                 //     }
+//                 // } catch (error) {
+//                 //     console.error(error);
+//                 //     res.status(500).json({ message: "Có lỗi xảy ra" });
+//                 //     return;
+//                 // }
 //             }
 
 //             res.status(200).json({ message: "Thêm nhiều đoàn viên thành công!" });

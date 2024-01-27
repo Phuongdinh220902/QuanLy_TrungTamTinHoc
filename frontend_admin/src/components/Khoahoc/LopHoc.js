@@ -16,7 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import ModalUpdateLopHoc from "./ModalUpdateLopHoc";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
-
+import ModalCreateLH from "./ModalCreateLopHoc";
 // function ThemKH() {
 //     const [show, setShow] = useState(false);
 //     const [tenKH, setTen] = useState('');
@@ -212,6 +212,14 @@ const LopHoc = (props) => {
         localStorage.setItem("tukhoa", tukhoa)
         await fetchDSLopHoc();
     };
+    const [showModalCreateLH, setShowModalCreateLH] = useState(false);
+
+    const handleShowModalCreateLH = () => {
+        setShowModalCreateLH(true);
+    };
+    const handleCloseModalLH = () => {
+        setShowModalCreateLH(false);
+    };
 
 
 
@@ -233,6 +241,9 @@ const LopHoc = (props) => {
                             </div>
                             <button className="formatButton" onClick={handleSearch}>
                                 <FontAwesomeIcon icon={faMagnifyingGlass} /> Tìm
+                            </button>
+                            <button className="formatButton addButton" onClick={handleShowModalCreateLH}>
+                                Thêm
                             </button>
 
                         </div>
@@ -331,6 +342,12 @@ const LopHoc = (props) => {
                 show={showModalUpdateLopHoc}
                 handleClose={() => setshowModalUpdateLopHoc(false)}
                 selectedLH={selectedLH}
+                onUpdate={fetchDSLopHoc}
+            />
+
+            <ModalCreateLH
+                show={showModalCreateLH}
+                handleCloseModalLH={handleCloseModalLH}
                 onUpdate={fetchDSLopHoc}
             />
 
