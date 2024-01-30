@@ -11,27 +11,26 @@ const { parse, format } = require("date-fns");
 
 const initAPIRoute = (app) => {
 
-    router.post('/createKhoaHoc', APIController.createKhoaHoc)
     router.get('/laydshv/:page/:tukhoa', APIController.laydshv)
     router.get('/laydsgv/:page/:tukhoa', APIController.laydsgv)
     router.post("/loginhv", APIController.loginhv)
     router.post("/loginadmin", autUser, APIController.loginadmin)
     router.post('/getMaXacNhan', APIController.getMaXacNhan)
-    router.post('/updateGV', APIController.updateGV)
     router.post("/deleteGV/:maGV", APIController.deleteGV)
     router.post('/themHV', APIController.themHV)
     router.post("/deleteHV/:maHV", APIController.deleteHV)
     router.post('/updateHV', APIController.updateHV)
     router.get('/laydskh/:page/:tukhoa', APIController.laydskh)
     router.post("/deleteKH/:maKH", APIController.deleteKH)
-    router.post('/updateKH', APIController.updateKH)
-    router.post('/themKH', APIController.themKH)
     router.get('/laydsLopHoc/:maKH/:page/:tukhoa', APIController.laydsLopHoc)
     router.post('/themLopHoc', APIController.themLopHoc)
     router.post("/deleteLH/:maLopHoc", APIController.deleteLH)
     router.post('/updateLH', APIController.updateLH)
     router.post("/deleteHVLopHoc/:maDSHV", APIController.deleteHVLopHoc)
     router.get('/DSGiangVien', APIController.DSGiangVien)
+    router.get('/layHinhAnhGioiThieu/:page', APIController.layHinhAnhGioiThieu)
+    router.post("/deleteHAQC/:maHinhAnhQC", APIController.deleteHAQC)
+    // USer
     router.get('/laydsHocVien/:maLopHoc/:page/:tukhoa', APIController.laydsHocVien)
     router.get('/layTrangChu', APIController.layTrangChu)
     router.get('/layTrangChuKhoaHoc', APIController.layTrangChuKhoaHoc)
@@ -45,7 +44,7 @@ const initAPIRoute = (app) => {
     var filename = ''
     const upload = multer({
         storage: multer.diskStorage({
-            destination: './src/public/giangvien',
+            destination: './src/public/images',
             filename: (req, file, cb) => {
                 // tạo tên file duy nhất
                 const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -81,6 +80,7 @@ const initAPIRoute = (app) => {
             const [newGiangVien] = await pool.execute("SELECT * FROM giang_vien WHERE email = ?", [email]);
 
             // Thêm ảnh vào bảng hinh_anh
+
             await pool.execute(
                 "INSERT INTO hinh_anh (tenHA, maGV) VALUES (?, ?)",
                 [filename, newGiangVien[0].maGV]
@@ -103,6 +103,182 @@ const initAPIRoute = (app) => {
         }
     });
 
+
+    router.post('/themKH', upload.single('file'), async (req, res) => {
+
+        let { tenKH, hocphi, mota, monhoc, so_gio } = req.body;
+        console.log(req.body);
+        try {
+            const [existingRows, existingFields] = await pool.execute("SELECT * FROM khoa_hoc WHERE tenKH = ?", [tenKH]);
+
+            if (existingRows.length > 0) {
+                return res.status(200).json({
+                    'DT': "",
+                    'EC': 1,
+                    'EM': 'Tên khoá học đã tồn tại'
+                });
+            }
+            // Thêm 
+            await pool.execute("insert into khoa_hoc(tenKH, hocphi, mota, monhoc, so_gio) values (?, ?, ?, ?, ?)",
+                [tenKH, hocphi, mota, monhoc, so_gio]
+            );
+
+            // Lấy khóa học vừa thêm
+            const [newKhoaHoc] = await pool.execute("SELECT * FROM khoa_hoc WHERE tenKH = ?", [tenKH]);
+
+            if (filename === undefined || filename === "" || filename === null) {
+                filename = "hinhanhmacdinh.jpg";
+            }
+
+            // Thêm ảnh vào bảng hinh_anh
+            await pool.execute(
+                "INSERT INTO hinhanh_khoahoc (tenHinhAnhKH, maKH) VALUES (?, ?)",
+                [filename, newKhoaHoc[0].maKH]
+            );
+            res.status(200).json({
+                'DT': {
+                    'tenKH': tenKH,
+                    'hocphi': hocphi,
+                    'mota': mota,
+                    'monhoc': monhoc,
+                    'so_gio': so_gio,
+                },
+                'EC': 0,
+                'EM': 'Tạo thành công'
+            });
+
+        } catch (error) {
+            console.log("Lỗi khi thêm khoá học: ", error);
+            return res.status(500).json({ error: "Lỗi khi thêm khoá học" });
+        }
+    });
+
+    router.post("/updateKH", upload.single("file"), async (req, res) => {
+        let { maKH, tenKH, hocphi, mota, monhoc, so_gio } = req.body;
+
+        console.log(req.body);
+        const { file } = req; // Lấy thông tin về file từ request
+        let filename = file ? file.filename : undefined;
+
+        try {
+            // Kiểm tra xem file có tồn tại không và có thay đổi không
+            // let filename = "";
+            if (file && file.filename) {
+                filename = file.filename;
+            }
+
+            // Cập nhật thông tin đoàn viên
+            await pool.execute("UPDATE khoa_hoc SET tenKH = ?, hocphi =?, mota = ?, monhoc = ?, so_gio = ? WHERE maKH=?", [tenKH, hocphi, mota, monhoc, so_gio, maKH])
+
+
+            if (file && file.filename) {
+                filename = file.filename;
+
+                // Cập nhật tên ảnh trong bảng 'anh'
+                await pool.execute("UPDATE hinhanh_khoahoc SET tenHinhAnhKH = ? WHERE maKH = ?", [
+                    filename,
+                    maKH,
+                ]);
+                console.log(filename)
+            }
+
+            return res.status(200).json({
+                message: "Cập nhật thành công!",
+            });
+        } catch (error) {
+            console.log("Không cập nhật được!", error);
+            return res.status(500).json({ error: "Không hiển thị được!" });
+        }
+    });
+
+    router.post("/updateGV", upload.single("file"), async (req, res) => {
+        let { maGV, tenGV, email, sdt, ngaysinh, gioitinh } = req.body;
+
+        console.log(req.body);
+        const { file } = req; // Lấy thông tin về file từ request
+        let filename = file ? file.filename : undefined;
+
+        try {
+            if (file && file.filename) {
+                filename = file.filename;
+            }
+
+            // Cập nhật thông tin đoàn viên
+            await pool.execute("UPDATE giang_vien SET tenGV = ?, email =?, sdt = ?, ngaysinh=STR_TO_DATE(?, '%Y-%m-%d'), gioitinh = ? WHERE maGV=?", [tenGV, email, sdt, ngaysinh, gioitinh, maGV])
+
+
+            if (file && file.filename) {
+                filename = file.filename;
+
+                // Cập nhật tên ảnh trong bảng 'anh'
+                await pool.execute("UPDATE hinh_anh SET tenHA = ? WHERE maGV = ?", [
+                    filename,
+                    maGV,
+                ]);
+                console.log(filename)
+            }
+
+            return res.status(200).json({
+                message: "Cập nhật thành công!",
+            });
+        } catch (error) {
+            console.log("Không cập nhật được!", error);
+            return res.status(500).json({ error: "Không hiển thị được!" });
+        }
+    });
+
+    router.post('/themHAQC', upload.single('file'), async (req, res) => {
+
+        let { tenHinhAnhQC } = req.body;
+        console.log(req.body);
+        try {
+            // Thêm ảnh vào bảng hinh_anh
+            await pool.execute(
+                "INSERT INTO anh_quangcao (tenHinhAnhQC) VALUES ( ?)",
+                [filename]
+            );
+            res.status(200).json({
+                'DT': {
+                    'tenHinhAnhQC': tenHinhAnhQC
+                },
+                'EC': 0,
+                'EM': 'Tạo thành công'
+            });
+
+        } catch (error) {
+            console.log("Lỗi khi thêm khoá học: ", error);
+            return res.status(500).json({ error: "Lỗi khi thêm khoá học" });
+        }
+    });
+
+    router.post("/updateHAQC", upload.single("file"), async (req, res) => {
+        let { maHinhAnhQC } = req.body;
+
+        console.log(req.body);
+        const { file } = req; // Lấy thông tin về file từ request
+        let filename = file ? file.filename : undefined;
+
+        try {
+
+            if (file && file.filename) {
+                filename = file.filename;
+
+                // Cập nhật tên ảnh trong bảng 'anh'
+                await pool.execute("UPDATE anh_quangcao SET tenHinhAnhQC = ? WHERE maHinhAnhQC = ?", [
+                    filename,
+                    maHinhAnhQC,
+                ]);
+                console.log(filename)
+            }
+
+            return res.status(200).json({
+                message: "Cập nhật thành công!",
+            });
+        } catch (error) {
+            console.log("Không cập nhật được!", error);
+            return res.status(500).json({ error: "Không hiển thị được!" });
+        }
+    });
 
     return app.use('/api/v1/', router)
 }

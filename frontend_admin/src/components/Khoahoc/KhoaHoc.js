@@ -184,6 +184,7 @@ const KhoaHoc = (props) => {
                                     <th className="table-item ">Học phí</th>
                                     <th className="table-item ">Môn học</th>
                                     <th className="table-item ">Số giờ</th>
+                                    <th className="table-item ">Ảnh</th>
                                     <th> </th>
                                 </tr>
                             </thead>
@@ -196,9 +197,19 @@ const KhoaHoc = (props) => {
                                                 <td className="table-item col-right">{index + 1}</td>
                                                 <td className="">{item.tenKH}</td>
                                                 {/* <td className="col-right">{item.hocphi ? item.hocphi : 0}</td> */}
-                                                <td className="col-right">{formatCurrency(item.hocphi ? item.hocphi : 0)}</td>
+                                                <td className="col-right">{formatCurrency(item.hocphi ? item.hocphi : 0)}đ</td>
                                                 <td className="">{item.monhoc}</td>
                                                 <td className="">{item.so_gio} giờ </td>
+                                                <td>
+                                                    <img
+                                                        className="anh"
+                                                        src={
+
+                                                            `http://localhost:2209/images/${item.tenHinhAnhKH}`
+                                                        }
+                                                        alt=""
+                                                    />
+                                                </td>
 
 
 

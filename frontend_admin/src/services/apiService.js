@@ -53,5 +53,11 @@ const deleteHVLopHoc = (maDSHV) => {
     return axios.post(`api/v1/deleteHVLopHoc/${maDSHV}`);
 };
 
+const layHinhAnhGioiThieu = (page) => {
+    return axios.get(`api/v1/layHinhAnhGioiThieu/${page}`);
+};
 
-export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH, laydsHocVien, deleteHVLopHoc };
+export {
+    laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH, laydsHocVien, deleteHVLopHoc,
+    layHinhAnhGioiThieu
+};

@@ -16,6 +16,7 @@ import DangNhap from './components/DangNhap/DangNhap';
 import KhoaHoc from './components/Khoahoc/KhoaHoc';
 import LopHoc from './components/Khoahoc/LopHoc';
 import DSHocVien from './components/Khoahoc/DSHocVien';
+import AnhGioiThieu from './components/AnhGioiThieu/AnhGioiThieu';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -31,6 +32,7 @@ root.render(
 
           <Route path="giangvien" element={<GiangVien />} />
           <Route path="khoahoc" element={<KhoaHoc />} />
+          <Route path="anhgioithieu" element={<AnhGioiThieu />} />
           <Route path="lophoc/:maKH" element={<LopHoc />} />
           <Route path="dshocvien/:maLopHoc" element={<DSHocVien />} />
 

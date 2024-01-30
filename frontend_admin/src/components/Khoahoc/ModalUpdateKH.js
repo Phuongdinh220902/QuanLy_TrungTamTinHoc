@@ -4,53 +4,59 @@ import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import { toast } from 'react-toastify';
 // import ToastProvider from "../ToastContainer";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faFileImport
+} from "@fortawesome/free-solid-svg-icons";
+import KhoaHoc from "./KhoaHoc";
 
 const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
+    const [maKH, setmaKH] = useState('');
     const [tenKH, setTen] = useState('');
     const [mota, setmota] = useState('');
     const [hocphi, sethocphi] = useState('');
     const [monhoc, setmonhoc] = useState('');
     const [so_gio, setso_gio] = useState('');
+    const [image, setImage] = useState('');
+    const [previewImage, setPreviewImage] = useState('');
     // Các biến khác nếu có
     console.log(selectedKH)
     useEffect(() => {
         if (selectedKH) {
+            setmaKH(selectedKH.maKH);
             setTen(selectedKH.tenKH);
             setmota(selectedKH.mota);
             sethocphi(selectedKH.hocphi);
             setmonhoc(selectedKH.monhoc);
             setso_gio(selectedKH.so_gio);
+            setImage(selectedKH.tenHinhAnhKH);
         }
     }, [selectedKH]);
+
+    const handleUpLoadImage = (event) => {
+        if (event.target && event.target.files && event.target.files[0]) {
+            setPreviewImage(URL.createObjectURL(event.target.files[0]));
+            setImage(event.target.files[0]);
+        }
+    };
 
     const handleUpdate = async () => {
         try {
             const formData = new FormData();
+            formData.append('maKH', maKH);
             formData.append('tenKH', tenKH);
             formData.append('mota', mota);
             formData.append('hocphi', hocphi);
             formData.append('monhoc', monhoc);
             formData.append('so_gio', so_gio);
+            if (image instanceof Blob) {
+                formData.append("file", image, image.name);
+            }
             // formData.append('so_gio', so_gio);
             for (const value of formData.values()) {
                 console.log(value);
             }
-
-            let mdata = {
-                maKH: selectedKH.maKH,
-                tenKH: tenKH,
-                mota: mota,
-                hocphi: hocphi,
-                monhoc: monhoc,
-                so_gio: so_gio,
-            }
-            console.log(mdata)
-            await axios.post('http://localhost:2209/api/v1/updateKH', mdata, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
+            let res = await axios.post('http://localhost:2209/api/v1/updateKH', formData);
 
             toast.success('Update người dùng thành công');
             onUpdate();
@@ -96,6 +102,26 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
                             <input type="text" className="form-control" value={so_gio}
                                 onChange={(event) => setso_gio(event.target.value)} />
                         </div>
+
+                        <div className="col-md-12">
+                            <label className="form-label label-upload" htmlFor="labelUpload">
+                                <FontAwesomeIcon icon={faFileImport} /> Thay đổi ảnh </label>
+                            <input type="file" id="labelUpload" hidden
+                                onChange={(event) => handleUpLoadImage(event)} />
+                        </div>
+
+                        <div className="col-md-12 img-preview">
+                            <img
+                                className="avatar_img"
+                                src={
+                                    previewImage ||
+                                    (selectedKH && selectedKH.tenHinhAnhKH
+                                        ? `http://localhost:2209/images/${selectedKH.tenHinhAnhKH}`
+                                        : '')
+                                }
+                                alt=""
+                            />
+                        </div>
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
@@ -107,8 +133,6 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-            {/* <ToastProvider /> */}
         </div>
 
     );

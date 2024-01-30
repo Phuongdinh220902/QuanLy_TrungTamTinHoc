@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import {
-    faUserPlus,
+    faFileImport,
 } from "@fortawesome/free-solid-svg-icons";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -14,9 +14,18 @@ const ThemKH = ({ show, handleCloseModalKH, onUpdate }) => {
     const [mota, setmota] = useState('');
     const [monhoc, setmonhoc] = useState('');
     const [so_gio, setso_gio] = useState('');
+    const [image, setImage] = useState('');
+    const [previewImage, setPreviewImage] = useState('');
 
     const [modalOpen, setModalOpen] = useState(false);
     const [showModalCreateKH, setShowModalCreateKH] = useState(false);
+
+    const handleUpLoadImage = (event) => {
+        if (event.target && event.target.files && event.target.files[0]) {
+            setPreviewImage(URL.createObjectURL(event.target.files[0]));
+            setImage(event.target.files[0]);
+        }
+    };
 
     const handleClose = () => {
         setShowModalCreateKH(false);
@@ -25,6 +34,8 @@ const ThemKH = ({ show, handleCloseModalKH, onUpdate }) => {
         setmota("");
         setmonhoc("");
         setso_gio("");
+        setImage("");
+        setPreviewImage("");
         handleCloseModalKH();
     }
 
@@ -59,26 +70,24 @@ const ThemKH = ({ show, handleCloseModalKH, onUpdate }) => {
             formData.append('mota', normalizedMoTa);
             formData.append('monhoc', monhoc);
             formData.append('so_gio', so_gio);
+            formData.append('file', image, image.name);
             for (const value of formData.values()) {
                 console.log(value);
             }
 
-            let mdata = {
-                tenKH: normalizedTenKH,
-                hocphi: hocphi,
-                mota: normalizedMoTa,
-                monhoc: monhoc,
-                so_gio: so_gio
+            let res = await axios.post('http://localhost:2209/api/v1/themKH', formData);
+            if (res.data && res.data.EC === 0) {
+                toast.success('Thêm thành công');
+                onUpdate();
+                handleClose();
             }
-            console.log(mdata)
-            await axios.post('http://localhost:2209/api/v1/themKH', mdata, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
-            onUpdate();
-            toast.success('Thêm thành công');
-            handleClose();
+
+            if (res.data && res.data.EC !== 0) {
+                toast.error(res.data.EM);
+            }
+            // onUpdate();
+            // toast.success('Thêm thành công');
+            // handleClose();
         }
         catch (error) {
             console.error("Lỗi khi gọi API thêm giảng viên:", error.message);
@@ -121,6 +130,20 @@ const ThemKH = ({ show, handleCloseModalKH, onUpdate }) => {
                             <label className="form-label">Số giờ</label>
                             <input type="text" className="form-control" value={so_gio}
                                 onChange={(event) => setso_gio(event.target.value)} />
+                        </div>
+                        <div className="col-md-12">
+                            <label className="form-label label-upload" htmlFor="labelUpload">
+                                <FontAwesomeIcon icon={faFileImport} /> Tải ảnh lên </label>
+                            <input type="file" id="labelUpload" hidden
+                                onChange={(event) => handleUpLoadImage(event)} />
+                        </div>
+
+                        <div className="col-md-12 img-preview">
+                            {previewImage ?
+                                <img src={previewImage} />
+                                :
+                                <span>preview</span>
+                            }
                         </div>
 
                     </form>

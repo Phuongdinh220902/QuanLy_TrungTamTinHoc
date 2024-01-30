@@ -56,7 +56,7 @@ const KhoaHoc = () => {
                                                                 className="ls-is-cached lazyloaded"
                                                                 src={
 
-                                                                    `http://localhost:2209/khoahoc/${course.tenHinhAnhKH}`
+                                                                    `http://localhost:2209/images/${course.tenHinhAnhKH}`
                                                                 }
                                                                 alt=""
                                                             />

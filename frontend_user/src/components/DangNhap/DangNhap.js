@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { dangnhapnguoidung } from "../../services/apiService";
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
 import { Link } from "react-router-dom";
 
@@ -579,6 +579,19 @@ const DangKyDangNhap = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                /> */}
             </div>
         </>
     );

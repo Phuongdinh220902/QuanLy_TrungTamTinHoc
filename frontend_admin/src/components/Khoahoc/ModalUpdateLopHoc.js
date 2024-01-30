@@ -156,7 +156,6 @@ const ModalUpdateLopHoc = ({ show, handleClose, selectedLH, onUpdate }) => {
             setThoiGian(selectedLH.thoigian);
             setDiaDiem(selectedLH.diadiem);
             setNgayBatDau(selectedLH.ngay_batdau);
-            console.log(typeof ngay_batdau)
         }
     }, [selectedLH]);
 

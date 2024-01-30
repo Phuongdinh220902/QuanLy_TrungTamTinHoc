@@ -4,7 +4,7 @@ console.log("Createing connection pool..");
 // create the connection to database
 const pool = mysql.createPool({
     host: 'localhost',
-    port: '3306',
+    port: '3307',
     user: 'root',
     database: 'qlttth'
 });

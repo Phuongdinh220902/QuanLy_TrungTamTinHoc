@@ -45,7 +45,7 @@ const TrangChuGV = () => {
                                 <div className="giang-vien-item">
                                     <div className={`gv-image img-hover-zoom gv${giaoVien.maHA}`}>
                                         <a href={`/giao-vien~${giaoVien.maGV}`}>
-                                            <img src={`http://localhost:2209/giangvien/${giaoVien.tenHA}`}
+                                            <img src={`http://localhost:2209/images/${giaoVien.tenHA}`}
                                                 alt={giaoVien.tenGV} />
                                         </a>
                                     </div>
@@ -72,7 +72,7 @@ const TrangChuGV = () => {
                         <div className="noi-dung">
                             <FontAwesomeIcon icon={faLocationDot} />&nbsp;
                             Khu II, Đ.3 Tháng 2, Ninh Kiều, Cần Thơ<br />
-                            Điện thoại: 38351056 - Fax: 38324466<br />
+                            Điện thoại: 0999999999 - Fax: 38324466<br />
                             Giờ làm việc: từ 07h30 - 17h00
                             <ul>
                                 <li>

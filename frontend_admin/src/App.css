@@ -367,3 +367,33 @@ code {
   font-size: 20px;
   /* Điều chỉnh kích thước của tiêu đề "Admin" */
 }
+
+.anh {
+  width: 60px;
+  /* Điều chỉnh kích thước của ảnh */
+  height: auto;
+  /* Giữ tỷ lệ khung hình */
+}
+
+
+.anhquangcao {
+  width: 360px;
+  /* Điều chỉnh kích thước của ảnh */
+  height: 130px;
+  /* Giữ tỷ lệ khung hình */
+}
+
+.table-item-stt {
+  width: 5%;
+  /* Điều chỉnh kích thước cột STT */
+}
+
+.table-item-image {
+  width: 60%;
+  /* Điều chỉnh kích thước cột ảnh */
+}
+
+.table-item-action {
+  width: 35%;
+  /* Điều chỉnh kích thước cột hành động */
+}

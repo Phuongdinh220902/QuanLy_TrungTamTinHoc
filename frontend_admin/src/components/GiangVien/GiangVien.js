@@ -18,154 +18,6 @@ import ModalUpdateGV from "./ModalUpdate";
 import ModalDelete from "./ModalDelete";
 import ModalCreateGV from "./ModalCreateGV";
 
-// function Them() {
-//     const [show, setShow] = useState(false);
-//     const [tenGV, setTen] = useState('');
-//     const [email, setEmail] = useState('');
-//     const [sdt, setSdt] = useState('');
-//     const [ngaysinh, setNgaysinh] = useState('');
-
-//     const [gioitinh, setGioitinh] = useState('Nữ');
-//     const [image, setImage] = useState('');
-//     const [previewImage, setPreviewImage] = useState('');
-
-//     const handleClose = () => {
-//         setShow(false)
-//         setTen("");
-//         setEmail("");
-//         setSdt("");
-//         setNgaysinh("");
-//         setGioitinh("Nam");
-//         setImage("");
-//         setPreviewImage("");
-//     }
-//     const handleShow = () => setShow(true);
-
-//     const handleUpLoadImage = (event) => {
-//         if (event.target && event.target.files && event.target.files[0]) {
-//             setPreviewImage(URL.createObjectURL(event.target.files[0]));
-//             setImage(event.target.files[0]);
-//         }
-//     };
-
-//     const validateEmail = (email) => {
-//         return String(email)
-//             .toLowerCase()
-//             .match(
-//                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-//             );
-//     };
-//     const validatePhoneNumber = (sdt) => {
-//         return String(sdt).match(/^0[0-9]{9}$/);
-//     };
-
-//     const handleSave = async () => {
-//         const isValidEmail = validateEmail(email);
-//         const isValidsdt = validatePhoneNumber(sdt);
-
-//         if (!isValidEmail) {
-//             toast.error('Email không hợp lệ');
-//             return;
-//         }
-//         if (!isValidsdt) {
-//             toast.error('Số điện thoại không hợp lệ');
-//             return;
-//         }
-//         const formData = new FormData();
-//         formData.append('tenGV', tenGV);
-//         formData.append('email', email);
-//         formData.append('sdt', sdt);
-//         formData.append('ngaysinh', ngaysinh);
-//         // Ánh xạ giới tính từ frontend sang backend
-//         const gioitinhValue = gioitinh === 'Nam' ? 1 : 0;
-//         formData.append('gioitinh', gioitinhValue);
-
-//         // formData.append('file', image);
-//         formData.append('file', image, image.name);
-//         let res = await axios.post('http://localhost:2209/api/v1/themgv', formData);
-//         console.log("check", res.data)
-//         if (res.data && res.data.EC === 0) {
-//             toast.success(res.data.EM);
-//             handleClose();
-//         }
-
-//         if (res.data && res.data.EC !== 0) {
-//             toast.error(res.data.EM);
-//         }
-//     }
-
-//     return (
-//         <>
-//             <Button variant="primary" onClick={handleShow} className="btn-lg bt-create">
-//                 <FontAwesomeIcon icon={faUserPlus} /> Thêm
-//             </Button>
-
-//             <Modal show={show} onHide={handleClose}
-//                 size="xl"
-//                 backdrop='static'
-//                 className="modal-add">
-//                 <Modal.Header closeButton>
-//                     <Modal.Title>Thêm mới giảng viên</Modal.Title>
-//                 </Modal.Header>
-//                 <Modal.Body>
-//                     <form className="row g-3">
-//                         <div className="col-12">
-//                             <label className="form-label">Tên Giảng Viên</label>
-//                             <input type="text" className="form-control" value={tenGV}
-//                                 onChange={(event) => setTen(event.target.value)} />
-//                         </div>
-//                         <div className="col-12">
-//                             <label className="form-label">Email</label>
-//                             <input type="email" className="form-control" value={email}
-//                                 onChange={(event) => setEmail(event.target.value)} />
-//                         </div>
-//                         <div className="col-12">
-//                             <label className="form-label">Số điện thoại</label>
-//                             <input type="text" className="form-control" value={sdt}
-//                                 onChange={(event) => setSdt(event.target.value)} />
-//                         </div>
-//                         <div className="col-12">
-//                             <label className="form-label">Ngày sinh</label>
-//                             <input type="date" className="form-control" value={ngaysinh}
-//                                 onChange={(event) => setNgaysinh(event.target.value)} />
-//                         </div>
-//                         <div className="col-md-4">
-//                             <label className="form-label">Giới Tính</label>
-//                             <select className="form-select"
-//                                 onChange={(event) => setGioitinh(event.target.value)}>
-//                                 <option value="Nam">Nam</option>
-//                                 <option value="Nữ">Nữ</option>
-//                             </select>
-//                         </div>
-
-//                         <div className="col-md-12">
-//                             <label className="form-label label-upload" htmlFor="labelUpload">
-//                                 <FontAwesomeIcon icon={faFileImport} /> Tải ảnh lên </label>
-//                             <input type="file" id="labelUpload" hidden
-//                                 onChange={(event) => handleUpLoadImage(event)} />
-//                         </div>
-
-//                         <div className="col-md-12 img-preview">
-//                             {previewImage ?
-//                                 <img src={previewImage} />
-//                                 :
-//                                 <span>preview</span>
-//                             }
-//                         </div>
-//                     </form>
-//                 </Modal.Body>
-//                 <Modal.Footer>
-//                     <Button variant="secondary" onClick={handleClose}>
-//                         Đóng
-//                     </Button>
-//                     <Button variant="primary" onClick={() => handleSave()}>
-//                         Lưu
-//                     </Button>
-//                 </Modal.Footer>
-//             </Modal>
-//         </>
-//     );
-// }
 
 
 const GiangVien = (props) => {
@@ -330,6 +182,7 @@ const GiangVien = (props) => {
                                     <th className="table-item">Giới tính</th>
                                     <th className="table-item">Email</th>
                                     <th className="table-item">Số điện thoại</th>
+                                    <th className="table-item">Ảnh</th>
                                     <th className="table-item"> </th>
                                 </tr>
                             </thead>
@@ -342,7 +195,7 @@ const GiangVien = (props) => {
                                                 <td className="col-center">{index + 1}</td>
                                                 <td className="">{item.tenGV}</td>
                                                 <td className=" col-center">
-                                                    {format(new Date(item.ngaysinh), "dd/MM/yyyy")}
+                                                    {item.ngaysinh}
                                                 </td>
                                                 <td className="">
                                                     {item.gioitinh === 0
@@ -353,7 +206,16 @@ const GiangVien = (props) => {
                                                 </td>
                                                 <td className="">{item.email}</td>
                                                 <td className="">{item.sdt}</td>
+                                                <td className="col-center">
+                                                    <img
+                                                        className="anh"
+                                                        src={
 
+                                                            `http://localhost:2209/images/${item.tenHA}`
+                                                        }
+                                                        alt=""
+                                                    />
+                                                </td>
                                                 <td className="table-item">
                                                     <button className="btn btn-warning mx-2"
                                                         onClick={() => handleOpenModalUpdate(item)}>
