@@ -44,7 +44,7 @@ const TrangChuGV = () => {
                             <div key={giaoVien.maGV} className="col-lg-3 col-md-6 col-sm-6 giang-vien-col">
                                 <div className="giang-vien-item">
                                     <div className={`gv-image img-hover-zoom gv${giaoVien.maHA}`}>
-                                        <a href={`/giao-vien~${giaoVien.maGV}`}>
+                                        <a href={`/giangvien/${giaoVien.maGV}`}>
                                             <img src={`http://localhost:2209/images/${giaoVien.tenHA}`}
                                                 alt={giaoVien.tenGV} />
                                         </a>

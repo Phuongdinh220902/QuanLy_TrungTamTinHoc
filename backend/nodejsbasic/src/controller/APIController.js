@@ -1021,6 +1021,22 @@ let layKhoaHoc = async (req, res) => {
     }
 };
 
+let layGiangVien = async (req, res) => {
+    const maGV = req.params.maGV;
+    try {
+        const [TCGV, a] = await pool.execute("SELECT giang_vien.maGV, tenGV, gioithieu, kinhnghiem, mota, tenHA, maHA FROM giang_vien, hinh_anh where giang_vien.maGV = ? and giang_vien.trang_thai = 1 and giang_vien.maGV = hinh_anh.maGV ", [maGV]);
+        return res.status(200).json({
+            TCGV: TCGV,
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
 let layLopHoc = async (req, res) => {
     const maKH = req.params.maKH;
     console.log(maKH);
@@ -1130,11 +1146,26 @@ let deleteHAQC = async (req, res) => {
     }
 }
 
+let layHinhAnhTrangChu = async (req, res) => {
+    try {
+        const [HA, a] = await pool.execute("SELECT tenHinhAnhQC FROM anh_quangcao where anh_quangcao.trang_thai = 1");
+        return res.status(200).json({
+            HA: HA,
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
 
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
     laydskh, deleteKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien, laydsHocVien, deleteHVLopHoc, themLopHoc,
-    layHinhAnhGioiThieu, deleteHAQC,
+    layHinhAnhGioiThieu, deleteHAQC, layHinhAnhTrangChu, layGiangVien,
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung,
     layKhoaHoc, layLopHoc

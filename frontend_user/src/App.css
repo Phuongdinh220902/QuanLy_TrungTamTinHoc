@@ -851,13 +851,9 @@ h2,
 
 .contact-info img {
   position: absolute;
-  /* Đặt vị trí tuyệt đối */
   top: 150px;
-  /* Điều chỉnh vị trí từ trên xuống */
   left: 700px;
-  /* Điều chỉnh vị trí từ phải qua */
   width: 350px;
-  /* Đảm bảo kích thước ảnh */
   height: 250px;
-  /* Đảm bảo kích thước ảnh */
+
 }

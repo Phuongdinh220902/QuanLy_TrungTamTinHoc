@@ -35,11 +35,13 @@ const initAPIRoute = (app) => {
     router.get('/layTrangChu', APIController.layTrangChu)
     router.get('/layTrangChuKhoaHoc', APIController.layTrangChuKhoaHoc)
     router.get('/layTrangChuGiangVien', APIController.layTrangChuGiangVien)
+    router.get('/layHinhAnhTrangChu', APIController.layHinhAnhTrangChu)
 
     router.post("/dangnhapnguoidung", APIController.dangnhapnguoidung)
     router.post('/dangkyTKNguoiDung', APIController.dangkyTKNguoiDung)
     router.get('/layKhoaHoc/:maKH', APIController.layKhoaHoc)
     router.get('/layLopHoc/:maKH', APIController.layLopHoc)
+    router.get('/layGiangVien/:maGV', APIController.layGiangVien)
 
     var filename = ''
     const upload = multer({

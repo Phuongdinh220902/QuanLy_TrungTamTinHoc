@@ -672,9 +672,11 @@ ol {
 
 .khung-giao-vien-chon img {
 	border: 1px solid #ddd;
-	margin-right: 10px;
+	margin-right: 30px;
 	margin-bottom: 0px;
 	float: left;
+	width: 250px;
+	height: 250px;
 }
 
 .khung-giao-vien {
@@ -699,7 +701,7 @@ ol {
 	background-color: #FD6504;
 	padding: 5px 8px 5px 8px;
 	color: #FFF;
-	margin-left: 240px;
+	margin-left: 275px;
 	margin-right: 5px
 }
 

@@ -10,61 +10,34 @@ import { Carousel } from 'react-bootstrap';
 import {
     faHouse
 } from "@fortawesome/free-solid-svg-icons";
-import logoImage5 from '../../images/291-data-excel.png';
-import logoImage1 from '../../images/291-mos-word.png';
-import logoImage2 from '../../images/291-tin-hoc-van-phong.png';
-import logoImage3 from '../../images/291-ud-cntt-co-ban.png';
 import namImg from '../../images/nam.jpg';
 import nuImg from '../../images/nu.jpg';
 import { Link } from "react-router-dom";
 
-function MyCarousel() {
+
+
+const Header = () => {
+    const [dsKH, setDsKH] = useState([]);
+    const [user, setUser] = useState(null);
+    const [dsAnh, setDsAnh] = useState([]);
     const [index, setIndex] = useState(0);
 
     const handleSelect = (selectedIndex) => {
         setIndex(selectedIndex);
     };
+    useEffect(() => {
+        const fetchHinhAnh = async () => {
+            try {
+                const response = await axios.get('http://localhost:2209/api/v1/layHinhAnhTrangChu');
+                setDsAnh(response.data.HA);
+                console.log(response.data.HA);
+            } catch (error) {
+                console.error('Lỗi khi gọi API: ', error);
+            }
+        };
+        fetchHinhAnh();
+    }, []);
 
-    return (
-        <Carousel className="custom-carousel" interval={4000} controls={false} indicators onSelect={handleSelect}>
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={logoImage5}
-                    alt=""
-                />
-            </Carousel.Item>
-
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={logoImage1}
-                    alt=""
-                />
-            </Carousel.Item>
-
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={logoImage2}
-                    alt=""
-                />
-            </Carousel.Item>
-
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={logoImage3}
-                    alt=""
-                />
-            </Carousel.Item>
-        </Carousel>
-    );
-};
-
-const Header = () => {
-    const [dsKH, setDsKH] = useState([]);
-    const [user, setUser] = useState(null);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -88,12 +61,6 @@ const Header = () => {
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [showLogout, setShowLogout] = useState(false);
     const handleClose = () => setShow(false);
-
-    const confirmLogout = () => {
-        localStorage.removeItem('user');
-        setUser(null);
-        navigate('/');
-    };
 
 
     const handleShow = (e, course) => {
@@ -192,34 +159,6 @@ const Header = () => {
                                     </div>
                                 </div>
 
-
-                                {/* <div className="menu-wrapper">
-                                    <div
-                                        className="menu text-white"
-                                        onMouseOver={handleMouseOver}
-                                        onMouseLeave={handleMouseLeave}
-                                    >
-                                        Chương trình đào tạo
-                                        {isMenuOpen && (
-                                            <div className="submenu text-dark">
-                                                <ul>
-                                                    {dsKH.map((khoaHoc) => (
-                                                        <li key={khoaHoc.maKH} onMouseOver={(e) => handleShow(e, khoaHoc)}>
-                                                            {khoaHoc.tenKH}
-                                                            {selectedCourse === khoaHoc && (
-                                                                <ul>
-                                                                    {khoaHoc.dsLH.map((lopHoc) => (
-                                                                        <li key={lopHoc.maLopHoc}>{lopHoc.tenLopHoc}</li>
-                                                                    ))}
-                                                                </ul>
-                                                            )}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div> */}
                             </NavLink>
                             <NavLink to='/tintuc' className='nav-link text-white' style={{ marginLeft: '30px' }}>Tin tức</NavLink>
                             <NavLink to='/thanhtoan' className='nav-link text-white' style={{ marginLeft: '30px' }}>Hướng dẫn thanh toán</NavLink>
@@ -230,7 +169,19 @@ const Header = () => {
                 </Container>
             </Navbar>
 
-            <MyCarousel />
+
+            <Carousel className="custom-carousel" interval={3000} controls={false} indicators onSelect={handleSelect}>
+                {dsAnh.map((anh, index) => (
+                    <Carousel.Item key={index}>
+                        <img
+                            className="d-block w-100"
+                            src={`http://localhost:2209/images/${anh.tenHinhAnhQC}`}
+                            alt=""
+                        />
+                    </Carousel.Item>
+                ))}
+            </Carousel>
+
         </>
 
     );

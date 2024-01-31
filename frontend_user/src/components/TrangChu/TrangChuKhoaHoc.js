@@ -6,6 +6,7 @@ import "../../css/t3h.css"
 import "../../css/color-theme.css"
 import "../../css/home.css"
 import "../../css/home2.css"
+import "../../css/t3h.nganh.css"
 import axios from 'axios';
 import { Link } from "react-router-dom";
 
