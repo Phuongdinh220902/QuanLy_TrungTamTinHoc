@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import {
     faPenToSquare,
     faUserPlus,
@@ -17,7 +17,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios";
 import ModalUpdateKH from "./ModalUpdateKH";
 import ModalCreateKH from "./ModalCreateKH";
+import ModalThem from "./ModalThem";
 import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const KhoaHoc = (props) => {
     const [DSKhoaHoc, setListKhoaHoc] = useState([]);
@@ -39,6 +41,17 @@ const KhoaHoc = (props) => {
     const handleShowModalCreateKH = () => {
         setShowModalCreateKH(true);
     };
+
+    const navigate = useNavigate();
+
+    // const [showModal1, setShowModal1] = useState(false);
+
+    // const handleShowModal = () => {
+    //     navigate('/themchitiet')
+    // };
+    // const handleCloseModal1 = () => {
+    //     setShowModal1(false);
+    // };
 
     const handleCloseModalKH = () => {
         setShowModalCreateKH(false);
@@ -170,6 +183,7 @@ const KhoaHoc = (props) => {
                                 Thêm
                             </button>
 
+
                         </div>
                     </div>
                 </div>
@@ -182,6 +196,7 @@ const KhoaHoc = (props) => {
                                     <th className="table-item ">STT</th>
                                     <th className="table-item ">Tên khoá học</th>
                                     <th className="table-item ">Học phí</th>
+                                    <th className="table-item ">Học phí giảm</th>
                                     <th className="table-item ">Môn học</th>
                                     <th className="table-item ">Số giờ</th>
                                     <th className="table-item ">Ảnh</th>
@@ -198,6 +213,7 @@ const KhoaHoc = (props) => {
                                                 <td className="">{item.tenKH}</td>
                                                 {/* <td className="col-right">{item.hocphi ? item.hocphi : 0}</td> */}
                                                 <td className="col-right">{formatCurrency(item.hocphi ? item.hocphi : 0)}đ</td>
+                                                <td className="col-right">{formatCurrency(item.hocphisaukhigiam ? item.hocphisaukhigiam : item.hocphi)}đ</td>
                                                 <td className="">{item.monhoc}</td>
                                                 <td className="">{item.so_gio} giờ </td>
                                                 <td>
@@ -214,11 +230,16 @@ const KhoaHoc = (props) => {
 
 
                                                 <td className="table-item">
-                                                    <button className="btn btn-info">
+                                                    <button className="btn btn-info mx-2">
                                                         <Link to={`/lophoc/${item.maKH}`} className="navlink linkStyle">
                                                             Xem
                                                         </Link>
                                                     </button>
+                                                    <Link to='/themchitiet'>
+                                                        <button className="btn btn-info">
+                                                            Thêm chi tiết
+                                                        </button>
+                                                    </Link>
                                                     <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
                                                         Cập nhật
                                                     </button>

@@ -266,7 +266,7 @@ code {
 
 .pagination {
   width: 100%;
-  position: fixed;
+  /* position: fixed; */
   bottom: 0;
   padding: 12px;
   justify-content: center;
@@ -396,4 +396,12 @@ code {
 .table-item-action {
   width: 35%;
   /* Điều chỉnh kích thước cột hành động */
+}
+
+/* ckeditor */
+.ck-editor__editable {
+  min-height: 300px;
+  /* Chiều cao tối thiểu */
+  height: 500px;
+  /* Chiều cao mặc định */
 }

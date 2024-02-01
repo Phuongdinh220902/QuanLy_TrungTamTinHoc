@@ -18,9 +18,9 @@
     padding-left: 10px;
 }
 
-.pl-25 {
+/* .pl-25 {
     padding-left: 25px;
-}
+} */
 
 .khoa-hoc-container {
     padding-top: 20px;
@@ -262,12 +262,13 @@
 }
 
 .tranning-single-meta .prices .price:before {
-    /* content: url(/template/frontend/images/price-icon-white.png); */
+    content: url(../images/price-icon-white.png);
     display: inline-block;
     height: 16px;
     margin-right: 0.5rem;
     vertical-align: text-bottom;
 }
+
 
 .tranning-single-meta .prices .price.old {
     font-weight: normal;
@@ -278,14 +279,20 @@
     font-weight: normal;
 }
 
+.tranning-single-meta .prices .price.uu-dai {
+    font-weight: normal;
+}
+
 .tranning-single-meta .prices .price.none {
     padding: 11px 0;
     text-align: right;
 }
 
-.tranning-single-meta .prices .price-special {
+.tranning-single-meta .prices .price-special :before {
+    content: url(../images/price-special-icon.png);
     color: #ee8306;
     padding-top: 4px;
+    margin-right: 5px;
 }
 
 .tranning-single-meta .prices .price-special a {

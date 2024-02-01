@@ -42,7 +42,7 @@ const initAPIRoute = (app) => {
     router.get('/layKhoaHoc/:maKH', APIController.layKhoaHoc)
     router.get('/layLopHoc/:maKH', APIController.layLopHoc)
     router.get('/layGiangVien/:maGV', APIController.layGiangVien)
-
+    router.get('/BoLocHocPhi', APIController.BoLocHocPhi)
     var filename = ''
     const upload = multer({
         storage: multer.diskStorage({
@@ -156,7 +156,7 @@ const initAPIRoute = (app) => {
     });
 
     router.post("/updateKH", upload.single("file"), async (req, res) => {
-        let { maKH, tenKH, hocphi, mota, monhoc, so_gio } = req.body;
+        let { maKH, tenKH, hocphi, mota, monhoc, so_gio, hocphisaukhigiam } = req.body;
 
         console.log(req.body);
         const { file } = req; // Lấy thông tin về file từ request
@@ -170,7 +170,7 @@ const initAPIRoute = (app) => {
             }
 
             // Cập nhật thông tin đoàn viên
-            await pool.execute("UPDATE khoa_hoc SET tenKH = ?, hocphi =?, mota = ?, monhoc = ?, so_gio = ? WHERE maKH=?", [tenKH, hocphi, mota, monhoc, so_gio, maKH])
+            await pool.execute("UPDATE khoa_hoc SET tenKH = ?, hocphi =?, hocphisaukhigiam = ?, mota = ?, monhoc = ?, so_gio = ? WHERE maKH=?", [tenKH, hocphi, hocphisaukhigiam, mota, monhoc, so_gio, maKH])
 
 
             if (file && file.filename) {
@@ -281,6 +281,40 @@ const initAPIRoute = (app) => {
             return res.status(500).json({ error: "Không hiển thị được!" });
         }
     });
+
+    // router.post('/themchitietkhoahoc', upload.single('file'), async (req, res) => {
+    //     try {
+    //         const content = req.body.content;
+    //         const imageUrl = req.file.path;
+    //         console.log(req.file.path)
+    //         // Thực hiện lưu trữ dữ liệu vào CSDL MySQL
+    //         // Trong thực tế, bạn cần thay thế các tham số kết nối CSDL của mình ở dòng sau
+    //         await pool.execute("INSERT INTO chitiet_khoahoc (chitiet, anh) VALUES (?, ?)", [content, imageUrl]);
+
+    //         // Trả về thông báo thành công nếu lưu trữ thành công
+    //         res.status(200).json({ message: 'Data saved successfully' });
+    //     } catch (error) {
+    //         console.error('Error saving data:', error);
+    //         res.status(500).json({ error: 'Error saving data' });
+    //     }
+    // });
+
+    router.post("/themchitietkhoahoc", upload.single("image"), async (req, res) => {
+        try {
+            const { content } = req.body;
+            const imageUrl = req.file ? req.file.path : null; // Lấy đường dẫn ảnh nếu có, nếu không thì là null
+            console.log(content)
+            // Thực hiện lưu dữ liệu vào CSDL MySQL
+            await pool.execute("INSERT INTO chitiet_khoahoc (chitiet, anh) VALUES (?, ?)", [content, imageUrl]);
+
+            // Trả về thông báo thành công nếu lưu trữ thành công
+            res.status(200).json({ message: "Data saved successfully" });
+        } catch (error) {
+            console.error("Error saving data:", error);
+            res.status(500).json({ error: "Error saving data" });
+        }
+    });
+
 
     return app.use('/api/v1/', router)
 }

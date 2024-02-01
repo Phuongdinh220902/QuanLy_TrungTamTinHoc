@@ -15,6 +15,7 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
     const [tenKH, setTen] = useState('');
     const [mota, setmota] = useState('');
     const [hocphi, sethocphi] = useState('');
+    const [hocphisaukhigiam, sethocphisaukhigiam] = useState('');
     const [monhoc, setmonhoc] = useState('');
     const [so_gio, setso_gio] = useState('');
     const [image, setImage] = useState('');
@@ -27,6 +28,7 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
             setTen(selectedKH.tenKH);
             setmota(selectedKH.mota);
             sethocphi(selectedKH.hocphi);
+            sethocphisaukhigiam(selectedKH.hocphisaukhigiam);
             setmonhoc(selectedKH.monhoc);
             setso_gio(selectedKH.so_gio);
             setImage(selectedKH.tenHinhAnhKH);
@@ -47,6 +49,7 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
             formData.append('tenKH', tenKH);
             formData.append('mota', mota);
             formData.append('hocphi', hocphi);
+            formData.append('hocphisaukhigiam', hocphisaukhigiam);
             formData.append('monhoc', monhoc);
             formData.append('so_gio', so_gio);
             if (image instanceof Blob) {
@@ -91,6 +94,11 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
                             <label className="form-label">Học Phí</label>
                             <input type="text" className="form-control" value={hocphi}
                                 onChange={(event) => sethocphi(event.target.value)} />
+                        </div>
+                        <div className="col-12">
+                            <label className="form-label">Học Phí Sau Khi Giảm</label>
+                            <input type="text" className="form-control" value={hocphisaukhigiam}
+                                onChange={(event) => sethocphisaukhigiam(event.target.value)} />
                         </div>
                         <div className="col-12">
                             <label className="form-label">Môn học</label>

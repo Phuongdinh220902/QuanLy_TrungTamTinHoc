@@ -297,10 +297,10 @@ let laydskh = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
-            const [sotrang, fields] = await pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH");
+            const [sotrang, fields] = await pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi, hocphisaukhigiam, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH");
 
             const [result2, fields1] = await Promise.all([
-                pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH LIMIT ? OFFSET ?", [
+                pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH LIMIT ? OFFSET ?", [
                     pageSize,
                     offset,
 
@@ -330,14 +330,14 @@ let laydskh = async (req, res) => {
         const offset = (page - 1) * pageSize;
 
         const [sotrang, fields] = await pool.execute(
-            "SELECT khoa_hoc.maKH, tenKH, hocphi, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.monhoc) LIKE UPPER(?) OR UPPER(khoa_hoc.so_gio) LIKE UPPER(?))",
+            "SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.monhoc) LIKE UPPER(?) OR UPPER(khoa_hoc.so_gio) LIKE UPPER(?))",
             ["%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
         );
         console.log(sotrang)
 
         const [result2, fields1] = await Promise.all([
             pool.execute(
-                "SELECT khoa_hoc.maKH, tenKH, hocphi, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.monhoc) LIKE UPPER(?) OR UPPER(khoa_hoc.so_gio) LIKE UPPER(?))",
+                "SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.monhoc) LIKE UPPER(?) OR UPPER(khoa_hoc.so_gio) LIKE UPPER(?))",
                 ["%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
             ),
         ]);
@@ -772,7 +772,7 @@ let layTrangChu = async (req, res) => {
 let layTrangChuKhoaHoc = async (req, res) => {
 
     try {
-        const [TCKH, a] = await pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi, so_gio,tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH");
+        const [TCKH, a] = await pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, mota, so_gio,tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH");
         return res.status(200).json({
             TCKH: TCKH
         })
@@ -1161,6 +1161,27 @@ let layHinhAnhTrangChu = async (req, res) => {
     }
 };
 
+let BoLocHocPhi = async (req, res) => {
+    try {
+        const [rows, fields] = await pool.execute("SELECT hocphi FROM khoa_hoc where khoa_hoc.trang_thai = 1");
+
+        const duoi2trieu = rows.filter(row => row.hocphi < 2000000);
+        const tu2den5trieu = rows.filter(row => row.hocphi >= 2000000 && row.hocphi <= 5000000);
+        const tren5trieu = rows.filter(row => row.hocphi > 5000000);
+
+        return res.status(200).json({
+            duoi2trieu,
+            tu2den5trieu,
+            tren5trieu
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+}
+
 
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
@@ -1168,5 +1189,5 @@ module.exports = {
     layHinhAnhGioiThieu, deleteHAQC, layHinhAnhTrangChu, layGiangVien,
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung,
-    layKhoaHoc, layLopHoc
+    layKhoaHoc, layLopHoc, BoLocHocPhi
 }

@@ -77,13 +77,32 @@ const KhoaHoc = () => {
                                                 <div className="tranning-single-meta">
                                                     <div className="duration">{`${course.so_gio} giờ`}</div>
                                                     <div className="prices pl-25">
-                                                        {/* Giả sử bạn có giá trị oldPrice và specialPrice từ API */}
-                                                        {/* <div className="price old-gach">{`${course.hocphi}đ`}</div> */}
-                                                        <div className="price-special">
-                                                            <a className="uu-dai" href={`/do-hoa-da-truyen-thong/${course.tenKH}_${course.maKH}#lich-khai-giang`}>
-                                                                {`${formatCurrency(course.hocphi)}đ`}
-                                                            </a>
-                                                        </div>
+                                                        {course.hocphisaukhigiam ? (
+                                                            <>
+                                                                <div className="prices pl-10">
+                                                                    <div className="price old-gach">{`${formatCurrency(course.hocphi)}đ`}</div>
+                                                                    <div className="price-special">
+                                                                        <a className="uu-dai" href={`/khoahoc/${course.maKH}`}>
+                                                                            {`${formatCurrency(course.hocphisaukhigiam)}đ`}
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+
+                                                            </>
+                                                        ) : (
+                                                            <>
+
+                                                                <div className="prices pl-10">
+                                                                    <div className="price old">{`${formatCurrency(course.hocphi)}đ`}</div>
+                                                                    <div className="price-special">
+                                                                        <a className="uu-dai" href={`/khoahoc/${course.maKH}`}>
+                                                                            Ưu đãi chi tiết
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -93,7 +112,8 @@ const KhoaHoc = () => {
 
                             </div>
                             <div className="tranning-all-courses text-center">
-                                <a href='/danh-sach-khoa-hoc' className='btn btn-default' target='_blank'>Xem tất cả
+
+                                <a href='/tatcakhoahoc' className='btn btn-default' target='_blank'>Xem tất cả
                                     các khóa học</a>
                             </div>
                         </div>

@@ -337,7 +337,7 @@ const KhoaHoc = ({ match }) => {
                 <h2 className="khoa-hoc-title">Thông Tin Khoá Học</h2>
                 <div className="khoa-hoc-details">
                     <h3></h3>
-                    <p>Học phí: {formatCurrency(khoaHoc.hocphi)}đ</p>
+                    <p>Học phí: {formatCurrency(khoaHoc.hocphisaukhigiam)}đ</p>
                     <p>Số giờ: {khoaHoc.so_gio} giờ</p>
                     <p>Mô tả: {khoaHoc.mota}</p>
                     <p>Môn học: {khoaHoc.monhoc}</p>
@@ -380,3 +380,5 @@ const KhoaHoc = ({ match }) => {
 
 
 export default KhoaHoc;
+
+
