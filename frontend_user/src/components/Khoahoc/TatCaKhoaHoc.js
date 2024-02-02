@@ -242,29 +242,30 @@ const TatCaKhoaHoc = () => {
     };
 
     return (
-        <div className="main-container">
-            <div className="banner-background">
-                <div className="container search-container">
-                    <div className="header-search-bar">
-                        <div className="catalog-search">
-                            <div className="col-md-7">
-                                <h1 className="headline">Tìm khóa học bạn quan tâm</h1>
-                                <h2 className="headline" style={{ "fontSize": '20px', "fontWeight": "300" }}>Học chắc từ nền tảng<br />
-                                    Ứng dụng hiệu quả CNTT vào thực tế cuộc sống</h2>
-                            </div>
-                            <div className="col-md-5">
-                                <div className="search-input-container">
-                                    <input className="catalog-search-input" type="search" placeholder="Tìm khóa học" value="" />
-                                    <div className="search_result_list"></div>
+        <div className="wrapper" style={{ "backgroundColor": "#fbfbfb" }}>
+            <div className="main-container" style={{ "marginBottom": "0" }}>
+                <div className="banner-background">
+                    <div className="container search-container">
+                        <div className="header-search-bar">
+                            <div className="catalog-search">
+                                <div className="col-md-7">
+                                    <h1 className="headline">Tìm khóa học bạn quan tâm</h1>
+                                    <h2 className="headline" style={{ "fontSize": '20px', "fontWeight": "300" }}>Học chắc từ nền tảng<br />
+                                        Ứng dụng hiệu quả CNTT vào thực tế cuộc sống</h2>
                                 </div>
+                                <div className="col-md-5">
+                                    <div className="search-input-container">
+                                        <input className="catalog-search-input" type="search" placeholder="Tìm khóa học" value="" />
+                                        <div className="search_result_list"></div>
+                                    </div>
+                                </div>
+                                <div className="clearfix"></div>
                             </div>
-                            <div className="clearfix"></div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="container">
-                {/* <div className="filters-container">
+                <div className="container" >
+                    {/* <div className="filters-container">
                     <h6 className="filters-label">Lựa chọn khóa học theo:</h6>
 
                     <select id="muchocphi" name="muchocphi[]" multiple="" className="form-control" style={{ "display": "none" }}>
@@ -294,61 +295,62 @@ const TatCaKhoaHoc = () => {
                         <option value="hocphi_desc">Học phí từ cao đến thấp</option>
                     </select><button type="button" className="btn dropdown-toggle btn-default" data-toggle="dropdown" role="combobox" aria-owns="bs-select-1" aria-haspopup="listbox" aria-expanded="false" data-id="sapxep" title="Sắp xếp"><div className="filter-option"><div className="filter-option-inner"><div className="filter-option-inner-inner">Sắp xếp</div></div> </div><span className="bs-caret"><span className="caret"></span></span></button><div className="dropdown-menu open"><div className="inner open" role="listbox" id="bs-select-1" tabindex="-1"><ul className="dropdown-menu inner " role="presentation"></ul></div></div></div>
                 </div> */}
-                <div className="khoa-hoc-container">
-                    <ul className="khoa-hoc-list">
-                        {khoaHoc.map(kh => (
-                            <li key={kh.maKH} className="courses">
-                                <a className="khoa-hoc-item" href={`/khoahoc/${kh.maKH}`}>
-                                    <div className="khoa-hoc-body">
-                                        <div className="khoa-hoc-overview">
-                                            <h2 className="khoa-hoc-title1">{kh.tenKH}</h2>
-                                            <p className="khoa-hoc-summary">{kh.mota}</p>
+                    <div className="khoa-hoc-container">
+                        <ul className="khoa-hoc-list">
+                            {khoaHoc.map(kh => (
+                                <li key={kh.maKH} className="courses">
+                                    <a className="khoa-hoc-item" href={`/khoahoc/${kh.maKH}`}>
+                                        <div className="khoa-hoc-body">
+                                            <div className="khoa-hoc-overview">
+                                                <h2 className="khoa-hoc-title1">{kh.tenKH}</h2>
+                                                <p className="khoa-hoc-summary">{kh.mota}</p>
+                                            </div>
+
+                                            <div className="khoa-hoc-actions">
+                                                <Link to={`/khoahoc/${kh.maKH}`}
+                                                    className="btn button--primary khoa-hoc-action">
+                                                    Chi tiết khóa học</Link>
+
+                                            </div>
+                                            <div className="khoa-hoc-stats">
+                                                <span className="khoa-hoc-duration">{kh.so_gio} giờ</span>
+                                                <span className="khoa-hoc-price">
+                                                    {kh.hocphisaukhigiam ? (
+                                                        <>
+                                                            <span className="old">{`${formatCurrency(kh.hocphi)}đ`}</span>
+                                                            <span className="new">{`${formatCurrency(kh.hocphisaukhigiam)}đ`}</span>
+                                                        </>
+                                                    ) : (
+                                                        <span className="hocphi">{`${formatCurrency(kh.hocphi)}đ`}</span>
+                                                    )}
+                                                </span>
+
+
+                                            </div>
                                         </div>
-
-                                        <div className="khoa-hoc-actions">
-                                            <Link to={`/khoahoc/${kh.maKH}`}
-                                                className="btn button--primary khoa-hoc-action">
-                                                Chi tiết khóa học</Link>
-
-                                        </div>
-                                        <div className="khoa-hoc-stats">
-                                            <span className="khoa-hoc-duration">{kh.so_gio} giờ</span>
-                                            <span className="khoa-hoc-price">
-                                                {kh.hocphisaukhigiam ? (
-                                                    <>
-                                                        <span className="old">{`${formatCurrency(kh.hocphi)}đ`}</span>
-                                                        <span className="new">{`${formatCurrency(kh.hocphisaukhigiam)}đ`}</span>
-                                                    </>
-                                                ) : (
-                                                    <span className="hocphi">{`${formatCurrency(kh.hocphi)}đ`}</span>
-                                                )}
-                                            </span>
-
-
-                                        </div>
-                                    </div>
-                                    <div className="khoa-hoc-sidebar">
-                                        <div className="khoa-hoc-image-container">
-                                            {/* <img className="khoa-hoc-image khoa-hoc-image-topleft" 
+                                        <div className="khoa-hoc-sidebar">
+                                            <div className="khoa-hoc-image-container">
+                                                {/* <img className="khoa-hoc-image khoa-hoc-image-topleft" 
                                             src={`/data/images/mon-hoc-thumb/${kh.tenHinhAnhKH}`} alt="" loading="lazy" /> */}
 
-                                            <img
-                                                className="khoa-hoc-image khoa-hoc-image-topleft"
-                                                src={
+                                                <img
+                                                    className="khoa-hoc-image khoa-hoc-image-topleft"
+                                                    src={
 
-                                                    `http://localhost:2209/images/${kh.tenHinhAnhKH}`
-                                                }
-                                                alt=""
-                                            />
+                                                        `http://localhost:2209/images/${kh.tenHinhAnhKH}`
+                                                    }
+                                                    alt=""
+                                                />
+                                            </div>
+                                            <div className="khoa-hoc-actions">
+                                                <button className="btn button--primary khoa-hoc-action">Chi tiết khóa học</button>
+                                            </div>
                                         </div>
-                                        <div className="khoa-hoc-actions">
-                                            <button className="btn button--primary khoa-hoc-action">Chi tiết khóa học</button>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

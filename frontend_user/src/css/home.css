@@ -308,15 +308,15 @@
     height: 180px;
 }
 
-.gv-image.gv1 {
+.gv-image.gv {
     box-shadow: 0px 0px 16px #0082c8;
     border: 2px solid #0082c8;
 }
 
-.gv-image.gv2 {
+/* .gv-image.gv2 {
     box-shadow: 0px 0px 16px #944868;
     border: 2px solid #944868;
-}
+} */
 
 .gv-body {
     padding: 15px 0;

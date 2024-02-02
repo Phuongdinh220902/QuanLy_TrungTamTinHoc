@@ -84,7 +84,7 @@ button.multiselect-clear-filter {
 }
 
 .banner-background {
-    /* background: url(/template/frontend/images/banner-bg2.jpg); */
+    background: url(../images/banner-bg2.jpg);
     height: 100%;
     background-size: cover;
     position: relative;

@@ -1,8 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import * as XLSX from "xlsx";
-import { format } from "date-fns";
 import {
     faChevronRight,
     faChevronLeft,

@@ -235,7 +235,7 @@ const KhoaHoc = (props) => {
                                                             Xem
                                                         </Link>
                                                     </button>
-                                                    <Link to='/themchitiet'>
+                                                    <Link to={`/themchitiet/${item.maKH}`}>
                                                         <button className="btn btn-info">
                                                             Thêm chi tiết
                                                         </button>

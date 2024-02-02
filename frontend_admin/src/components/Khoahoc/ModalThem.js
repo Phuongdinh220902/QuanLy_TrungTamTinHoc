@@ -81,49 +81,42 @@ import React, { useState, useRef } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 function uploadAdapter(loader) {
-    return {
-        upload: () => {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const file = await loader.file;
-                    resolve({ default: URL.createObjectURL(file) });
-                } catch (error) {
-                    reject("Hello");
-                }
-            });
-        },
-        abort: () => { },
-    };
+    return loader.file.then(file => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                resolve({ default: event.target.result });
+            };
+
+            reader.onerror = function (error) {
+                reject(error);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    });
 }
 
-function uploadPlugin(editor) {
-    editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-        return uploadAdapter(loader);
-    };
-}
-
-const ThemChiTiet = () => {
-    const [editorData, setEditorData] = useState(
-        "<p>Hello world</p><img src='https://images.unsplash.com/photo-1673859360509-1ef362f94f0c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY3NjMzNjE2OA&ixlib=rb-4.0.3&q=80&w=1080' />"
-    );
+function ThemChiTiet() {
+    const [editorData, setEditorData] = useState("<p>Hello world</p>");
     const editorInstance = useRef(null);
-
+    const { maKH } = useParams(); // Lấy maKH từ URL
     const handleSendData = async () => {
         try {
             const content = editorInstance.current.getData();
-            const formData = new FormData();
-            formData.append("content", content);
-
             const response = await axios.post(
                 "http://localhost:2209/api/v1/themchitietkhoahoc",
-                formData,
+                { maKH, content },
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data",
+                        "Content-Type": "application/json",
                     },
-                }
+                },
+                console.log(maKH)
             );
             console.log("Response from server:", response.data);
         } catch (error) {
@@ -135,19 +128,30 @@ const ThemChiTiet = () => {
         <div className="">
             <CKEditor
                 editor={ClassicEditor}
-                onReady={(editor) => { editorInstance.current = editor; }}
-                onChange={(event, editor) => { }}
-                data={editorData}
-                config={{
-                    extraPlugins: [uploadPlugin],
+                onReady={(editor) => {
+                    editorInstance.current = editor;
+                    uploadPlugin(editor);
                 }}
+                onChange={(event, editor) => {
+                    const data = editor.getData();
+                    setEditorData(data);
+                }}
+                data={editorData}
             />
-            <button onClick={handleSendData}>Send Data</button>
+            <button onClick={handleSendData}>Submit</button>
         </div>
     );
-};
+}
+
+function uploadPlugin(editor) {
+    editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+        return uploadAdapter(loader);
+    };
+}
 
 export default ThemChiTiet;
+
+
 
 
 

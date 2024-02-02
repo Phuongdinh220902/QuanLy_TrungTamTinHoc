@@ -36,7 +36,7 @@ root.render(
           <Route path="anhgioithieu" element={<AnhGioiThieu />} />
           <Route path="lophoc/:maKH" element={<LopHoc />} />
           <Route path="dshocvien/:maLopHoc" element={<DSHocVien />} />
-          <Route path="themchitiet" element={<ThemChiTiet />} />
+          <Route path="themchitiet/:maKH" element={<ThemChiTiet />} />
         </Route>
       </Routes>
 

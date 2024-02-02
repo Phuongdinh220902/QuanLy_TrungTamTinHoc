@@ -43,6 +43,9 @@ const initAPIRoute = (app) => {
     router.get('/layLopHoc/:maKH', APIController.layLopHoc)
     router.get('/layGiangVien/:maGV', APIController.layGiangVien)
     router.get('/BoLocHocPhi', APIController.BoLocHocPhi)
+
+    router.get('/layGioiThieuKhoaHoc/:maKH', APIController.layGioiThieuKhoaHoc)
+
     var filename = ''
     const upload = multer({
         storage: multer.diskStorage({
@@ -299,21 +302,50 @@ const initAPIRoute = (app) => {
     //     }
     // });
 
-    router.post("/themchitietkhoahoc", upload.single("image"), async (req, res) => {
+    router.post('/uploadanhchitiet', upload.single('file'), async (req, res) => {
+        let { anh } = req.body;
+        console.log(req.body);
         try {
-            const { content } = req.body;
-            const imageUrl = req.file ? req.file.path : null; // Lấy đường dẫn ảnh nếu có, nếu không thì là null
-            console.log(content)
-            // Thực hiện lưu dữ liệu vào CSDL MySQL
-            await pool.execute("INSERT INTO chitiet_khoahoc (chitiet, anh) VALUES (?, ?)", [content, imageUrl]);
+            await pool.execute(
+                "INSERT INTO chitiet_khoahoc (anh) VALUES ( ?)",
+                [filename]
+            );
+            res.status(200).json({
+                'DT': {
+                    'anh': anh
+                },
+                'EC': 0,
+                'EM': 'Tạo thành công'
+            });
 
-            // Trả về thông báo thành công nếu lưu trữ thành công
-            res.status(200).json({ message: "Data saved successfully" });
         } catch (error) {
-            console.error("Error saving data:", error);
-            res.status(500).json({ error: "Error saving data" });
+            console.log("Lỗi khi thêm khoá học: ", error);
+            return res.status(500).json({ error: "Lỗi khi thêm khoá học" });
         }
     });
+
+    router.post("/themchitietkhoahoc", async (req, res) => {
+        try {
+            // const { maKH } = req.params; 
+            let { maKH } = req.body;
+            const { content } = req.body; // Lấy nội dung từ body của yêu cầu
+
+            console.log("maKH:", maKH);
+            console.log("Content:", content);
+
+            // Thực hiện truy vấn SQL để chèn dữ liệu vào cơ sở dữ liệu
+            await pool.execute(
+                "INSERT INTO chitiet_khoahoc (maKH, chitiet) VALUES (?, ?)",
+                [maKH, content]
+            );
+
+            res.json({ message: 'Data received successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    });
+
 
 
     return app.use('/api/v1/', router)

@@ -287,8 +287,8 @@ ol {
 	list-style-type: circle;
 }
 
-.nganh-noi-dung ul {
-	/* list-style-image: url(../images/ZA104198199.PNG); */
+.nganh-noi-dung p {
+	list-style-image: url(../images/ZA104198199.PNG);
 	font-size: 14px;
 	color: #151414;
 	margin-left: 35px;
@@ -312,7 +312,7 @@ ol {
 }
 
 .nganh-khoang-cach {
-	margin-top: 10px;
+	margin-top: 70px;
 	margin-bottom: 0px;
 }
 
