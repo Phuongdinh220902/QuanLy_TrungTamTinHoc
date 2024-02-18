@@ -57,7 +57,9 @@ const KhoaHoc = ({ match }) => {
     const [lopHoc, setLopHoc] = useState([]);
     const [gioiThieu, setGioiThieu] = useState("");
     const [hinhAnh, setHinhAnh] = useState("");
-
+    const [tieude, setTieuDe] = useState("");
+    const [noidung, setNoiDung] = useState("");
+    const [contentData, setContentData] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -77,6 +79,17 @@ const KhoaHoc = ({ match }) => {
                 if (tenHinhAnhKH) {
                     setHinhAnh(tenHinhAnhKH); // Lưu trữ tên hình ảnh từ API vào state
                 }
+
+                const responseNoiDung = await axios.get(`http://localhost:2209/api/v1/layNoiDungKhoaHoc/${maKH}`);
+                console.log(responseNoiDung)
+                setContentData(responseNoiDung.data.ND);
+                // const { tieude, noidung } = responseNoiDung.data.ND[0];
+                // if (tieude) {
+                //     setTieuDe(tieude); // Lưu trữ nội dung từ API vào state
+                // }
+                // if (noidung) {
+                //     setNoiDung(noidung); // Lưu trữ tên hình ảnh từ API vào state
+                // }
             } catch (error) {
                 console.error('Lỗi khi lấy dữ liệu từ API: ', error);
             }
@@ -84,6 +97,7 @@ const KhoaHoc = ({ match }) => {
 
         fetchData();
     }, [maKH]);
+
     if (!khoaHoc) {
         return <div>Loading...</div>;
     }
@@ -106,23 +120,38 @@ const KhoaHoc = ({ match }) => {
                             <div> {khoaHoc.tenKH}</div>
                         </h1>
                         <div className="nganh-noi-dung">
+
                             <div dangerouslySetInnerHTML={{ __html: gioiThieu }}></div> {/* Hiển thị nội dung từ state */}
                         </div>
+                    </div>
+
+                    <div className="nganh-khoang-cach-muc" style={{ clear: 'both' }}></div>
+                    <div className="panel-group khoang-cach-5" id="accordion">
+                        {contentData.map((item, index) => (
+                            <div className="panel panel-default" key={index}>
+                                <div className="panel-heading">
+                                    <a className="myCollapse" data-toggle="collapse" data-parent="#accordion" href={`#collapse${index + 1}`} aria-expanded="true">
+                                        <h4 className="panel-title" style={{ float: 'left', paddingTop: '3px', width: '95%', color: '#FD6504' }}>
+                                            {item.tieude}
+                                        </h4>
+                                        <span className="glyphicon nganh-chon glyphicon-menu-up" aria-hidden="true" style={{ float: 'right' }}></span>
+                                    </a>
+                                    <div style={{ clear: 'both' }}></div>
+                                </div>
+                                <div id={`collapse${index + 1}`} className="panel-collapse collapse in" aria-expanded="true">
+                                    <div className="panel-body nganh-tieu-de-muc" dangerouslySetInnerHTML={{ __html: item.noidung }}></div>
+                                </div>
+
+                            </div>
+                        ))}
+
                     </div>
                 </div>
             </div>
 
 
             <div className="khoa-hoc-container1">
-                {/* <h2 className="khoa-hoc-title">Thông Tin Khoá Học</h2>
-                <div className="khoa-hoc-details">
-                    <h3></h3>
-                    <p>Học phí: {formatCurrency(khoaHoc.hocphisaukhigiam)}đ</p>
-                    <p>Số giờ: {khoaHoc.so_gio} giờ</p>
-                    <p>Mô tả: {khoaHoc.mota}</p>
-                    <p>Môn học: {khoaHoc.monhoc}</p>
-                    
-                </div>  */}
+
                 <h2 className="lop-hoc-title">Danh sách lớp học</h2>
                 <table className="table">
                     <thead>
@@ -137,7 +166,7 @@ const KhoaHoc = ({ match }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {lopHoc.map((lop, index) => (
+                        {lopHoc && lopHoc.map((lop, index) => (
                             <tr key={lop.maLopHoc}>
                                 <td>{index + 1}</td>
                                 <td>{lop.tenLopHoc}</td>
@@ -148,9 +177,9 @@ const KhoaHoc = ({ match }) => {
                                 <td>
                                     <button className="button-dk"> Đăng ký</button>
                                 </td>
-
                             </tr>
                         ))}
+
                     </tbody>
                 </table>
             </div>

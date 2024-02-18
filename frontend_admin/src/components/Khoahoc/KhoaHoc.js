@@ -1,9 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
-    faPenToSquare,
-    faUserPlus,
     faChevronRight,
     faChevronLeft,
     faMagnifyingGlass
@@ -17,7 +15,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios";
 import ModalUpdateKH from "./ModalUpdateKH";
 import ModalCreateKH from "./ModalCreateKH";
-import ModalThem from "./ModalThem";
+import ModalThem from "./ThemChiTiet";
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
@@ -28,6 +26,7 @@ const KhoaHoc = (props) => {
     const [selectID, setselectID] = useState(null);
     const [selectedKH, setselectedKH] = useState(null);
     const [showModalUpdateKH, setshowModalUpdateKH] = useState(false);
+    const [showModal1, setShowModal1] = useState(false);
 
     let [tukhoa, setTuKhoa] = useState("")
 
@@ -43,15 +42,6 @@ const KhoaHoc = (props) => {
     };
 
     const navigate = useNavigate();
-
-    // const [showModal1, setShowModal1] = useState(false);
-
-    // const handleShowModal = () => {
-    //     navigate('/themchitiet')
-    // };
-    // const handleCloseModal1 = () => {
-    //     setShowModal1(false);
-    // };
 
     const handleCloseModalKH = () => {
         setShowModalCreateKH(false);
@@ -126,6 +116,13 @@ const KhoaHoc = (props) => {
     };
     const formatCurrency = (value) => {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const [selectedMaKH, setSelectedMaKH] = useState(null);
+
+    const handleAddDetails = (maKH) => {
+        setSelectedMaKH(maKH);
+        setShowModal1(true);
     };
 
 
@@ -237,7 +234,7 @@ const KhoaHoc = (props) => {
                                                     </button>
                                                     <Link to={`/themchitiet/${item.maKH}`}>
                                                         <button className="btn btn-info">
-                                                            Thêm chi tiết
+                                                            Thêm mô tả
                                                         </button>
                                                     </Link>
                                                     <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
@@ -245,6 +242,11 @@ const KhoaHoc = (props) => {
                                                     </button>
                                                     <button className="btn btn-danger " onClick={() => { setselectID(item.maKH); setShowModal(true) }}
                                                     >Xoá</button>
+                                                    <Link to={`/mota/${item.maKH}`}>
+                                                        <button className="btn btn-info">
+                                                            Xem chi tiết
+                                                        </button>
+                                                    </Link>
                                                 </td>
 
                                             </tr>
@@ -317,6 +319,47 @@ const KhoaHoc = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     Bạn có chắc chắn muốn xoá khoá học này không?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Hủy
+                    </Button>
+                    <Button variant="danger" onClick={() => handleDelete()}>
+                        Xoá
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={showModal1}
+                onHide={() => setShowModal1(false)}
+                className="custom-modal"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Thêm chi tiết</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <h5>CHƯƠNG TRÌNH HỌC
+                        <Link to={`/themchitiet/${selectedMaKH}`}>
+                            <button className="btn btn-info">
+                                Thêm chi tiết
+                            </button>
+                        </Link>
+                    </h5>
+                    <h5>KẾT QUẢ ĐẠT ĐƯỢC
+                        <Link to={`/themchitiet/${selectedMaKH}`}>
+                            <button className="btn btn-info">
+                                Thêm chi tiết
+                            </button>
+                        </Link>
+                    </h5>
+                    <h5>THỜI LƯỢNG - HỌC PHÍ
+                        <Link to={`/themchitiet/${selectedMaKH}`}>
+                            <button className="btn btn-info">
+                                Thêm chi tiết
+                            </button>
+                        </Link>
+                    </h5>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>

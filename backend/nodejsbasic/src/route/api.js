@@ -45,7 +45,7 @@ const initAPIRoute = (app) => {
     router.get('/BoLocHocPhi', APIController.BoLocHocPhi)
 
     router.get('/layGioiThieuKhoaHoc/:maKH', APIController.layGioiThieuKhoaHoc)
-
+    router.get('/layNoiDungKhoaHoc/:maKH', APIController.layNoiDungKhoaHoc)
     var filename = ''
     const upload = multer({
         storage: multer.diskStorage({
@@ -324,7 +324,7 @@ const initAPIRoute = (app) => {
         }
     });
 
-    router.post("/themchitietkhoahoc", async (req, res) => {
+    router.post("/themmotakhoahoc", async (req, res) => {
         try {
             // const { maKH } = req.params; 
             let { maKH } = req.body;
@@ -337,6 +337,30 @@ const initAPIRoute = (app) => {
             await pool.execute(
                 "INSERT INTO chitiet_khoahoc (maKH, chitiet) VALUES (?, ?)",
                 [maKH, content]
+            );
+
+            res.json({ message: 'Data received successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    });
+
+    router.post("/themnoidungkhoahoc", async (req, res) => {
+        try {
+            // const { maKH } = req.params; 
+            let { maKH } = req.body;
+            const { content } = req.body; // Lấy nội dung từ body của yêu cầu
+            const { title } = req.body;
+
+            console.log("maKH:", maKH);
+            console.log("title:", title);
+            console.log("Content:", content);
+
+            // Thực hiện truy vấn SQL để chèn dữ liệu vào cơ sở dữ liệu
+            await pool.execute(
+                "INSERT INTO noidung_khoahoc (maKH, tieude, noidung) VALUES (?, ?, ?)",
+                [maKH, title, content]
             );
 
             res.json({ message: 'Data received successfully' });

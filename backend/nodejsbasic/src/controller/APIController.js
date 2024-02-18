@@ -1198,6 +1198,22 @@ let layGioiThieuKhoaHoc = async (req, res) => {
     }
 };
 
+let layNoiDungKhoaHoc = async (req, res) => {
+    const maKH = req.params.maKH;
+    try {
+        const [ND, a] = await pool.execute("SELECT tieude, noidung FROM noidung_khoahoc, khoa_hoc where noidung_khoahoc.maKH = ? and noidung_khoahoc.maKH = khoa_hoc.maKH", [maKH]);
+        return res.status(200).json({
+            ND: ND
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
 
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
@@ -1205,5 +1221,5 @@ module.exports = {
     layHinhAnhGioiThieu, deleteHAQC, layHinhAnhTrangChu, layGiangVien,
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung,
-    layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc
+    layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc
 }

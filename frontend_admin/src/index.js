@@ -17,7 +17,9 @@ import KhoaHoc from './components/Khoahoc/KhoaHoc';
 import LopHoc from './components/Khoahoc/LopHoc';
 import DSHocVien from './components/Khoahoc/DSHocVien';
 import AnhGioiThieu from './components/AnhGioiThieu/AnhGioiThieu';
-import ThemChiTiet from './components/Khoahoc/ModalThem';
+import ThemChiTiet from './components/Khoahoc/ThemChiTiet';
+import ThemNoiDungKhoaHoc from './components/Khoahoc/ThemNoiDungKhoaHoc';
+import MoTa from './components/Khoahoc/MoTa';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -37,6 +39,8 @@ root.render(
           <Route path="lophoc/:maKH" element={<LopHoc />} />
           <Route path="dshocvien/:maLopHoc" element={<DSHocVien />} />
           <Route path="themchitiet/:maKH" element={<ThemChiTiet />} />
+          <Route path="themnoidungkhoahoc/:maKH" element={<ThemNoiDungKhoaHoc />} />
+          <Route path="mota/:maKH" element={<MoTa />} />
         </Route>
       </Routes>
 
