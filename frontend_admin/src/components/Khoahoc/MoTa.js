@@ -1,23 +1,24 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-    faChevronRight,
-    faChevronLeft,
-    faMagnifyingGlass
-} from "@fortawesome/free-solid-svg-icons";
-import {
-    laydsLopHoc, deleteLH
-} from "../../services/apiService";
-import Modal from 'react-bootstrap/Modal';
-import { ToastContainer, toast } from 'react-toastify';
-import ModalUpdateLopHoc from "./ModalUpdateLopHoc";
+import axios from "axios";
 import { Link } from "react-router-dom";
-import ModalCreateLH from "./ModalCreateLopHoc";
-
-const LopHoc = (props) => {
+const MoTa = (props) => {
     const { maKH } = useParams();
-    const { maLopHoc } = useParams();
+
+    const [moTaKhoaHoc, setMoTaKhoaHoc] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:2209/api/v1/layMoTaKH/${maKH}`);
+                setMoTaKhoaHoc(response.data.ND);
+            } catch (error) {
+                console.error('Lỗi khi gọi API: ', error);
+            }
+        };
+
+        fetchData();
+    }, [maKH]);
 
     return (
         <>
@@ -35,164 +36,36 @@ const LopHoc = (props) => {
                                 </tr>
                             </thead>
                             <tbody id="myTable">
-                                <tr className="tableRow">
-                                    <td className="table-item col-right">1</td>
-                                    <td className="">Mô tả</td>
-                                    <td className="table-item">
-                                        <button className="btn btn-info ">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Xem
+                                {moTaKhoaHoc.map((item, index) => (
+                                    <tr key={index} className="tableRow">
+                                        <td className="table-item col-right">{index + 1}</td>
+                                        <td className="">{item.tieude}</td>
+
+                                        <td className="table-item">
+                                            <Link to={`/chinhsuamota/${maKH}`}>
+                                                <button className="btn btn-warning mx-2">
+                                                    Cập nhật
+                                                </button>
                                             </Link>
-                                        </button>
-                                        <Link to={`/themchitiet/${maKH}`}>
-                                            <button className="btn btn-info mx-2">
-                                                Thêm
+
+                                            <button className="btn btn-danger">
+                                                Xoá
                                             </button>
-                                        </Link>
-                                        <button className="btn btn-warning">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Cập nhật
-                                            </Link>
-                                        </button>
-
-                                    </td>
-                                </tr>
-                                <tr className="tableRow">
-                                    <td className="table-item col-right">2</td>
-                                    <td className="">Chương trình học</td>
-                                    <td className="table-item">
-
-                                        <button className="btn btn-info">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Xem
-                                            </Link>
-                                        </button>
-                                        <button className="btn btn-info mx-2">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Thêm
-                                            </Link>
-                                        </button>
-                                        <button className="btn btn-warning">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Cập nhật
-                                            </Link>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr className="tableRow">
-                                    <td className="table-item col-right">3</td>
-                                    <td className="">Kết quả đạt được</td>
-                                    <td className="table-item">
-                                        <button className="btn btn-info">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Xem
-                                            </Link>
-                                        </button>
-                                        <button className="btn btn-info mx-2">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Thêm
-                                            </Link>
-                                        </button>
-                                        <button className="btn btn-warning">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Cập nhật
-                                            </Link>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr className="tableRow">
-                                    <td className="table-item col-right">4</td>
-                                    <td className="">Ngày bắt đầu</td>
-                                    <td className="table-item">
-                                        <button className="btn btn-info">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Xem
-                                            </Link>
-                                        </button>
-                                        <button className="btn btn-info mx-2">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Thêm
-                                            </Link>
-                                        </button>
-                                        <button className="btn btn-warning">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Cập nhật
-                                            </Link>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr className="tableRow">
-                                    <td className="table-item col-right">5</td>
-                                    <td className="">Lịch học</td>
-                                    <td className="table-item">
-                                        <button className="btn btn-info ">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Xem
-                                            </Link>
-                                        </button>
-                                        <button className="btn btn-info mx-2">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Thêm
-                                            </Link>
-                                        </button>
-                                        <button className="btn btn-warning">
-                                            <Link to={`/dshocvien/${maLopHoc}`} className="navlink linkStyle">
-                                                Cập nhật
-                                            </Link>
-                                        </button>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {moTaKhoaHoc.length === 0 && (
+                                    <tr className="tablenone">
+                                        <td className="tablenone" colSpan="4">Không có mô tả khoá học!</td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
-
-
                     </div>
                 </div>
-                <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="light"
-                />
             </div>
-
-            {/* <ModalUpdateLopHoc
-                show={showModalUpdateLopHoc}
-                handleClose={() => setshowModalUpdateLopHoc(false)}
-                selectedLH={selectedLH}
-                onUpdate={fetchDSLopHoc}
-            />
-
-            <Modal
-                show={showModal}
-                onHide={() => setShowModal(false)}
-                className="custom-modal"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Xác nhận xoá</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    Bạn có chắc chắn muốn xoá lớp học này không?
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
-                        Hủy
-                    </Button>
-                    <Button variant="danger" onClick={() => handleDelete()}>
-                        Xoá
-                    </Button>
-                </Modal.Footer>
-            </Modal> */}
         </>
     );
 };
 
-
-
-export default LopHoc;
+export default MoTa;

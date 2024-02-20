@@ -47,7 +47,7 @@ const Header = () => {
                             <NavLink to='/user' className='nav-link'>Học Viên</NavLink>
                             <NavLink to='/khoahoc' className='nav-link'>Khoá Học</NavLink>
                             <NavLink to='/anhgioithieu' className='nav-link'>Ảnh Quảng Cáo</NavLink>
-
+                            <NavLink to='/thongtindiemthi' className='nav-link'>Thông Tin Điểm Thi</NavLink>
                         </Nav>
 
 

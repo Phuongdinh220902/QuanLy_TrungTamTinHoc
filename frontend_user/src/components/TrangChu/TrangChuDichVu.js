@@ -2,7 +2,7 @@
 import logoImage4 from '../../images/tien-ich-ho-tro-icon.png';
 import logoImage5 from '../../images/tra-cuu-chung-chi.png';
 import logoImage6 from '../../images/tra-cuu-diem-thi.png';
-
+import { Link } from "react-router-dom";
 const DichVu = () => {
 
     return (
@@ -18,13 +18,16 @@ const DichVu = () => {
                     <div className="tien-ich lazy visible">
                         <div className="col-sm-6 col-md-6 canh-le">
                             <div className="tien-ich-mo-ta">
-                                <a href="/tra-cuu-diem-thi" target="_blank">
+                                <Link to='tracuudiemthi'>
                                     <img className="img-responsive hidden-xs"
                                         src={logoImage6} alt="" />
-                                </a>
+                                </Link>
                                 <h3><img className="visible-xs"
                                     src={logoImage6}
-                                    alt="" /> <a href="/tra-cuu-diem-thi" target="_blank">Tra cứu kết quả thi</a></h3>
+                                    alt="" /> <Link to='tracuudiemthi'>
+                                        Tra cứu kết quả thi
+                                    </Link>
+                                </h3>
                                 <p>Học viên có thể tra cứu điểm thi và tải Chứng nhận hoàn thành khóa học sau ngày thi 2 tuần.</p>
                             </div>
                             <div className="clearfix"></div>

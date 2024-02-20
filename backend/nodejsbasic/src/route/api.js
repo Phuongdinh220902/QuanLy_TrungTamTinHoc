@@ -46,6 +46,11 @@ const initAPIRoute = (app) => {
 
     router.get('/layGioiThieuKhoaHoc/:maKH', APIController.layGioiThieuKhoaHoc)
     router.get('/layNoiDungKhoaHoc/:maKH', APIController.layNoiDungKhoaHoc)
+    router.get('/layThongTinDiemThi', APIController.layThongTinDiemThi)
+    router.post("/updateTTDT", APIController.updateTTDT)
+    router.get('/layMoTaKH/:maKH', APIController.layMoTaKH)
+    router.post("/updateMoTa/:maKH", APIController.updateMoTa)
+
     var filename = ''
     const upload = multer({
         storage: multer.diskStorage({

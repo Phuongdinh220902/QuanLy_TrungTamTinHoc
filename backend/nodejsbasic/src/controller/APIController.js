@@ -1214,6 +1214,67 @@ let layNoiDungKhoaHoc = async (req, res) => {
     }
 };
 
+let layThongTinDiemThi = async (req, res) => {
+    try {
+        const [ND, a] = await pool.execute("SELECT noidung FROM thongtindiemthi");
+        return res.status(200).json({
+            ND: ND
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let updateTTDT = async (req, res) => {
+    let noidung = req.body.noidung;
+    console.log("Nội dung:", noidung);
+    try {
+        await pool.execute(
+            "update thongtindiemthi set thongtindiemthi.noidung = ? ", [noidung]);
+
+        return res.status(200).json({
+            message: "Update thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+    }
+}
+
+let layMoTaKH = async (req, res) => {
+    const maKH = req.params.maKH;
+    try {
+        const [ND, a] = await pool.execute("SELECT maND, maKH, tieude, noidung FROM noidung_khoahoc where noidung_khoahoc.maKH = ?", [maKH]);
+        return res.status(200).json({
+            ND: ND
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let updateMoTa = async (req, res) => {
+    const maND = req.params.maND;
+    let { tieude, noidung } = req.body;
+    console.log("Nội dung:", noidung);
+    try {
+        await pool.execute(
+            "update noidung_khoahoc set noidung_khoahoc.tieude = ? and noidung_khoahoc.noidung = ? where noidung_khoahoc.maND = ?", [tieude, noidung, maND]);
+
+        return res.status(200).json({
+            message: "Update thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+    }
+}
 
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
@@ -1221,5 +1282,6 @@ module.exports = {
     layHinhAnhGioiThieu, deleteHAQC, layHinhAnhTrangChu, layGiangVien,
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung,
-    layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc
+    layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
+    updateMoTa
 }

@@ -1,13 +1,10 @@
-
-import { Link } from "react-router-dom";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-
+import { useNavigate } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 function uploadAdapter(loader) {
     return loader.file.then(file => {
         return new Promise((resolve, reject) => {
@@ -26,36 +23,56 @@ function uploadAdapter(loader) {
     });
 }
 
-function ThemChiTiet() {
-    const [editorData, setEditorData] = useState(" ");
-    const editorInstance = useRef(null);
+function ChinhSuaMoTa() {
     const { maKH } = useParams();
+    const { maND } = useParams();
+    const [editorData, setEditorData] = useState("");
+    const editorInstance = useRef(null);
+    const [tieude, setTieuDe] = useState("");
     const navigate = useNavigate();
 
-    const handleSendData = async () => {
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
         try {
-            const content = editorInstance.current.getData();
-            const response = await axios.post(
-                "http://localhost:2209/api/v1/themmotakhoahoc",
-                { maKH, content },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                },
-                console.log(maKH)
-            );
-            toast.success('Thêm thành công');
+            const response = await axios.get(`http://localhost:2209/api/v1/layMoTaKH/${maKH}`);
+            const { ND } = response.data;
+
+            if (ND && ND.length > 0 && ND[0].noidung) {
+                setEditorData(ND[0].noidung);
+                setTieuDe(ND[0].tieude);
+
+            } else {
+                console.error("Dữ liệu không hợp lệ từ API");
+            }
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu: ", error);
+        }
+    };
+
+    const handleUpdate = async () => {
+        try {
+            console.log(tieude)
+            console.log(editorData)
+            console.log(maND)
+            await axios.post(`http://localhost:2209/api/v1/updateMoTa/${maND}`, {
+                tieude: tieude, noidung: editorData, maND: maND
+            });
+
+            // Hiển thị thông báo thành công
+            toast.success("Cập nhật thành công!");
+
             setTimeout(() => {
                 navigate('/khoahoc');
             }, 4000);
 
         } catch (error) {
-            console.error("Error sending data:", error);
-            toast.error('Lỗi khi thêm');
+            console.error("Lỗi khi cập nhật dữ liệu: ", error);
+            // Xử lý lỗi
         }
     };
-
     const handleToastClose = () => {
         navigate('/khoahoc');
     };
@@ -63,14 +80,17 @@ function ThemChiTiet() {
     return (
         <>
             <div className="">
-                <Link to={`/themnoidungkhoahoc/${maKH}`}>
-                    <button style={{ marginLeft: '1200px', marginBottom: '10px' }} className="formatButton addButton">
-                        Thêm nội dung khoá học
-                    </button>
-                </Link>
+                <div className="searchHV-input">
+                    <h3>Tiêu Đề</h3>
+                    <input
+                        placeholder="Nhập tiêu đề"
+                        type="text"
+                        value={tieude}
+                        onChange={(e) => setTieuDe(e.target.value)}
+                    />
+                </div>
                 <CKEditor
                     editor={ClassicEditor}
-
                     onReady={(editor) => {
                         editorInstance.current = editor;
                         uploadPlugin(editor);
@@ -81,10 +101,9 @@ function ThemChiTiet() {
                     }}
                     data={editorData}
                 />
-                <div className="button-container1">
-                    <button className="btn btn-info" onClick={handleSendData}>Submit</button>
+                <div className="button-container">
+                    <button className="btn btn-info" onClick={handleUpdate}>Submit</button>
                 </div>
-
                 <ToastContainer
                     position="top-right"
                     autoClose={4000}
@@ -109,9 +128,4 @@ function uploadPlugin(editor) {
     };
 }
 
-export default ThemChiTiet;
-
-
-
-
-
+export default ChinhSuaMoTa;

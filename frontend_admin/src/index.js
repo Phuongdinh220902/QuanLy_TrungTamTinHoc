@@ -20,6 +20,8 @@ import AnhGioiThieu from './components/AnhGioiThieu/AnhGioiThieu';
 import ThemChiTiet from './components/Khoahoc/ThemChiTiet';
 import ThemNoiDungKhoaHoc from './components/Khoahoc/ThemNoiDungKhoaHoc';
 import MoTa from './components/Khoahoc/MoTa';
+import ThongTinDiemThi from './components/ThongTinDiemThi/ThongTinDiemThi';
+import ChinhSuaMoTa from './components/Khoahoc/ChinhSuaMoTa';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -41,6 +43,8 @@ root.render(
           <Route path="themchitiet/:maKH" element={<ThemChiTiet />} />
           <Route path="themnoidungkhoahoc/:maKH" element={<ThemNoiDungKhoaHoc />} />
           <Route path="mota/:maKH" element={<MoTa />} />
+          <Route path="chinhsuamota/:maKH" element={<ChinhSuaMoTa />} />
+          <Route path="thongtindiemthi" element={<ThongTinDiemThi />} />
         </Route>
       </Routes>
 
