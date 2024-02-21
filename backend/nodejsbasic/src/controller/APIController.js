@@ -974,10 +974,11 @@ let getMaXacNhan = async (req, res) => {
 let dangnhapnguoidung = async (req, res) => {
     let { email, password } = req.body;
     // Thực hiện truy vấn để lấy mật khẩu đã hash từ cơ sở dữ liệu
-    const [rows, fields] = await pool.execute("SELECT tenHV, password, gioitinh FROM hoc_vien WHERE email = ?", [email]);
+    const [rows, fields] = await pool.execute("SELECT maHV, tenHV, password, gioitinh FROM hoc_vien WHERE email = ?", [email]);
     console.log(password)
     if (rows.length > 0) {
         const hashedPassword = rows[0].password;
+        const maHV = rows[0].maHV;
         const tenHV = rows[0].tenHV;
         const gioitinh = rows[0].gioitinh;
         // So sánh mật khẩu đã hash với mật khẩu người dùng nhập vào
@@ -988,6 +989,7 @@ let dangnhapnguoidung = async (req, res) => {
             const token = jwt.sign({ email }, 'your-secret-key', { expiresIn: '1h' });
 
             return res.status(200).json({
+                maHV: maHV,
                 tenHV: tenHV,
                 gioitinh: gioitinh,
                 token: token
@@ -998,7 +1000,6 @@ let dangnhapnguoidung = async (req, res) => {
             });
         }
     } else {
-        console.log('a')
         return res.status(401).json({
             error: "Thông tin đăng nhập không đúng",
         });
@@ -1247,7 +1248,23 @@ let updateTTDT = async (req, res) => {
 let layMoTaKH = async (req, res) => {
     const maKH = req.params.maKH;
     try {
-        const [ND, a] = await pool.execute("SELECT maND, maKH, tieude, noidung FROM noidung_khoahoc where noidung_khoahoc.maKH = ?", [maKH]);
+        const [ND, a] = await pool.execute("SELECT maND, maKH, tieude, noidung FROM noidung_khoahoc where noidung_khoahoc.maKH = ? and noidung_khoahoc.trang_thai = 1", [maKH]);
+        return res.status(200).json({
+            ND: ND
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let lay1MoTaKH = async (req, res) => {
+    const maND = req.params.maND;
+    try {
+        const [ND, a] = await pool.execute("SELECT maND, maKH, tieude, noidung FROM noidung_khoahoc where noidung_khoahoc.maND = ? and noidung_khoahoc.trang_thai = 1", [maND]);
         return res.status(200).json({
             ND: ND
         })
@@ -1263,11 +1280,13 @@ let layMoTaKH = async (req, res) => {
 let updateMoTa = async (req, res) => {
     const maND = req.params.maND;
     let { tieude, noidung } = req.body;
-    console.log("Nội dung:", noidung);
+    console.log(noidung);
+    console.log(tieude);
     try {
         await pool.execute(
-            "update noidung_khoahoc set noidung_khoahoc.tieude = ? and noidung_khoahoc.noidung = ? where noidung_khoahoc.maND = ?", [tieude, noidung, maND]);
-
+            "update noidung_khoahoc set noidung_khoahoc.tieude = ? where noidung_khoahoc.maND = ?", [tieude, maND]);
+        await pool.execute(
+            "update noidung_khoahoc set noidung_khoahoc.noidung = ? where noidung_khoahoc.maND = ?", [noidung, maND]);
         return res.status(200).json({
             message: "Update thành công!",
         });
@@ -1276,6 +1295,38 @@ let updateMoTa = async (req, res) => {
     }
 }
 
+let deleteMoTa = async (req, res) => {
+    let maND = req.params.maND;
+    console.log("Mã hình ảnh để xoá:", maND);
+
+    try {
+        await pool.execute(
+            "update noidung_khoahoc set noidung_khoahoc.trang_thai = 0 where noidung_khoahoc.maND = ?", [maND]);
+
+        return res.status(200).json({
+            message: "Xóa thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+    }
+}
+
+let layTrangCaNhanHV = async (req, res) => {
+    const maHV = req.params.maHV;
+    try {
+        const [TCN, a] = await pool.execute("SELECT * FROM hoc_vien where hoc_vien.maHV = ? and hoc_vien.trang_thai = 1", [maHV]);
+        return res.status(200).json({
+            TCN: TCN
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
     laydskh, deleteKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien, laydsHocVien, deleteHVLopHoc, themLopHoc,
@@ -1283,5 +1334,5 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung,
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
-    updateMoTa
+    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV
 }

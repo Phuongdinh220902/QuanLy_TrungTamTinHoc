@@ -43,7 +43,7 @@ root.render(
           <Route path="themchitiet/:maKH" element={<ThemChiTiet />} />
           <Route path="themnoidungkhoahoc/:maKH" element={<ThemNoiDungKhoaHoc />} />
           <Route path="mota/:maKH" element={<MoTa />} />
-          <Route path="chinhsuamota/:maKH" element={<ChinhSuaMoTa />} />
+          <Route path="chinhsuamota/:maND" element={<ChinhSuaMoTa />} />
           <Route path="thongtindiemthi" element={<ThongTinDiemThi />} />
         </Route>
       </Routes>

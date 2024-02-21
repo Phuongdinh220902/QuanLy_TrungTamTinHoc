@@ -57,7 +57,11 @@ const layHinhAnhGioiThieu = (page) => {
     return axios.get(`api/v1/layHinhAnhGioiThieu/${page}`);
 };
 
+const deleteMoTa = (maND) => {
+    return axios.post(`api/v1/deleteMoTa/${maND}`);
+};
+
 export {
     laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH, laydsHocVien, deleteHVLopHoc,
-    layHinhAnhGioiThieu
+    layHinhAnhGioiThieu, deleteMoTa
 };

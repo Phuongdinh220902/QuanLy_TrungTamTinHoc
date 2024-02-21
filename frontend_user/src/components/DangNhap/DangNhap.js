@@ -2,15 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { dangnhapnguoidung } from "../../services/apiService";
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { Link } from "react-router-dom";
-
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import {
-//     faEyeSlash,
-//     faEye
-// } from "@fortawesome/free-solid-svg-icons";
 
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
@@ -39,15 +33,16 @@ const DangKyDangNhap = () => {
                 navigate('/');
                 const userData = response.data; // Dữ liệu người dùng từ phản hồi API
                 localStorage.setItem('user', JSON.stringify(userData));
+                localStorage.setItem('maHV', userData.maHV);
                 console.log(userData)
-            } else {
-                // Xử lý đăng nhập không thành công
-                console.log("Đăng nhập không thành công");
+            }
+            if (response.status === 401) {
+                toast.error('Thông tin đăng nhập không đúng')
             }
 
+
         } catch (error) {
-            // Xử lý lỗi từ phía client hoặc server
-            console.error("Lỗi trong quá trình đăng nhập:", error.message);
+            toast.error('Thông tin đăng nhập không đúng');
         }
     };
 
@@ -100,33 +95,32 @@ const DangKyDangNhap = () => {
         const normalizedTenHV = normalizeTenHV(tenHV);
 
         if (!tenHV.trim() || !email || !sdt || !ngaysinh || !noisinh || !gioitinh) {
-            console.log('Vui lòng điền đầy đủ thông tin')
             toast.error('Vui lòng điền đầy đủ thông tin');
             return;
         }
         // Kiểm tra tên có ít nhất 2 cụm từ
         const words = tenHV.trim().split(/\s+/);
         if (words.length < 2) {
-            console.log('Tên phải có ít nhất 2 cụm từ.');
+            toast.error('Tên phải có ít nhất 2 cụm từ.');
             return;
         }
 
         if (!/^[^\d!@#$%^&*()_+={}\[\]:;<>,?~\\/`"\|]*$/.test(tenHV)) {
-            console.log('Tên không được chứa các kí tự đặc biệt');
+            toast.error('Tên không được chứa các kí tự đặc biệt');
             return;
         }
 
         if (!isValidEmail) {
-            console.log('Email không hợp lệ');
+            toast.error('Email không hợp lệ');
             return;
         }
         if (!isValidPhone) {
-            console.log('Số điện thoại không hợp lệ');
+            toast.error('Số điện thoại không hợp lệ');
             return;
         }
 
         if (ageDifferenceInYears < 18) {
-            console.log('Học viên phải có tuổi từ 16 trở lên');
+            toast.error('Học viên phải có tuổi từ 16 trở lên');
             return;
         }
 
@@ -163,11 +157,12 @@ const DangKyDangNhap = () => {
                 }
             });
 
-            console.log("goi api xong")
-
             if (response.status === 200) {
-                console.log("ok dang ki thanh cong")
-                navigate('/dangnhap', { replace: true });
+                toast.success('Đăng ký tài khoản thành công');
+                setTimeout(() => {
+                    navigate('/dangnhap');
+                }, 3500);
+                // navigate('/dangnhap', { replace: true });
 
                 setTen('');
                 setEmail('');
@@ -201,6 +196,10 @@ const DangKyDangNhap = () => {
 
     const handleTogglePassword = () => {
         setShowPassword(!showPassword);
+    };
+
+    const handleToastClose = () => {
+        navigate('/dangnhap');
     };
 
 
@@ -580,9 +579,10 @@ const DangKyDangNhap = () => {
                     </div>
                 </div>
 
-                {/* <ToastContainer
+
+                <ToastContainer
                     position="top-right"
-                    autoClose={5000}
+                    autoClose={4000}
                     hideProgressBar={false}
                     newestOnTop={false}
                     closeOnClick
@@ -591,7 +591,8 @@ const DangKyDangNhap = () => {
                     draggable
                     pauseOnHover
                     theme="light"
-                /> */}
+                    onClose={handleToastClose}
+                />
             </div>
         </>
     );

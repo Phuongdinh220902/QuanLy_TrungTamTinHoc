@@ -329,47 +329,6 @@ const KhoaHoc = (props) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-            <Modal
-                show={showModal1}
-                onHide={() => setShowModal1(false)}
-                className="custom-modal"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Thêm chi tiết</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <h5>CHƯƠNG TRÌNH HỌC
-                        <Link to={`/themchitiet/${selectedMaKH}`}>
-                            <button className="btn btn-info">
-                                Thêm chi tiết
-                            </button>
-                        </Link>
-                    </h5>
-                    <h5>KẾT QUẢ ĐẠT ĐƯỢC
-                        <Link to={`/themchitiet/${selectedMaKH}`}>
-                            <button className="btn btn-info">
-                                Thêm chi tiết
-                            </button>
-                        </Link>
-                    </h5>
-                    <h5>THỜI LƯỢNG - HỌC PHÍ
-                        <Link to={`/themchitiet/${selectedMaKH}`}>
-                            <button className="btn btn-info">
-                                Thêm chi tiết
-                            </button>
-                        </Link>
-                    </h5>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
-                        Hủy
-                    </Button>
-                    <Button variant="danger" onClick={() => handleDelete()}>
-                        Xoá
-                    </Button>
-                </Modal.Footer>
-            </Modal>
         </>
     );
 };

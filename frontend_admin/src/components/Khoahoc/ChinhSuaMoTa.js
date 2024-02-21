@@ -37,7 +37,7 @@ function ChinhSuaMoTa() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://localhost:2209/api/v1/layMoTaKH/${maKH}`);
+            const response = await axios.get(`http://localhost:2209/api/v1/lay1MoTaKH/${maND}`);
             const { ND } = response.data;
 
             if (ND && ND.length > 0 && ND[0].noidung) {
@@ -58,7 +58,7 @@ function ChinhSuaMoTa() {
             console.log(editorData)
             console.log(maND)
             await axios.post(`http://localhost:2209/api/v1/updateMoTa/${maND}`, {
-                tieude: tieude, noidung: editorData, maND: maND
+                tieude: tieude, noidung: editorData
             });
 
             // Hiển thị thông báo thành công

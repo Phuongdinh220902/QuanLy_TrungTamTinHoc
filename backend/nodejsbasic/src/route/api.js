@@ -30,6 +30,10 @@ const initAPIRoute = (app) => {
     router.get('/DSGiangVien', APIController.DSGiangVien)
     router.get('/layHinhAnhGioiThieu/:page', APIController.layHinhAnhGioiThieu)
     router.post("/deleteHAQC/:maHinhAnhQC", APIController.deleteHAQC)
+    router.get('/layMoTaKH/:maKH', APIController.layMoTaKH)
+    router.post("/updateMoTa/:maND", APIController.updateMoTa)
+    router.get('/lay1MoTaKH/:maND', APIController.lay1MoTaKH)
+    router.post("/deleteMoTa/:maND", APIController.deleteMoTa)
     // USer
     router.get('/laydsHocVien/:maLopHoc/:page/:tukhoa', APIController.laydsHocVien)
     router.get('/layTrangChu', APIController.layTrangChu)
@@ -48,8 +52,7 @@ const initAPIRoute = (app) => {
     router.get('/layNoiDungKhoaHoc/:maKH', APIController.layNoiDungKhoaHoc)
     router.get('/layThongTinDiemThi', APIController.layThongTinDiemThi)
     router.post("/updateTTDT", APIController.updateTTDT)
-    router.get('/layMoTaKH/:maKH', APIController.layMoTaKH)
-    router.post("/updateMoTa/:maKH", APIController.updateMoTa)
+    router.get('/layTrangCaNhanHV/:maHV', APIController.layTrangCaNhanHV)
 
     var filename = ''
     const upload = multer({

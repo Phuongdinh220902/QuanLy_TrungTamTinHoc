@@ -20,7 +20,7 @@ import LienHe from './components/LienHe/LienHe';
 import GiangVien from './components/GiangVien/GiangVien';
 import TatCaKhoaHoc from './components/Khoahoc/TatCaKhoaHoc';
 import TraCuuDiemThi from './components/TraCuuDiem/TraCuuDiemThi';
-
+import TrangCaNhan from './components/TrangCaNhan/TrangCaNhan';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
@@ -40,6 +40,7 @@ root.render(
           <Route path="giangvien/:maGV" element={<GiangVien />} />
           <Route path="tatcakhoahoc" element={<TatCaKhoaHoc />} />
           <Route path="tracuudiemthi" element={<TraCuuDiemThi />} />
+          <Route path="trangcanhan" element={<TrangCaNhan />} />
         </Route>
       </Routes>
 

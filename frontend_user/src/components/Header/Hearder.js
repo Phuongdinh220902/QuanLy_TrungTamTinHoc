@@ -8,13 +8,11 @@ import logoImage from '../../images/logoctu.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Carousel } from 'react-bootstrap';
 import {
-    faHouse
+    faHouse, faRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
 import namImg from '../../images/nam.jpg';
 import nuImg from '../../images/nu.jpg';
 import { Link } from "react-router-dom";
-
-
 
 const Header = () => {
     const [dsKH, setDsKH] = useState([]);
@@ -92,6 +90,8 @@ const Header = () => {
         navigate('/dangnhap');
     };
 
+    const [showUserMenu, setShowUserMenu] = useState(false);
+
     return (
         <>
             <div className="container hidden-xs" style={{ position: 'relative' }}>
@@ -105,19 +105,18 @@ const Header = () => {
                         <i className="shopping-cart"></i>
                         <span style={{ margin: '0 2px 0 0' }}></span>
                     </div>
-                    {/* <input type="text" placeholder="Tìm kiếm" className="noi-dung-tim" /> */}
-                    {/* <span className="glyphicon glyphicon-search nut-tim" aria-hidden="true"></span> */}
                     <div className="user-info">
                         {user && (
                             <div className="user-info-container">
-                                <img src={user.gioitinh === 1 ? namImg : nuImg} alt={user.gioitinh === 1 ? 'Nam' : 'Nữ'} />
-                                <div className="user-details">
-                                    <div className="user-name" style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                                <div className="user-info">
+                                    <img src={user.gioitinh === 1 ? namImg : nuImg} alt={user.gioitinh === 1 ? 'Nam' : 'Nữ'} />
+                                    <Link to='/trangcanhan' className="user-name" style={{ fontSize: '18px', fontWeight: 'bold', color: 'black' }}>
                                         {user.tenHV}
-                                    </div>
-                                    <div className="logout-button">
-                                        <Button variant="link" onClick={handleLogout}>Đăng xuất</Button>
-                                    </div>
+
+                                    </Link>&nbsp;
+                                    &nbsp;<Link to="/" onClick={handleLogout} style={{ fontSize: '16px', color: 'black' }}>
+                                        <FontAwesomeIcon icon={faRightFromBracket} />
+                                    </Link>
                                 </div>
                             </div>
                         )}
