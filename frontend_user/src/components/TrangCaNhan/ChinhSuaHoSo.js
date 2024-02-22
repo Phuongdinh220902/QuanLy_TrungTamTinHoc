@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
+import { Link } from "react-router-dom";
+
 const ChinhSuaHoSo = () => {
     const [userProfile, setUserProfile] = useState(null);
     const maHV = localStorage.getItem('maHV');
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    // Hàm mở modal
+    const handleOpenPasswordModal = () => {
+        console.log('ok')
+        setShowPasswordModal(true);
+    };
 
+    // Hàm đóng modal
+    const handleClosePasswordModal = () => {
+        setShowPasswordModal(false);
+    };
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -98,7 +110,6 @@ const ChinhSuaHoSo = () => {
         }
     };
 
-    const [showModal, setShowModal] = useState(false);
     const styles = `
         .account-settings .user-profile {
             margin: 0 0 1rem 0;
@@ -160,6 +171,7 @@ const ChinhSuaHoSo = () => {
     return (
         <>
             <style>{styles}</style>
+
             <div className="container" style={{ marginTop: '45px' }}>
                 <div className="row gutters">
                     <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
@@ -233,7 +245,11 @@ const ChinhSuaHoSo = () => {
                                         <div className="text-right">
                                             <button type="button" id="submit" name="submit" className="btn btn-secondary">Huỷ</button>&nbsp;
                                             <button type="button" id="submit" name="submit" className="btn btn-primary" onClick={handleUpdateProfile}>Cập nhật</button>&nbsp;
-                                            <button type="button" className="btn btn-primary" >Đổi mật khẩu</button>
+                                            <Link to='/doimk'>
+                                                <button type="button" className="btn btn-primary" >
+                                                    Đổi mật khẩu
+                                                </button>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>

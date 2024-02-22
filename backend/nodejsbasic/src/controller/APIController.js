@@ -799,41 +799,6 @@ let layTrangChuGiangVien = async (req, res) => {
         });
     }
 };
-
-// let dangkyTKNguoiDung = async (req, res) => {
-//     let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password } = req.body;
-
-//     const [existingRows, existingFields] = await pool.execute("SELECT * FROM hoc_vien WHERE email = ? ", [email]);
-//     const [existingRows1, existingFields1] = await pool.execute("SELECT * FROM hoc_vien WHERE sdt = ? ", [sdt]);
-
-//     if (existingRows.length > 0) {
-//         return res.status(400).json({
-//             message: "Email đã tồn tại",
-//         });
-//     }
-//     if (existingRows1.length > 0) {
-//         return res.status(400).json({
-//             message: "Số điện thoại đã tồn tại",
-//         });
-//     }
-
-//     try {
-//         const [rows, fields] = await pool.execute(
-//             "INSERT INTO hoc_vien (tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password) VALUES (?, ?, ?, ?, ?, ?, ?)",
-//             [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password]
-//         );
-
-//         return res.status(200).json({
-//             message: "Đăng ký thành công"
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         return res.status(200).json({
-//             message: "Có lỗi xảy ra trong quá trình đăng ký",
-//         });
-//     }
-// }
-
 // let dangkyTKNguoiDung = async (req, res) => {
 //     console.log("ok")
 //     let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password } = req.body;
@@ -1343,6 +1308,50 @@ let updateHV1 = async (req, res) => {
     }
 }
 
+let doiMatKhau = async (req, res) => {
+    let { maHV, oldPassword, newPassword } = req.body;
+
+    try {
+        console.log(newPassword)
+        // Kiểm tra xem email có tồn tại trong cơ sở dữ liệu không
+        const [existingRows, existingFields] = await pool.execute("SELECT * FROM hoc_vien WHERE maHV = ? ", [maHV]);
+
+        if (existingRows.length === 0) {
+            return res.status(400).json({
+                message: "Email không tồn tại",
+            });
+        }
+
+        const user = existingRows[0];
+        const passwordMatch = await bcrypt.compare(oldPassword, user.password);
+
+        if (!passwordMatch) {
+            return res.status(400).json({
+                message: "Mật khẩu cũ không đúng",
+            });
+        }
+
+        // Hash mật khẩu mới
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        // Thực hiện cập nhật mật khẩu mới vào cơ sở dữ liệu
+        await pool.execute(
+            "UPDATE hoc_vien SET password = ? WHERE maHV = ?",
+            [hashedNewPassword, maHV]
+        );
+
+        return res.status(200).json({
+            message: "Đổi mật khẩu thành công",
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Có lỗi xảy ra trong quá trình đổi mật khẩu",
+        });
+    }
+}
+
+
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
     laydskh, deleteKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien, laydsHocVien, deleteHVLopHoc, themLopHoc,
@@ -1350,5 +1359,5 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung,
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
-    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1
+    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1, doiMatKhau
 }

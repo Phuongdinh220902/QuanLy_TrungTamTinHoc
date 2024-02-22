@@ -39,7 +39,7 @@ const ProfilePage = () => {
     return (
         <>
             <style>{styles}</style>
-            <section style={{ marginTop: "30px" }}>
+            <section style={{ marginTop: "31px", marginBottom: '28px' }}>
                 <div className="container py-5 h-100">
                     <div className="row d-flex justify-content-center align-items-center h-100">
                         <div className="col col-lg-6 mb-4 mb-lg-0">
@@ -109,7 +109,7 @@ const ProfilePage = () => {
                         </div>
                         <div className="col col-lg-6 mb-4 mb-lg-0">
                             <div className="card mb-3" style={{ borderRadius: ".5rem" }}>
-                                <div className="container mt-3" style={{ maxWidth: '600px', height: '310px', overflow: 'auto' }}>
+                                <div className="container mt-3" style={{ maxWidth: '600px', height: '290px', overflow: 'auto' }}>
                                     <h2>Các Khoá Học</h2>
                                     <div className="list-group" style={{ maxWidth: '520px' }}>
                                         <a href="/" className="list-group-item list-group-item-action">First item</a>

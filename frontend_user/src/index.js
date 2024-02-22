@@ -21,6 +21,7 @@ import TatCaKhoaHoc from './components/Khoahoc/TatCaKhoaHoc';
 import TraCuuDiemThi from './components/TraCuuDiem/TraCuuDiemThi';
 import TrangCaNhan from './components/TrangCaNhan/TrangCaNhan';
 import ChinhSuaHoSo from './components/TrangCaNhan/ChinhSuaHoSo';
+import DoiMK from './components/TrangCaNhan/ModalDoiMK';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -43,6 +44,7 @@ root.render(
           <Route path="tracuudiemthi" element={<TraCuuDiemThi />} />
           <Route path="trangcanhan" element={<TrangCaNhan />} />
           <Route path="chinhsuahoso" element={<ChinhSuaHoSo />} />
+          <Route path="doimk" element={<DoiMK />} />
         </Route>
       </Routes>
 
