@@ -46,7 +46,42 @@ import { Link } from "react-router-dom";
 //     );
 // }
 
+import { Carousel } from 'react-bootstrap';
 
+function MyCarousel() {
+    const [dsAnh, setDsAnh] = useState([]);
+    const [index, setIndex] = useState(0);
+
+    const handleSelect = (selectedIndex) => {
+        setIndex(selectedIndex);
+    };
+    useEffect(() => {
+        const fetchHinhAnh = async () => {
+            try {
+                const response = await axios.get('http://localhost:2209/api/v1/layHinhAnhTrangChu');
+                setDsAnh(response.data.HA);
+                console.log(response.data.HA);
+            } catch (error) {
+                console.error('Lỗi khi gọi API: ', error);
+            }
+        };
+        fetchHinhAnh();
+    }, []);
+
+    return (
+        <Carousel className="custom-carousel" interval={3000} controls={false} indicators onSelect={handleSelect}>
+            {dsAnh.map((anh, index) => (
+                <Carousel.Item key={index}>
+                    <img
+                        className="d-block w-100"
+                        src={`http://localhost:2209/images/${anh.tenHinhAnhQC}`}
+                        alt=""
+                    />
+                </Carousel.Item>
+            ))}
+        </Carousel>
+    );
+};
 
 const KhoaHoc = ({ match }) => {
     const formatCurrency = (value) => {
@@ -104,6 +139,7 @@ const KhoaHoc = ({ match }) => {
 
     return (
         <>
+            <MyCarousel />
             <div className="container nganh-khoang-cach" id="GioiThieuMonHoc">
                 <div className="col-md-9 khoang-cach-5">
                     <div className="col-md-4 khoang-cach-5 mon-hoc-image" style={{ textAlign: "center" }}>

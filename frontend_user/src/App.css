@@ -444,7 +444,7 @@ textarea {
 
 /* Để footer không đè lên nội dung chính */
 .main-container {
-  margin-bottom: 50px;
+  margin-bottom: 10px;
   /* Đặt khoảng cách dưới chính nội dung để tránh bị đè lên */
 }
 
@@ -795,8 +795,6 @@ h2,
 }
 
 .user-info-container img {
-  width: 40px;
-  /* Điều chỉnh kích thước của hình ảnh */
   height: 40px;
   border-radius: 50%;
   /* Làm tròn góc cho hình ảnh */

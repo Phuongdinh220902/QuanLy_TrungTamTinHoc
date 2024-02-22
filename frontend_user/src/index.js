@@ -13,7 +13,6 @@ import {
 import TrangChu from './components/TrangChu/TrangChu';
 import KhoaHoc from './components/Khoahoc/KhoaHoc';
 import LopHoc from './components/Khoahoc/LopHoc';
-import DSHocVien from './components/Khoahoc/DSHocVien';
 import DangNhap from './components/DangNhap/DangNhap';
 import QuenMK from './components/DangNhap/QuenMK';
 import LienHe from './components/LienHe/LienHe';
@@ -21,6 +20,8 @@ import GiangVien from './components/GiangVien/GiangVien';
 import TatCaKhoaHoc from './components/Khoahoc/TatCaKhoaHoc';
 import TraCuuDiemThi from './components/TraCuuDiem/TraCuuDiemThi';
 import TrangCaNhan from './components/TrangCaNhan/TrangCaNhan';
+import ChinhSuaHoSo from './components/TrangCaNhan/ChinhSuaHoSo';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
@@ -41,6 +42,7 @@ root.render(
           <Route path="tatcakhoahoc" element={<TatCaKhoaHoc />} />
           <Route path="tracuudiemthi" element={<TraCuuDiemThi />} />
           <Route path="trangcanhan" element={<TrangCaNhan />} />
+          <Route path="chinhsuahoso" element={<ChinhSuaHoSo />} />
         </Route>
       </Routes>
 

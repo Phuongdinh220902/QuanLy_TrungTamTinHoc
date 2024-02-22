@@ -10,8 +10,8 @@ import { Carousel } from 'react-bootstrap';
 import {
     faHouse, faRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
-import namImg from '../../images/nam.jpg';
-import nuImg from '../../images/nu.jpg';
+import namImg from '../../images/namavatar.png';
+import nuImg from '../../images/nu.webp';
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -169,7 +169,7 @@ const Header = () => {
             </Navbar>
 
 
-            <Carousel className="custom-carousel" interval={3000} controls={false} indicators onSelect={handleSelect}>
+            {/* <Carousel className="custom-carousel" interval={3000} controls={false} indicators onSelect={handleSelect}>
                 {dsAnh.map((anh, index) => (
                     <Carousel.Item key={index}>
                         <img
@@ -179,7 +179,7 @@ const Header = () => {
                         />
                     </Carousel.Item>
                 ))}
-            </Carousel>
+            </Carousel> */}
 
         </>
 

@@ -23,7 +23,7 @@ html {
 }
 
 .main-container {
-    min-height: calc(100vh - 328px);
+    min-height: calc(100vh - 500px);
 }
 
 button.multiselect {
@@ -506,18 +506,6 @@ ul.filters-active li button.filters-active-item {
 .khoa-hoc-level:before {
     display: inline-block;
     margin-right: 0.5rem;
-}
-
-.khoa-hoc-level.intermediate:before {
-    /* content: url(/template/frontend/images/intermediate.svg); */
-}
-
-.khoa-hoc-level.beginner:before {
-    /* content: url(/template/frontend/images/beginner.svg); */
-}
-
-.khoa-hoc-level.advanced:before {
-    /* content: url(/template/frontend/images/advanced.svg); */
 }
 
 .khoa-hoc-duration {

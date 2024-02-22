@@ -1314,7 +1314,7 @@ let deleteMoTa = async (req, res) => {
 let layTrangCaNhanHV = async (req, res) => {
     const maHV = req.params.maHV;
     try {
-        const [TCN, a] = await pool.execute("SELECT * FROM hoc_vien where hoc_vien.maHV = ? and hoc_vien.trang_thai = 1", [maHV]);
+        const [TCN, a] = await pool.execute("SELECT maHV, tenHV, email, sdt, DATE_FORMAT(STR_TO_DATE(ngaysinh, '%Y-%m-%d'), '%d-%m-%Y') AS ngaysinh, noisinh, gioitinh FROM hoc_vien where hoc_vien.maHV = ? and hoc_vien.trang_thai = 1", [maHV]);
         return res.status(200).json({
             TCN: TCN
         })
@@ -1327,6 +1327,22 @@ let layTrangCaNhanHV = async (req, res) => {
     }
 };
 
+let updateHV1 = async (req, res) => {
+    let { maHV, tenHV, email, sdt, ngaysinh, gioitinh, noisinh } = req.body;
+    console.log(req.body);
+    try {
+
+        const [rows, fields] = await pool.execute("UPDATE hoc_vien SET tenHV = ?, email =?, sdt = ?, ngaysinh=STR_TO_DATE(?, '%Y-%m-%d'), gioitinh = ?, noisinh = ? WHERE maHV=?", [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, maHV])
+        return res.status(200).json({
+            "message": "Cập nhật thành công"
+        })
+    }
+    catch (error) {
+        console.log("Lỗi khi cập nhật học viên: ", error);
+        return res.status(500).json({ error: "Lỗi khi cập nhật học viên" });
+    }
+}
+
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
     laydskh, deleteKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien, laydsHocVien, deleteHVLopHoc, themLopHoc,
@@ -1334,5 +1350,5 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung,
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
-    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV
+    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1
 }
