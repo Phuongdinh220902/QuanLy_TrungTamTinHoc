@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
-import logoImage from '../../images/logoctu.png';
+import logoImage from '../../images/logo.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Carousel } from 'react-bootstrap';
 import {

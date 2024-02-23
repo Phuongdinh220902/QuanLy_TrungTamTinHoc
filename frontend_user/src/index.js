@@ -21,7 +21,7 @@ import TatCaKhoaHoc from './components/Khoahoc/TatCaKhoaHoc';
 import TraCuuDiemThi from './components/TraCuuDiem/TraCuuDiemThi';
 import TrangCaNhan from './components/TrangCaNhan/TrangCaNhan';
 import ChinhSuaHoSo from './components/TrangCaNhan/ChinhSuaHoSo';
-import DoiMK from './components/TrangCaNhan/ModalDoiMK';
+import DoiMK from './components/TrangCaNhan/DoiMK';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

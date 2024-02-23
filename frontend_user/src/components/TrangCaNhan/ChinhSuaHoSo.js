@@ -243,8 +243,13 @@ const ChinhSuaHoSo = () => {
                                 <div className="row gutters">
                                     <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                         <div className="text-right">
-                                            <button type="button" id="submit" name="submit" className="btn btn-secondary">Huỷ</button>&nbsp;
-                                            <button type="button" id="submit" name="submit" className="btn btn-primary" onClick={handleUpdateProfile}>Cập nhật</button>&nbsp;
+                                            <Link to='/trangcanhan'>
+                                                <button type="button" className="btn btn-secondary" >
+                                                    Huỷ
+                                                </button>
+                                            </Link>
+
+                                            &nbsp;<button type="button" id="submit" name="submit" className="btn btn-primary" onClick={handleUpdateProfile}>Cập nhật</button>&nbsp;
                                             <Link to='/doimk'>
                                                 <button type="button" className="btn btn-primary" >
                                                     Đổi mật khẩu

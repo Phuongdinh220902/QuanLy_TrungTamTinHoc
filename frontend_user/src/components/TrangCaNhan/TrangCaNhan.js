@@ -75,7 +75,7 @@ const ProfilePage = () => {
                                                     </div>
                                                 </div>
                                                 <div className="col-6 mb-3">
-                                                    <h6>Phone</h6>
+                                                    <h6>Số điện thoại</h6>
                                                     <p className="text-muted">{userProfile && userProfile.sdt}</p>
                                                 </div>
                                             </div>
@@ -110,7 +110,7 @@ const ProfilePage = () => {
                         <div className="col col-lg-6 mb-4 mb-lg-0">
                             <div className="card mb-3" style={{ borderRadius: ".5rem" }}>
                                 <div className="container mt-3" style={{ maxWidth: '600px', height: '290px', overflow: 'auto' }}>
-                                    <h2>Các Khoá Học</h2>
+                                    <h2>Các khoá học</h2>
                                     <div className="list-group" style={{ maxWidth: '520px' }}>
                                         <a href="/" className="list-group-item list-group-item-action">First item</a>
                                         <a href="/" className="list-group-item list-group-item-action">Second item</a>

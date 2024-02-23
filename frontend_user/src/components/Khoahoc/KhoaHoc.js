@@ -166,7 +166,7 @@ const KhoaHoc = ({ match }) => {
                         {contentData.map((item, index) => (
                             <div className="panel panel-default" key={index}>
                                 <div className="panel-heading">
-                                    <a className="myCollapse" data-toggle="collapse" data-parent="#accordion" href={`#collapse${index + 1}`} aria-expanded="true">
+                                    <a className="myCollapse" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">
                                         <h4 className="panel-title" style={{ float: 'left', paddingTop: '3px', width: '95%', color: '#FD6504' }}>
                                             {item.tieude}
                                         </h4>
