@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-    faPenToSquare,
     faChevronRight,
     faChevronLeft,
     faMagnifyingGlass
@@ -14,9 +13,9 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import ModalUpdateLopHoc from "./ModalUpdateLopHoc";
-import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import ModalCreateLH from "./ModalCreateLopHoc";
+import axios from "axios";
 
 const LopHoc = (props) => {
     const [DSLopHoc, setListLopHoc] = useState([]);
@@ -35,6 +34,7 @@ const LopHoc = (props) => {
     useEffect(() => {
         fetchDSLopHoc();
     }, [currentPage, tukhoa]);
+
 
     const handleOpenModalUpdate = (lh) => {
         try {
@@ -89,6 +89,9 @@ const LopHoc = (props) => {
 
             if (res.status === 200) {
                 setListLopHoc(res.data.dataCD);
+                const newCheckboxStates = res.data.dataCD.map((item) => item.hoan_thanh === 1);
+                setCheckboxStates(newCheckboxStates);
+                setNewState(newCheckboxStates);
             } else {
                 console.error("Lỗi khi gọi API:", res.statusText);
             }
@@ -112,7 +115,48 @@ const LopHoc = (props) => {
         setShowModalCreateLH(false);
     };
 
+    const [checkboxStates, setCheckboxStates] = useState([]);
 
+    const [newState, setNewState] = useState([]);
+
+    useEffect(() => {
+        if (DSLopHoc.length > 0) {
+            const initialCheckboxStates = DSLopHoc.map((item) => item.hoan_thanh === 1);
+            setCheckboxStates(initialCheckboxStates);
+            setNewState(initialCheckboxStates); // Khởi tạo trạng thái mới ban đầu
+        }
+    }, [DSLopHoc]);
+
+
+    const handleCheckboxChange = async (maDSHV, isChecked, index) => {
+        const newCheckboxStates = [...checkboxStates];
+        newCheckboxStates[index] = !newCheckboxStates[index];
+        setCheckboxStates(newCheckboxStates);
+
+        const newNewState = [...newState];
+        newNewState[index] = !newNewState[index]; // Cập nhật trạng thái mới
+        setNewState(newNewState);
+
+        const dataToSave = DSLopHoc.map((item, index) => ({
+            maLopHoc: item.maLopHoc, // Replace with the actual property name
+            isChecked: newNewState[index],
+        }));
+
+        try {
+            const response = await axios.post('http://localhost:2209/api/v1/SaveCheckboxStatesLopHoc', {
+                maLopHoc: maLopHoc,
+                isChecked: dataToSave,
+            });
+
+            if (response.status === 200) {
+                toast.success('Cập nhật trạng thái thành công')
+            } else {
+                toast.error('Cập nhật trạng thái thất bại')
+            }
+        } catch (error) {
+            console.error('Lỗi khi gửi yêu cầu API:', error);
+        }
+    };
 
     return (
         <>
@@ -151,6 +195,7 @@ const LopHoc = (props) => {
                                     <th className="table-item ">Tên giảng viên</th>
                                     <th className="table-item ">Ngày bắt đầu</th>
                                     <th className="table-item ">Lịch học</th>
+                                    <th className="table-item ">Đã hoàn thành</th>
                                     <th className="table-item ">  </th>
                                 </tr>
                             </thead>
@@ -166,6 +211,13 @@ const LopHoc = (props) => {
                                                 <td className="table-item">{item.ngay_batdau}
                                                 </td>
                                                 <td className="">{item.thoigian}</td>
+                                                <td className="col-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={checkboxStates[index]}
+                                                        onChange={() => handleCheckboxChange(item.maLopHoc, checkboxStates[index], index)}
+                                                    />
+                                                </td>
 
                                                 <td className="table-item">
                                                     <button className="btn btn-info">
@@ -266,58 +318,6 @@ const LopHoc = (props) => {
     );
 };
 
-// const LopHoc = (props) => {
-//     const [DSLopHoc, setListLopHoc] = useState([]);
-//     const { maKH } = useParams();
-
-//     useEffect(() => {
-//         fetchDSLopHoc();
-//     }, []);
-
-//     const fetchDSLopHoc = async () => {
-//         try {
-//             let res = await laymotKH(maKH);
-//             console.log(res);
-
-//             if (res.status === 200) {
-//                 setListLopHoc(res.data.dataCD);
-//             } else {
-//                 console.error("Lỗi khi gọi API:", res.statusText);
-//             }
-//         } catch (error) {
-//             console.error("Lỗi khi gọi API:", error.message);
-//         }
-//     };
-
-//     return (
-//         <>
-//             <div className="container-fluid app__content">
-//                 <h2 className="text-center">Danh Sách Lớp Học</h2>
-
-//                 <div className="listDV">
-//                     <div className="table-container">
-//                         <table className="table table-striped">
-//                             <thead>
-//                                 <tr>
-//                                     <th className="table-item ">STT</th>
-//                                     <th className="table-item ">Tên Lớp Học</th>
-//                                 </tr>
-//                             </thead>
-//                             <tbody id="myTable">
-//                                 {DSLopHoc.map((item, index) => (
-//                                     <tr key={`table-lophoc-${index}`} className="tableRow">
-//                                         <td className="table-item col-right">{index + 1}</td>
-//                                         <td className="table-item">{item.tenLopHoc}</td>
-//                                     </tr>
-//                                 ))}
-//                             </tbody>
-//                         </table>
-//                     </div>
-//                 </div>
-//             </div>
-//         </>
-//     );
-// };
 
 
 

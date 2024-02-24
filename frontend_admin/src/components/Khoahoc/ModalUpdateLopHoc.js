@@ -13,59 +13,8 @@ const ModalUpdateLopHoc = ({ show, handleClose, selectedLH, onUpdate }) => {
     const [diadiem, setDiaDiem] = useState('');
     const [ngay_batdau, setNgayBatDau] = useState('02/02/2002');
     const [dsGV, setDsGV] = useState([]);
-    // const newns = format(new Date(ngay_batdau), "dd/MM/yyyy");
-
-    // function check_date(cur_date) {
-    //     // cur_date = cur_date.toString()
-    //     var dateArray = cur_date.split('/');
-    //     var year = dateArray[0]
-    //     var month = dateArray[1]
-    //     var day = dateArray[2]
-    //     var viTriT = year.indexOf('T');
-
-    //     if (viTriT !== -1) {
-    //         year = year.substring(0, viTriT);
-    //     }
-    //     if (day.length == 2) {
-    //         try {
-    //             var day_number = Number(day)
-    //             if (day_number < 0 || day_number > 31) {
-    //                 alert("Ngay khong hop le")
-    //             }
-    //         }
-    //         catch (err) {
-    //             alert(err)
-    //         }
-
-    //     }
-
-    //     if (month.length == 2) {
-    //         try {
-    //             var month_nubmer = Number(month)
-    //             console.log(month_nubmer)
-    //             if (month_nubmer < 0 || month_nubmer > 12) {
-    //                 alert("thang khong hop le")
-    //             }
-    //         }
-    //         catch (err) {
-    //             alert("thang khong hop le")
-    //         }
-
-    //     }
-
-    //     try {
-    //         var year_number = Number(year)
-
-    //     } catch (err) {
-    //         alert("nam khong hop le")
-    //     }
-
-    //     return day + '/' + month + '/' + year
-    // }
 
     function check_date(cur_date) {
-        // // Kiểm tra nếu cur_date không tồn tại hoặc là chuỗi rỗng
-        console.log(cur_date)
         if (!cur_date || cur_date.trim() === '') {
             // alert("Ngày không hợp lệ");
             return cur_date;

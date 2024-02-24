@@ -522,10 +522,10 @@ let laydsLopHoc = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
-            const [sotrang, fields] = await pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau , lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH", [maKH]);
+            const [sotrang, fields] = await pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, lop_hoc.hoan_thanh,tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau , lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH", [maKH]);
             console.log(sotrang)
             const [result2, fields1] = await Promise.all([
-                pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc,DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau , lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH LIMIT ? OFFSET ?", [
+                pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV,lop_hoc.hoan_thanh, lich_hoc.thoigian, tenGV, tenLopHoc,DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau , lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH LIMIT ? OFFSET ?", [
                     maKH,
                     pageSize,
                     offset,
@@ -556,14 +556,14 @@ let laydsLopHoc = async (req, res) => {
         const offset = (page - 1) * pageSize;
 
         const [sotrang, fields] = await pool.execute(
-            "SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH AND (UPPER(lop_hoc.tenLopHoc) LIKE UPPER(?) OR UPPER(giang_vien.tenGV) LIKE UPPER(?))",
+            "SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian,lop_hoc.hoan_thanh ,tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH AND (UPPER(lop_hoc.tenLopHoc) LIKE UPPER(?) OR UPPER(giang_vien.tenGV) LIKE UPPER(?))",
             [maKH, "%" + tukhoa + "%", "%" + tukhoa + "%"]
         );
         console.log(sotrang)
 
         const [result2, fields1] = await Promise.all([
             pool.execute(
-                "SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH AND (UPPER(lop_hoc.tenLopHoc) LIKE UPPER(?) OR UPPER(giang_vien.tenGV) LIKE UPPER(?))",
+                "SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian ,lop_hoc.hoan_thanh, tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau, lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH AND (UPPER(lop_hoc.tenLopHoc) LIKE UPPER(?) OR UPPER(giang_vien.tenGV) LIKE UPPER(?))",
                 [maKH, "%" + tukhoa + "%", "%" + tukhoa + "%"]
             ),
         ]);
@@ -664,10 +664,10 @@ let laydsHocVien = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
-            const [sotrang, fields] = await pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV", [maLopHoc]);
+            const [sotrang, fields] = await pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, lop_hoc.maKH, khoa_hoc.hocphisaukhigiam, hoc_phi.maDSHV, hoc_phi.trang_thai, hoc_phi.maHP FROM dshv, lop_hoc, khoa_hoc, hoc_vien, hoc_phi where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and lop_hoc.maKH = khoa_hoc.maKH and dshv.maDSHV = hoc_phi.maDSHV", [maLopHoc]);
             console.log(sotrang)
             const [result2, fields1] = await Promise.all([
-                pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV LIMIT ? OFFSET ?", [
+                pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, lop_hoc.maKH, khoa_hoc.hocphisaukhigiam, hoc_phi.maDSHV, hoc_phi.trang_thai, hoc_phi.maHP FROM dshv, lop_hoc, khoa_hoc, hoc_vien, hoc_phi where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and lop_hoc.maKH = khoa_hoc.maKH and dshv.maDSHV = hoc_phi.maDSHV LIMIT ? OFFSET ?", [
                     maLopHoc,
                     pageSize,
                     offset,
@@ -687,7 +687,7 @@ let laydsHocVien = async (req, res) => {
                     dataCD: [],
                     totalPages: 0,
                     currentPage: 1,
-                    dsGV: dsGV
+
                 });
             }
         }
@@ -697,14 +697,14 @@ let laydsHocVien = async (req, res) => {
         const offset = (page - 1) * pageSize;
 
         const [sotrang, fields] = await pool.execute(
-            "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
+            "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, lop_hoc.maKH, khoa_hoc.hocphisaukhigiam, hoc_phi.maDSHV, hoc_phi.trang_thai, hoc_phi.maHP FROM dshv, lop_hoc, khoa_hoc, hoc_vien, hoc_phi where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and lop_hoc.maKH = khoa_hoc.maKH and dshv.maDSHV = hoc_phi.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
             [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%"]
         );
         console.log(sotrang)
 
         const [result2, fields1] = await Promise.all([
             pool.execute(
-                "SELECT dshv.maDSHV,dshv.maLopHoc, dshv.maHV, tenHV, email, sdt FROM dshv, lop_hoc, hoc_vien where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
+                "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, lop_hoc.maKH, khoa_hoc.hocphisaukhigiam, hoc_phi.maDSHV, hoc_phi.trang_thai, hoc_phi.maHP FROM dshv, lop_hoc, khoa_hoc, hoc_vien, hoc_phi where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and lop_hoc.maKH = khoa_hoc.maKH and dshv.maDSHV = hoc_phi.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
                 [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%"]
             ),
         ]);
@@ -1390,37 +1390,68 @@ let doiMatKhau = async (req, res) => {
 // };
 
 
-// let SaveCheckboxStates = async (req, res) => {
-//     let { IDDoanPhi, checkboxStates } = req.body;
+let SaveCheckboxStates = async (req, res) => {
+    let { maDSHV, isChecked } = req.body;
 
-//     console.log(req.body);
-//     console.log("+=============");
-//     console.log(checkboxStates);
+    console.log(req.body);
+    console.log("+=============");
+    console.log(isChecked);
 
-//     try {
-//         // Assuming checkboxStates is an array of objects with IDChiTietDoanPhi and isChecked
-//         for (let { IDChiTietDoanPhi, isChecked } of checkboxStates) {
-//             if (isChecked == false) {
-//                 isChecked = 0;
-//             } else {
-//                 isChecked = 1;
-//             }
-//             console.log(isChecked);
-//             await pool.execute(
-//                 "UPDATE chitietdoanphi SET DaDong = ? WHERE IDChiTietDoanPhi = ? and IDDoanPhi = ?",
-//                 [isChecked, IDChiTietDoanPhi, IDDoanPhi]
-//             );
-//         }
+    try {
+        // Assuming checkboxStates is an array of objects with IDChiTietDoanPhi and isChecked
+        for (let { maHP, isChecked } of isChecked) {
+            if (isChecked == false) {
+                isChecked = 0;
+            } else {
+                isChecked = 1;
+            }
+            console.log(isChecked);
+            await pool.execute(
+                "UPDATE hoc_phi SET trang_thai = ? WHERE maDSHV = ? and maHP = ?",
+                [isChecked, maDSHV, maHP]
+            );
+        }
 
-//         return res.status(200).json({
-//             success: true,
-//             message: "Cập nhật thành công!",
-//         });
-//     } catch (error) {
-//         console.error("Error updating checkbox states:", error);
-//         return res.status(500).json({ message: "Cập nhật thành công!" });
-//     }
-// };
+        return res.status(200).json({
+            success: true,
+            message: "Cập nhật thành công!",
+        });
+    } catch (error) {
+        console.error("Error updating checkbox states:", error);
+        return res.status(500).json({ message: "Cập nhật thành công!" });
+    }
+};
+
+let SaveCheckboxStatesLopHoc = async (req, res) => {
+    let { maLopHoc, isChecked } = req.body;
+
+    console.log(req.body);
+    console.log("+=============");
+    console.log(isChecked);
+
+    try {
+        for (let { maLopHoc, isChecked } of isChecked) {
+            if (isChecked == false) {
+                isChecked = 0;
+            } else {
+                isChecked = 1;
+            }
+            console.log(isChecked);
+            await pool.execute(
+                "UPDATE lop_hoc SET hoan_thanh = ? WHERE maLopHoc = ?",
+                [isChecked, maLopHoc]
+            );
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Cập nhật thành công!",
+        });
+    } catch (error) {
+        console.error("Error updating checkbox states:", error);
+        return res.status(500).json({ message: "Cập nhật thất bại!" });
+    }
+};
 
 
 module.exports = {
@@ -1430,5 +1461,5 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung,
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
-    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1, doiMatKhau
+    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc
 }

@@ -194,7 +194,6 @@ const KhoaHoc = (props) => {
                                     <th className="table-item ">Tên khoá học</th>
                                     <th className="table-item ">Học phí</th>
                                     <th className="table-item ">Học phí giảm</th>
-                                    <th className="table-item ">Môn học</th>
                                     <th className="table-item ">Số giờ</th>
                                     <th className="table-item ">Ảnh</th>
                                     <th> </th>
@@ -211,7 +210,6 @@ const KhoaHoc = (props) => {
                                                 {/* <td className="col-right">{item.hocphi ? item.hocphi : 0}</td> */}
                                                 <td className="col-right">{formatCurrency(item.hocphi ? item.hocphi : 0)}đ</td>
                                                 <td className="col-right">{formatCurrency(item.hocphisaukhigiam ? item.hocphisaukhigiam : item.hocphi)}đ</td>
-                                                <td className="">{item.monhoc}</td>
                                                 <td className="">{item.so_gio} giờ </td>
                                                 <td>
                                                     <img
@@ -229,24 +227,25 @@ const KhoaHoc = (props) => {
                                                 <td className="table-item">
                                                     <button className="btn btn-info mx-2">
                                                         <Link to={`/lophoc/${item.maKH}`} className="navlink linkStyle">
-                                                            Xem
+                                                            Xem lớp học
                                                         </Link>
                                                     </button>
+                                                    <Link to={`/mota/${item.maKH}`}>
+                                                        <button className="btn btn-info ">
+                                                            Xem mô tả
+                                                        </button>
+                                                    </Link>
                                                     <Link to={`/themchitiet/${item.maKH}`}>
-                                                        <button className="btn btn-info">
+                                                        <button className="btn btn-info mx-2">
                                                             Thêm mô tả
                                                         </button>
                                                     </Link>
-                                                    <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
+                                                    <button className="btn btn-warning" onClick={() => handleOpenModalUpdate(item)}>
                                                         Cập nhật
                                                     </button>
-                                                    <button className="btn btn-danger " onClick={() => { setselectID(item.maKH); setShowModal(true) }}
+                                                    <button className="btn btn-danger mx-2" onClick={() => { setselectID(item.maKH); setShowModal(true) }}
                                                     >Xoá</button>
-                                                    <Link to={`/mota/${item.maKH}`}>
-                                                        <button className="btn btn-info">
-                                                            Xem chi tiết
-                                                        </button>
-                                                    </Link>
+
                                                 </td>
 
                                             </tr>

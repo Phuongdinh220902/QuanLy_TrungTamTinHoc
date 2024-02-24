@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-    faPenToSquare,
     faChevronRight,
     faChevronLeft,
     faMagnifyingGlass
@@ -14,7 +13,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import ModalUpdateLopHoc from "./ModalUpdateLopHoc";
-
+import axios from "axios";
 const DSHocVien = (props) => {
     const [DSHocVien, setListHocVien] = useState([]);
     // const { maLopHoc } = useParams();
@@ -33,16 +32,6 @@ const DSHocVien = (props) => {
         fetchDSHocVien();
     }, [currentPage, tukhoa]);
 
-    // const handleOpenModalUpdate = (lh) => {
-    //     try {
-    //         setselectedLH(lh);
-    //         setshowModalUpdateLopHoc(true);
-    //     }
-    //     catch (err) {
-    //         console.log(err)
-    //     }
-
-    // };
 
     const handleDelete = async () => {
         try {
@@ -80,12 +69,15 @@ const DSHocVien = (props) => {
 
     const fetchDSHocVien = async () => {
         try {
-            let tukhoa_ = localStorage.getItem("tukhoa")
+            let tukhoa_ = localStorage.getItem("tukhoa");
             let res = await laydsHocVien(maLopHoc, currentPage, tukhoa_);
             console.log(res);
 
             if (res.status === 200) {
                 setListHocVien(res.data.dataCD);
+                const newCheckboxStates = res.data.dataCD.map((item) => item.trang_thai === 1);
+                setCheckboxStates(newCheckboxStates);
+                setNewState(newCheckboxStates); // Cập nhật trạng thái mới khi fetch dữ liệu mới
             } else {
                 console.error("Lỗi khi gọi API:", res.statusText);
             }
@@ -93,6 +85,7 @@ const DSHocVien = (props) => {
             console.error("Lỗi khi gọi API:", error.message);
         }
     };
+
     const handleSearch = async () => {
         if (tukhoa === "" || !tukhoa) {
             tukhoa = "null"
@@ -101,6 +94,50 @@ const DSHocVien = (props) => {
         await fetchDSHocVien();
     };
 
+    const [checkboxStates, setCheckboxStates] = useState([]);
+
+    const [newState, setNewState] = useState([]);
+
+    useEffect(() => {
+        if (DSHocVien.length > 0) {
+            const initialCheckboxStates = DSHocVien.map((item) => item.trang_thai === 1);
+            setCheckboxStates(initialCheckboxStates);
+            setNewState(initialCheckboxStates); // Khởi tạo trạng thái mới ban đầu
+        }
+    }, [DSHocVien]);
+
+
+
+
+    const handleCheckboxChange = async (maDSHV, isChecked, index) => {
+        const newCheckboxStates = [...checkboxStates];
+        newCheckboxStates[index] = !newCheckboxStates[index];
+        setCheckboxStates(newCheckboxStates);
+
+        const newNewState = [...newState];
+        newNewState[index] = !newNewState[index]; // Cập nhật trạng thái mới
+        setNewState(newNewState);
+
+        const dataToSave = DSHocVien.map((item, index) => ({
+            maHP: item.maHP, // Replace with the actual property name
+            isChecked: newNewState[index],
+        }));
+
+        try {
+            const response = await axios.post('http://localhost:2209/api/v1/SaveCheckboxStates', {
+                maDSHV: maDSHV,
+                isChecked: dataToSave,
+            });
+
+            if (response.status === 200) {
+                toast.success('Cập nhật trạng thái thành công')
+            } else {
+                toast.error('Cập nhật trạng thái thất bại')
+            }
+        } catch (error) {
+            console.error('Lỗi khi gửi yêu cầu API:', error);
+        }
+    };
 
     return (
         <>
@@ -132,10 +169,10 @@ const DSHocVien = (props) => {
                             <thead>
                                 <tr>
                                     <th className="table-item">STT</th>
-                                    {/* <th className="table-item ">Tên lớp học</th> */}
                                     <th className="table-item ">Tên học viên</th>
                                     <th className="table-item ">Email</th>
-                                    {/* <th className="table-item ">Lịch học</th> */}
+                                    <th className="table-item ">Học phí</th>
+                                    <th className="table-item ">Đã nộp</th>
                                     <th className="table-item ">  </th>
                                 </tr>
                             </thead>
@@ -148,6 +185,16 @@ const DSHocVien = (props) => {
                                                 <td className="table-item col-right">{index + 1}</td>
                                                 <td className="">{item.tenHV}</td>
                                                 <td className="">{item.email}</td>
+                                                <td className="">{item.hocphisaukhigiam}</td>
+                                                <td className="col-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={checkboxStates[index]}
+                                                        onChange={() => handleCheckboxChange(item.maDSHV, checkboxStates[index], index)}
+                                                    />
+                                                </td>
+
+
                                                 <td className="table-item">
                                                     {/* <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
                                                         Cập nhật
@@ -161,7 +208,7 @@ const DSHocVien = (props) => {
                                     })}
                                 {DSHocVien && DSHocVien.length === 0 && (
                                     <tr className="tablenone">
-                                        <td className="tablenone">Không có lớp học nào!</td>
+                                        <td className="tablenone">Không có học viên nào!</td>
                                     </tr>
                                 )}
                             </tbody>
