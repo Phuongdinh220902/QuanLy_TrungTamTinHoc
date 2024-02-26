@@ -940,3 +940,108 @@ h2,
     font-size: 16px;
   }
 }
+
+/* Trang chủ cảm nhận */
+.hoc-vien-container {
+  background-image: url("./images/bg_Y_Kien_HV.jpg");
+}
+
+.owl-stage-outer {
+  display: flex;
+  justify-content: center;
+}
+
+.owl-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.owl-nav button {
+  background-color: transparent;
+  /* Xóa màu nền */
+  border: none;
+  /* Xóa viền */
+  padding: 0;
+  /* Loại bỏ khoảng trống */
+  font-size: 1.5rem;
+  /* Điều chỉnh kích thước của icon */
+  color: #000;
+  /* Màu của icon */
+}
+
+
+
+.owl-nav button:hover {
+  color: #666;
+  /* Màu của icon khi di chuột qua */
+}
+
+.owl-dots {
+  background-color: transparent;
+  /* Xóa màu nền */
+  padding: 0;
+  /* Loại bỏ khoảng trống */
+  display: flex;
+  /* Sắp xếp các điểm trên cùng 1 hàng */
+  justify-content: center;
+  /* Căn giữa theo chiều ngang */
+  align-items: center;
+  /* Căn giữa theo chiều dọc */
+}
+
+.owl-dots button.owl-dot {
+  background-color: rgba(255, 255, 255, 0.5);
+  /* Màu nền với độ mờ */
+  border: none;
+  /* Xóa viền */
+  border-radius: 50%;
+  /* Đảm bảo hình tròn */
+  padding: 5px;
+  /* Điều chỉnh kích thước */
+  margin: 0 5px;
+  /* Khoảng cách giữa các điểm */
+}
+
+.owl-dots button.owl-dot.active {
+  background-color: rgba(255, 255, 255, 0.8);
+  /* Màu nền của điểm được chọn */
+}
+
+.custom-carousel {
+  overflow: hidden;
+  position: relative;
+}
+
+.custom-carousel .owl-stage {
+  display: flex;
+  transition: transform 0.5s ease;
+  /* Hiệu ứng trượt */
+}
+
+.custom-carousel .owl-item {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+
+.custom-carousel .owl-nav {
+  pointer-events: none;
+  /* Loại bỏ sự kiện trỏ chuột cho phần tử cha */
+}
+
+.custom-carousel .owl-nav button {
+  background-color: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #000;
+  transition: color 0.3s ease;
+  /* Hiệu ứng màu icon */
+  pointer-events: auto;
+  /* Cho phép sự kiện trỏ chuột cho phần tử con */
+}
+
+.custom-carousel .owl-nav button:hover {
+  color: #666;
+  /* Màu của icon khi di chuột qua */
+}

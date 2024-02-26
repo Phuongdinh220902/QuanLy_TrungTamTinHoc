@@ -45,6 +45,7 @@ root.render(
           <Route path="trangcanhan" element={<TrangCaNhan />} />
           <Route path="chinhsuahoso" element={<ChinhSuaHoSo />} />
           <Route path="doimk" element={<DoiMK />} />
+
         </Route>
       </Routes>
 

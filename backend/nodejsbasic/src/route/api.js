@@ -42,6 +42,7 @@ const initAPIRoute = (app) => {
     router.get('/layTrangChuKhoaHoc', APIController.layTrangChuKhoaHoc)
     router.get('/layTrangChuGiangVien', APIController.layTrangChuGiangVien)
     router.get('/layHinhAnhTrangChu', APIController.layHinhAnhTrangChu)
+    router.get('/layTrangChuCamNhan', APIController.layTrangChuCamNhan)
 
     router.post("/dangnhapnguoidung", APIController.dangnhapnguoidung)
     router.post('/dangkyTKNguoiDung', APIController.dangkyTKNguoiDung)

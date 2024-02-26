@@ -1349,47 +1349,6 @@ let doiMatKhau = async (req, res) => {
     }
 }
 
-// let LayDSNopDoanPhi = async (req, res) => {
-//     try {
-//         const IDDoanPhi = req.params.IDDoanPhi;
-//         const IDNamHoc = req.params.IDNamHoc;
-
-//         // Modify your SQL query in LayDSNopDoanPhi function
-//         const [rows, result2] = await pool.execute(
-//             "SELECT chitietdoanphi.IDChiTietDoanPhi, lop.TenLop, lop.khoa, doanphi.TenDoanPhi, doanphi.SoTien AS SoTienLop, COUNT(doanvien.IDDoanVien) AS SoLuongDoanVien, chitietdoanphi.DaDong, namhoc.tennamhoc " +
-//             "FROM doanphi " +
-//             "JOIN chitietdoanphi ON doanphi.IDDoanPhi = chitietdoanphi.IDDoanPhi " +
-//             "JOIN lop ON chitietdoanphi.IDLop = lop.IDLop " +
-//             "JOIN namhoc ON doanphi.IDNamHoc = namhoc.IDNamHoc " +
-//             "LEFT JOIN doanvien ON lop.IDLop = doanvien.IDLop " +
-//             "LEFT JOIN chitietnamhoc ON doanvien.IDDoanVien = chitietnamhoc.IDDoanVien AND namhoc.IDNamHoc = chitietnamhoc.IDNamHoc " +
-//             "WHERE doanphi.IDDoanPhi = ? AND chitietnamhoc.IDNamHoc = ? " +
-//             "GROUP BY chitietdoanphi.IDChiTietDoanPhi, doanphi.IDDoanPhi, lop.IDLop ",
-//             [IDDoanPhi, IDNamHoc]
-//         );
-
-//         return res.status(200).json({
-//             TenDoanPhi: rows[0].TenDoanPhi,
-//             TenNamHoc: rows[0].tennamhoc,
-//             ChiTietDoanPhi: rows.map((row) => ({
-//                 IDChiTietDoanPhi: row.IDChiTietDoanPhi,
-//                 TenLop: row.TenLop,
-//                 Khoa: row.khoa,
-//                 SoTienLop: row.SoTienLop,
-//                 SoLuongDoanVien: row.SoLuongDoanVien,
-//                 ThanhTien: row.SoTienLop * row.SoLuongDoanVien,
-//                 Check: row.DaDong,
-//             })),
-//         });
-//     } catch (error) {
-//         console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
-//         return res.status(500).json({
-//             error: "Lỗi khi truy vấn cơ sở dữ liệu",
-//         });
-//     }
-// };
-
-
 let SaveCheckboxStates = async (req, res) => {
     let { maDSHV, isChecked } = req.body;
 
@@ -1453,6 +1412,20 @@ let SaveCheckboxStatesLopHoc = async (req, res) => {
     }
 };
 
+let layTrangChuCamNhan = async (req, res) => {
+    try {
+        const [CN, a] = await pool.execute("SELECT maCN, cam_nhan.noidung, cam_nhan.trang_thai, cam_nhan.maDSHV, dshv.maHV, dshv.maLopHoc, khoa_hoc.tenKH, hoc_vien.tenHV FROM cam_nhan, khoa_hoc, hoc_vien,lop_hoc, dshv where cam_nhan.trang_thai = 1 and cam_nhan.maDSHV = dshv.maDSHV and dshv.maHV = hoc_vien.maHV and dshv.maLopHoc = lop_hoc.maLopHoc and lop_hoc.maKH = khoa_hoc.maKH");
+        return res.status(200).json({
+            CN: CN
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
 
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
@@ -1461,5 +1434,6 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung,
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
-    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc
+    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
+    layTrangChuCamNhan
 }

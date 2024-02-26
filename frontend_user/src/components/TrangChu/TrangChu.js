@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import KhoaHoc from './TrangChuKhoaHoc'
 import DichVu from './TrangChuDichVu'
 import TrangChuGV from './TrangChuGiangVien'
+import CamNhan from './TrangChuCamNhan'
 import { Carousel } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -27,7 +28,7 @@ function MyCarousel() {
     }, []);
 
     return (
-        <Carousel className="custom-carousel" interval={3000} controls={false} indicators onSelect={handleSelect}>
+        <Carousel className="custom-carousel" interval={5000} controls={false} indicators onSelect={handleSelect}>
             {dsAnh.map((anh, index) => (
                 <Carousel.Item key={index}>
                     <img
@@ -48,7 +49,9 @@ const TrangChu = () => {
             <MyCarousel />
             <KhoaHoc />
             <DichVu />
+
             <TrangChuGV />
+            <CamNhan />
         </div>
     );
 }
