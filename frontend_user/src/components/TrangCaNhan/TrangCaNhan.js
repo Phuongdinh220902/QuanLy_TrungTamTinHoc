@@ -9,15 +9,17 @@ import { Link } from "react-router-dom";
 const ProfilePage = () => {
     const [userProfile, setUserProfile] = useState(null);
     const maHV = localStorage.getItem('maHV');
-
+    const [registeredCourses, setRegisteredCourses] = useState([]);
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                console.log(maHV)
                 // Gọi API để lấy thông tin cá nhân của người dùng với maHV từ params
-                const response = await axios.get(`http://localhost:2209/api/v1/layTrangCaNhanHV/${maHV}`);
-                setUserProfile(response.data.TCN[0]);
-                console.log(response.data.TCN[0])
+                const responseProfile = await axios.get(`http://localhost:2209/api/v1/layTrangCaNhanHV/${maHV}`);
+                setUserProfile(responseProfile.data.TCN[0]);
+
+                // Gọi API để lấy danh sách các khóa học đã đăng ký của người dùng
+                const responseCourses = await axios.get(`http://localhost:2209/api/v1/layKhoaHocDaDK/${maHV}`);
+                setRegisteredCourses(responseCourses.data.KH);
             } catch (error) {
                 console.error('Lỗi khi gọi API: ', error);
             }
@@ -33,6 +35,7 @@ const ProfilePage = () => {
         .text-center1 {
     text-align: center !important;
 }
+
     
     `;
 
@@ -107,25 +110,32 @@ const ProfilePage = () => {
                             </div>
 
                         </div>
+
                         <div className="col col-lg-6 mb-4 mb-lg-0">
                             <div className="card mb-3" style={{ borderRadius: ".5rem" }}>
                                 <div className="container mt-3" style={{ maxWidth: '600px', height: '290px', overflow: 'auto' }}>
                                     <h2>Các khoá học</h2>
                                     <div className="list-group" style={{ maxWidth: '520px' }}>
-                                        <a href="/" className="list-group-item list-group-item-action">First item</a>
-                                        <a href="/" className="list-group-item list-group-item-action">Second item</a>
-                                        <a href="/" className="list-group-item list-group-item-action">First item</a>
-                                        <a href="/" className="list-group-item list-group-item-action">Second item</a>
-                                        <a href="/" className="list-group-item list-group-item-action">First item</a>
-                                        <a href="/" className="list-group-item list-group-item-action">Second item</a>
-                                        <a href="/" className="list-group-item list-group-item-action">First item</a>
-                                        <a href="/" className="list-group-item list-group-item-action">Second item</a>
-                                        <a href="/" className="list-group-item list-group-item-action">First item</a>
-                                        <a href="/" className="list-group-item list-group-item-action">Second item</a>
+                                        {registeredCourses.map((course, index) => (
+                                            <a href="/" className="list-group-item list-group-item-action" key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                                {/* Hiển thị hình ảnh khóa học */}
+                                                <div style={{ marginRight: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.75)', borderRadius: '10px' }}>
+                                                    <img src={`http://localhost:2209/images/${course.tenHinhAnhKH}`} alt={course.tenKH} style={{ width: '100px', height: 'auto', borderRadius: '10px' }} />
+                                                </div>
+
+                                                {/* Hiển thị thông tin khóa học */}
+                                                <div style={{ flex: 1 }}>
+                                                    <h5 style={{ fontSize: '18px', fontWeight: 'bold' }}>{course.tenKH}</h5>
+                                                    <p className="mb-1" style={{ fontSize: '16px' }}>Lớp: {course.tenLopHoc}</p>
+                                                </div>
+                                            </a>
+                                        ))}
+
                                     </div>
                                 </div>
                             </div>
                         </div>
+
 
                     </div>
                 </div>

@@ -39,14 +39,14 @@ const TrangChuGV = () => {
                             <div key={giaoVien.maGV} className="col-lg-3 col-md-6 col-sm-6 giang-vien-col">
                                 <div className="giang-vien-item">
                                     <div className={`gv-image img-hover-zoom gv${giaoVien.maHA}`}>
-                                        <a href={`/giangvien/${giaoVien.maGV}`}>
+                                        <a href={`/thongtingiangvien/${giaoVien.maGV}`}>
                                             <img src={`http://localhost:2209/images/${giaoVien.tenHA}`}
                                                 alt={giaoVien.tenGV} />
                                         </a>
                                     </div>
                                     <div className="gv-body">
                                         <div className="giang-vien-title">
-                                            <a href={`/giao-vien~${giaoVien.maGV}`}>{giaoVien.tenGV}</a>
+                                            <a href={`/thongtingiangvien/${giaoVien.maGV}`}>{giaoVien.tenGV}</a>
                                         </div>
                                         {/* <div className="giang-vien-subtitle">{giaoVien.tenHA}</div> */}
                                     </div>

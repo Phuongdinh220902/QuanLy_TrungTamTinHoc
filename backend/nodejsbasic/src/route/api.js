@@ -58,6 +58,7 @@ const initAPIRoute = (app) => {
     router.get('/layTrangCaNhanHV/:maHV', APIController.layTrangCaNhanHV)
     router.post("/SaveCheckboxStates", APIController.SaveCheckboxStates);
     router.post("/SaveCheckboxStatesLopHoc", APIController.SaveCheckboxStatesLopHoc);
+    router.get('/layKhoaHocDaDK/:maHV', APIController.layKhoaHocDaDK)
 
     var filename = ''
     const upload = multer({
