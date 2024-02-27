@@ -1444,6 +1444,23 @@ let layKhoaHocDaDK = async (req, res) => {
     }
 };
 
+let layLopHocGV = async (req, res) => {
+    // const maGV = req.params.maGV;
+    // console.log(maGV)
+    try {
+        // const [KH, a] = await pool.execute("SELECT khoahoc_giangvien.maGV, tenKHGV, tenHinhAnhKHGV, giang_vien.tenGV, email, sdt, ngaysinh from  khoahoc_giangvien, giang_vien where khoahoc_giangvien.trang_thai = 1 and giang_vien.maGV = khoahoc_giangvien.maGV and khoahoc_giangvien.maGV = ?", [maGV]);
+        const [KH, a] = await pool.execute("SELECT khoahoc_giangvien.maGV, tenKHGV, tenHinhAnhKHGV, giang_vien.tenGV, email, sdt, ngaysinh from  khoahoc_giangvien, giang_vien where khoahoc_giangvien.trang_thai = 1 and giang_vien.maGV = khoahoc_giangvien.maGV and khoahoc_giangvien.maGV = 1");
+        return res.status(200).json({
+            KH: KH
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
 
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
@@ -1453,5 +1470,5 @@ module.exports = {
     dangnhapnguoidung, dangkyTKNguoiDung,
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
-    layTrangChuCamNhan, layKhoaHocDaDK
+    layTrangChuCamNhan, layKhoaHocDaDK, layLopHocGV
 }

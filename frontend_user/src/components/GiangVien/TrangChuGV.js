@@ -1,118 +1,135 @@
+// import React, { useState } from 'react';
+// import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+// import { Link } from 'react-router-dom';
 
-import axios from "axios"
-import 'react-toastify/dist/ReactToastify.css';
-import { Link } from 'react-router-dom';
+// const TCGiangVien = () => {
+//     const [collapsed, setCollapsed] = useState(false);
+//     const [classes, setClasses] = useState([]);
+
+//     const handleToggleSidebar = () => {
+//         setCollapsed(!collapsed);
+//     };
+
+//     return (
+//         <div>
+//             <header style={{ backgroundColor: 'lightblue', padding: '10px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+//                 <button onClick={handleToggleSidebar} style={{ marginRight: '10px' }}>
+//                     {collapsed ? 'Expand' : 'Collapse'}
+//                 </button>
+//             </header>
+
+//             <div style={{ marginRight: '0', marginLeft: 'auto' }}>
+//                 <Sidebar collapsed={collapsed}>
+//                     <Menu>
+//                         <Menu>
+//                             <SubMenu defaultOpen label="Charts">
+//                                 <MenuItem> Pie charts</MenuItem>
+//                                 <MenuItem> Line charts</MenuItem>
+//                                 <MenuItem> Bar charts</MenuItem>
+//                             </SubMenu>
+//                             <SubMenu label="Maps">
+//                                 <MenuItem> Google maps</MenuItem>
+//                                 <MenuItem> Open street maps</MenuItem>
+//                             </SubMenu>
+//                             <SubMenu label="Theme">
+//                                 <MenuItem> Dark</MenuItem>
+//                                 <MenuItem> Light</MenuItem>
+//                             </SubMenu>
+//                         </Menu>
+//                     </Menu>
+//                 </Sidebar>
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default TCGiangVien;
+
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-// import './Sidebar.css'; 
-
-function Sidebar() {
-    return (
-        <aside data-testid="ps-sidebar-root-test-id" width="250px" className="ps-sidebar-root css-14dbqr2">
-            <div data-testid="ps-sidebar-container-test-id" className="ps-sidebar-container css-1hhlh5t">
-                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                    <div className="css-1vmkajq" style={{ marginBottom: '24px', marginTop: '16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <div className="css-kyhzew">P</div>
-                            <p fontWeight="700" color="#0098e5" className="css-crt1ee">Pro Sidebar</p>
-                        </div>
-                    </div>
-                    <div style={{ flex: '1 1 0%', marginBottom: '32px' }}>
-                        <div style={{ padding: '0px 24px', marginBottom: '8px' }}>
-                            <p fontWeight="600" className="css-1o7yz74" style={{ opacity: 0.7, letterSpacing: '0.5px' }}>General</p>
-                        </div>
-                        {/* Navigation Menu */}
-                        <nav className="ps-menu-root css-vj11vy">
-                            <ul className="css-ewdv3l">
-                                {/* Menu Items */}
-                                {/* You can map through your menu items and create <li> elements dynamically */}
-                                {/* For example: */}
-                                <li className="ps-menuitem-root ps-submenu-root css-uf9z8p">
-                                    <a className="ps-menu-button" data-testid="ps-menu-button-test-id" tabIndex="0">
-                                        {/* Menu Item Content */}
-                                    </a>
-                                    {/* Submenu Content */}
-                                    <div className="ps-submenu-content css-1naa948">
-                                        <ul className="css-ewdv3l">
-                                            {/* Submenu Items */}
-                                            {/* You can map through your submenu items and create <li> elements dynamically */}
-                                        </ul>
-                                    </div>
-                                </li>
-                            </ul>
-                        </nav>
-                        {/* End of Navigation Menu */}
-                    </div>
-                    {/* Extra Section */}
-                    <div style={{ padding: '0px 24px', marginBottom: '8px', marginTop: '32px' }}>
-                        <p fontWeight="600" className="css-1o7yz74" style={{ opacity: 0.7, letterSpacing: '0.5px' }}>Extra</p>
-                    </div>
-                    <nav className="ps-menu-root css-vj11vy">
-                        <ul className="css-ewdv3l">
-                            {/* Additional Menu Items */}
-                        </ul>
-                    </nav>
-                </div>
-                {/* Sidebar Footer */}
-                <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '20px' }}>
-                    <div className="css-49v479">
-                        {/* Sidebar Footer Content */}
-                    </div>
-                </div>
-                {/* Sidebar Image */}
-                <img data-testid="ps-sidebar-image-test-id" src="https://user-images.githubusercontent.com/25878302/144499035-2911184c-76d3-4611-86e7-bc4e8ff84ff5.jpg" alt="sidebar background" className="ps-sidebar-image css-16g65jg" />
-            </div>
-        </aside>
-    );
-}
-
-
-
+import {
+    faHouseChimney,
+    faGraduationCap,
+    faRightFromBracket,
+    faBars,
+    faGears,
+    faBoxOpen
+} from "@fortawesome/free-solid-svg-icons";
 const TCGiangVien = () => {
-    const { maGV } = useParams();
-    const [giangVien, setGiangVien] = useState(null);
+    const [collapsed, setCollapsed] = useState(false);
+    const [classes, setClasses] = useState([]);
+    const [data, setData] = useState([]); // State để lưu trữ dữ liệu từ API
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const response = await axios.get(`http://localhost:2209/api/v1/layGiangVien/${maGV}`);
-    //             setGiangVien(response.data.TCGV);
-    //         } catch (error) {
-    //             console.error('Lỗi khi gọi API: ', error);
-    //         }
-    //     };
+    const handleToggleSidebar = () => {
+        setCollapsed(!collapsed);
+    };
 
-    //     fetchData();
-    // }, [maGV]);
+    useEffect(() => {
+        fetchData(); // Gọi hàm lấy dữ liệu từ API khi component được render
+    }, []);
 
-    // if (!giangVien) {
-    //     return <div>Loading...</div>;
-    // }
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:2209/api/v1/layLopHocGV'); // Thay YOUR_API_ENDPOINT bằng endpoint của API của bạn
+            setData(response.data.KH); // Lưu trữ dữ liệu từ API vào state
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
     return (
-        // <Sidebar>
-        //     <Menu
-        //         menuItemStyles={{
-        //             button: {
-        //                 // the active class will be added automatically by react router
-        //                 // so we can use it to style the active menu item
-        //                 [`&.active`]: {
-        //                     backgroundColor: '#13395e',
-        //                     color: '#b6c8d9',
-        //                 },
-        //             },
-        //         }}
-        //     >
-        //         <MenuItem component={<Link to="/documentation" />}> Documentation</MenuItem>
-        //         <MenuItem component={<Link to="/calendar" />}> Calendar</MenuItem>
-        //         <MenuItem component={<Link to="/e-commerce" />}> E-commerce</MenuItem>
-        //     </Menu>
-        // </Sidebar>
-        <Sidebar />
+        <div>
+            <header style={{ backgroundColor: 'white', padding: '15px', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', borderBottom: '1px solid #ccc', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', height: '70px' }}>
+                <FontAwesomeIcon icon={faBars} onClick={handleToggleSidebar} style={{ marginRight: '10px', cursor: 'pointer' }} />
+
+            </header>
+
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', minHeight: '100vh' }}>
+                {/* Sidebar */}
+                <Sidebar collapsed={collapsed}>
+                    <Menu>
+                        <MenuItem >
+                            <FontAwesomeIcon icon={faHouseChimney} style={{ marginRight: '10px' }} />
+                            Màn hình chính
+                        </MenuItem>
+                        <SubMenu defaultOpen label={<span><FontAwesomeIcon icon={faGraduationCap} style={{ marginRight: '10px' }} />Lớp học</span>}>
+                            {data.map((item, index) => (
+                                <MenuItem key={index}>{item.tenKHGV}</MenuItem>
+                            ))}
+                        </SubMenu>
+                        <MenuItem >
+                            <FontAwesomeIcon icon={faBoxOpen} style={{ marginRight: '10px' }} />
+                            Lớp học đã lưu trữ
+                        </MenuItem>
+                        <MenuItem >
+                            <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
+                            Cài đặt
+                        </MenuItem>
+                        <MenuItem >
+                            <FontAwesomeIcon icon={faRightFromBracket} style={{ marginRight: '10px' }} />
+                            Thoát
+                        </MenuItem>
+                    </Menu>
+                </Sidebar>
+
+                {/* Content */}
+                <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gridGap: '20px' }}>
+                    {data.map((item, index) => (
+                        <div key={index} style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '10px', textAlign: 'center', height: '250px' }}>
+                            <h3>{item.tenKHGV}</h3>
+                            <p>{item.tenGV}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+
     );
 };
 
-
 export default TCGiangVien;
-
-
