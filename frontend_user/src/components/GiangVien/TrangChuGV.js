@@ -62,30 +62,54 @@ import {
 const TCGiangVien = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [classes, setClasses] = useState([]);
-    const [data, setData] = useState([]); // State để lưu trữ dữ liệu từ API
+    const [data, setData] = useState([]);
+    const [tenGV, setTenGV] = useState("");
+    const [tenHA, setTenHA] = useState("");
 
     const handleToggleSidebar = () => {
         setCollapsed(!collapsed);
     };
 
     useEffect(() => {
-        fetchData(); // Gọi hàm lấy dữ liệu từ API khi component được render
+        fetchData();
+        const userData = JSON.parse(localStorage.getItem('giangvien'));
+        if (userData) {
+            setTenGV(userData.tenGV);
+            setTenHA(userData.tenHA);
+        }
     }, []);
+    console.log(tenGV)
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:2209/api/v1/layLopHocGV'); // Thay YOUR_API_ENDPOINT bằng endpoint của API của bạn
-            setData(response.data.KH); // Lưu trữ dữ liệu từ API vào state
+            const response = await axios.get('http://localhost:2209/api/v1/layLopHocGV');
+            setData(response.data.KH);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
+
     return (
         <div>
-            <header style={{ backgroundColor: 'white', padding: '15px', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', borderBottom: '1px solid #ccc', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', height: '70px' }}>
-                <FontAwesomeIcon icon={faBars} onClick={handleToggleSidebar} style={{ marginRight: '10px', cursor: 'pointer' }} />
+            <header style={{
+                backgroundColor: 'white',
+                padding: '15px',
+                display: 'flex',
+                justifyContent: 'space-between', // Để căn giữa và icon và các phần tử khác
+                alignItems: 'center',
+                borderBottom: '1px solid #ccc',
+                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+                height: '70px'
+            }}>
+                <FontAwesomeIcon icon={faBars} onClick={handleToggleSidebar} style={{ cursor: 'pointer' }} />
+                <div className="user-info-container" style={{ display: 'flex', alignItems: 'center' }}>
 
+
+                    <img src={`http://localhost:2209/images/${tenHA}`} alt="Avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} /> {/* Hiển thị hình ảnh */}
+                    <h3>{tenGV}</h3>
+
+                </div>
             </header>
 
 
@@ -102,10 +126,7 @@ const TCGiangVien = () => {
                                 <MenuItem key={index}>{item.tenKHGV}</MenuItem>
                             ))}
                         </SubMenu>
-                        <MenuItem >
-                            <FontAwesomeIcon icon={faBoxOpen} style={{ marginRight: '10px' }} />
-                            Lớp học đã lưu trữ
-                        </MenuItem>
+
                         <MenuItem >
                             <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
                             Cài đặt

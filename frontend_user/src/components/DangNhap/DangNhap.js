@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { Link } from "react-router-dom";
 
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-
+import { jwtDecode } from "jwt-decode";
 const DangKyDangNhap = () => {
 
     const [tenHV, setTen] = useState('');
@@ -19,24 +19,45 @@ const DangKyDangNhap = () => {
     const [gioitinh, setGioitinh] = useState('Nữ');
 
     const navigate = useNavigate();
-    const [formdata, setFormdata] = useState({
-        email: "",
-        password: "",
-    });
 
     const handleLogin = async () => {
         try {
-            const response = await dangnhapnguoidung(formdata);
+            // const response = await dangnhapnguoidung(formdata);
+            const response = await axios.post("http://localhost:2209/api/v1/login", {
+                email,
+                password,
+            });
+            // if (response.status === 200) {
 
+            //     navigate('/');
+            //     const userData = response.data; 
+            //     localStorage.setItem('user', JSON.stringify(userData));
+            //     localStorage.setItem('maHV', userData.maHV);
+            //     console.log(userData)
+            // }
+            // if (response.status === 401) {
+            //     toast.error('Thông tin đăng nhập không đúng')
+            // }
             if (response.status === 200) {
-                // Chuyển hướng đến trang sau khi đăng nhập thành công
-                navigate('/');
-                const userData = response.data; // Dữ liệu người dùng từ phản hồi API
-                localStorage.setItem('user', JSON.stringify(userData));
-                localStorage.setItem('maHV', userData.maHV);
+                const decodedToken = jwtDecode(response.data.token);
+                const userData = response.data;
                 console.log(userData)
-            }
-            if (response.status === 401) {
+
+                setTimeout(() => {
+                    if (decodedToken.role === "HocVien") {
+                        navigate("/");
+                        localStorage.setItem('user', JSON.stringify(userData));
+                        localStorage.setItem('maHV', userData.maHV);
+                        console.log(userData)
+
+                    } else if (decodedToken.role === "GiangVien") {
+                        navigate('/giangvien');
+                        localStorage.setItem('giangvien', JSON.stringify(userData));
+                        localStorage.setItem('maGV', userData.maGV);
+                        console.log(userData, 'ok')
+                    }
+                }, 500);
+            } else {
                 toast.error('Thông tin đăng nhập không đúng')
             }
 
@@ -534,16 +555,16 @@ const DangKyDangNhap = () => {
                             placeholder="Email"
                             type="text"
                             name="email"
-                            value={formdata.email}
-                            onChange={(e) => setFormdata({ ...formdata, email: e.target.value })}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                         <input
                             placeholder="Password"
                             name="password"
                             type={showPassword ? "text" : "password"}
-                            value={formdata.password}
-                            onChange={(e) => setFormdata({ ...formdata, password: e.target.value })}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                         {/* Thêm icon để thay đổi trạng thái mật khẩu */}

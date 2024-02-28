@@ -830,7 +830,6 @@ let layTrangChuGiangVien = async (req, res) => {
 const bcrypt = require('bcrypt');
 
 let dangkyTKNguoiDung = async (req, res) => {
-    console.log("d v ao")
     let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, password } = req.body;
 
     const [existingRows, existingFields] = await pool.execute("SELECT * FROM hoc_vien WHERE email = ? ", [email]);
@@ -1412,6 +1411,37 @@ let SaveCheckboxStatesLopHoc = async (req, res) => {
     }
 };
 
+let SaveCheckboxStatesLopHocBatDau = async (req, res) => {
+    let { maLopHoc, isChecked } = req.body;
+
+    console.log(req.body);
+    console.log("+=============");
+    console.log(isChecked);
+
+    try {
+        for (let { maLopHoc, isChecked } of isChecked) {
+            if (isChecked == false) {
+                isChecked = 0;
+            } else {
+                isChecked = 1;
+            }
+            console.log(isChecked);
+            await pool.execute(
+                "UPDATE lop_hoc SET bat_dau = ? WHERE maLopHoc = ?",
+                [isChecked, maLopHoc]
+            );
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Cập nhật thành công!",
+        });
+    } catch (error) {
+        console.error("Error updating checkbox states:", error);
+        return res.status(500).json({ message: "Cập nhật thất bại!" });
+    }
+};
+
 let layTrangChuCamNhan = async (req, res) => {
     try {
         const [CN, a] = await pool.execute("SELECT maCN, cam_nhan.noidung, cam_nhan.trang_thai, cam_nhan.maDSHV, dshv.maHV, dshv.maLopHoc, khoa_hoc.tenKH, hoc_vien.tenHV, maHinhAnhHV, tenHinhAnhHV, hinhanh_hocvien.maHV FROM cam_nhan, khoa_hoc, hoc_vien,lop_hoc, hinhanh_hocvien,dshv where cam_nhan.trang_thai = 1 and cam_nhan.maDSHV = dshv.maDSHV and dshv.maHV = hoc_vien.maHV and dshv.maLopHoc = lop_hoc.maLopHoc and lop_hoc.maKH = khoa_hoc.maKH and hoc_vien.maHV = hinhanh_hocvien.maHV");
@@ -1462,6 +1492,25 @@ let layLopHocGV = async (req, res) => {
     }
 };
 
+let layThongTinTrangGiangVien = async (req, res) => {
+
+    const maGV = req.body.maGV;
+    try {
+        const [TCGV, a] = await pool.execute("SELECT giang_vien.maGV, tenGV, gioithieu, kinhnghiem, mota, tenHA, maHA FROM giang_vien, hinh_anh where giang_vien.maGV = ? and giang_vien.trang_thai = 1 and giang_vien.maGV = hinh_anh.maGV ", [maGV]);
+
+        return res.status(200).json({
+            TCGV: TCGV,
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+
+};
+
+
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
     laydskh, deleteKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien, laydsHocVien, deleteHVLopHoc, themLopHoc,
@@ -1470,5 +1519,5 @@ module.exports = {
     dangnhapnguoidung, dangkyTKNguoiDung,
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
-    layTrangChuCamNhan, layKhoaHocDaDK, layLopHocGV
+    layTrangChuCamNhan, layKhoaHocDaDK, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau
 }

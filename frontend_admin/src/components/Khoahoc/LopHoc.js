@@ -195,6 +195,7 @@ const LopHoc = (props) => {
                                     <th className="table-item ">Tên giảng viên</th>
                                     <th className="table-item ">Ngày bắt đầu</th>
                                     <th className="table-item ">Lịch học</th>
+                                    <th className="table-item ">Bắt đầu</th>
                                     <th className="table-item ">Đã hoàn thành</th>
                                     <th className="table-item ">  </th>
                                 </tr>
@@ -208,9 +209,15 @@ const LopHoc = (props) => {
                                                 <td className="table-item col-right">{index + 1}</td>
                                                 <td className="">{item.tenLopHoc}</td>
                                                 <td className="">{item.tenGV}</td>
-                                                <td className="table-item">{item.ngay_batdau}
-                                                </td>
+                                                <td className="table-item">{item.ngay_batdau}</td>
                                                 <td className="">{item.thoigian}</td>
+                                                <td className="col-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={checkboxStates[index]}
+                                                        onChange={() => handleCheckboxChange(item.maLopHoc, checkboxStates[index], index)}
+                                                    />
+                                                </td>
                                                 <td className="col-center">
                                                     <input
                                                         type="checkbox"

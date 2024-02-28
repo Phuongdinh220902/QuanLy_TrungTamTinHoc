@@ -8,7 +8,9 @@ import { autUser } from '../middleware/autuser'
 const XLSX = require("xlsx");
 let router = express.Router();
 const { parse, format } = require("date-fns");
-
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 const initAPIRoute = (app) => {
 
     router.get('/laydshv/:page/:tukhoa', APIController.laydshv)
@@ -44,7 +46,7 @@ const initAPIRoute = (app) => {
     router.get('/layHinhAnhTrangChu', APIController.layHinhAnhTrangChu)
     router.get('/layTrangChuCamNhan', APIController.layTrangChuCamNhan)
 
-    router.post("/dangnhapnguoidung", APIController.dangnhapnguoidung)
+    // router.post("/dangnhapnguoidung", APIController.dangnhapnguoidung)
     router.post('/dangkyTKNguoiDung', APIController.dangkyTKNguoiDung)
     router.get('/layKhoaHoc/:maKH', APIController.layKhoaHoc)
     router.get('/layLopHoc/:maKH', APIController.layLopHoc)
@@ -58,9 +60,89 @@ const initAPIRoute = (app) => {
     router.get('/layTrangCaNhanHV/:maHV', APIController.layTrangCaNhanHV)
     router.post("/SaveCheckboxStates", APIController.SaveCheckboxStates);
     router.post("/SaveCheckboxStatesLopHoc", APIController.SaveCheckboxStatesLopHoc);
+    router.post("/SaveCheckboxStatesLopHocBatDau", APIController.SaveCheckboxStatesLopHocBatDau);
     router.get('/layKhoaHocDaDK/:maHV', APIController.layKhoaHocDaDK)
     // router.get('/layLopHocGV/:maGV', APIController.layLopHocGV)
     router.get('/layLopHocGV', APIController.layLopHocGV)
+    router.get('/layThongTinTrangGiangVien/:maGV', APIController.layThongTinTrangGiangVien)
+
+
+    function generateToken(email, role) {
+        const secretKey = "yourSecretKey"; // Replace with your actual secret key
+        const token = jwt.sign({ email, role }, secretKey, { expiresIn: "1h" });
+        return token;
+    }
+
+    router.post("/login", async (req, res) => {
+        const { email, password } = req.body;
+        console.log(req.body);
+
+        try {
+            const [HV, fields] = await pool.execute("SELECT maHV, tenHV, password, gioitinh FROM hoc_vien WHERE email = ?", [email]);
+            console.log(password)
+            if (HV.length > 0) {
+                const maHV = HV[0].maHV;
+                const tenHV = HV[0].tenHV;
+                const gioitinh = HV[0].gioitinh;
+                const hashedPassword = HV[0].password;
+
+                const passwordMatch = await bcrypt.compare(password, hashedPassword);
+
+                if (passwordMatch) {
+                    const token = generateToken(HV[0].email, "HocVien");
+
+                    return res.status(200).json({
+                        maHV: maHV,
+                        tenHV: tenHV,
+                        gioitinh: gioitinh,
+                        token: token
+                    });
+                }
+            }
+            const [GV, field] = await pool.execute(
+                "SELECT giang_vien.maGV, tenGV, password, tenHA FROM giang_vien, hinh_anh WHERE email = ? and giang_vien.maGV = hinh_anh.maGV",
+                [email]
+            );
+
+            if (GV.length > 0) {
+                const maGV = GV[0].maGV;
+                const tenGV = GV[0].tenGV;
+                const tenHA = GV[0].tenHA;
+                const hashedPassword = GV[0].password;
+                const passwordMatch = await bcrypt.compare(password, hashedPassword);
+
+                if (passwordMatch) {
+                    const token = generateToken(GV[0].email, "GiangVien");
+
+                    return res.status(200).json({
+                        maGV: maGV,
+                        tenGV: tenGV,
+                        tenHA: tenHA,
+                        token: token
+                    });
+                }
+            }
+
+            return res
+                .status(401)
+                .json({ success: false, message: "Invalid credentials" });
+        } catch (error) {
+            console.error(error);
+            return res
+                .status(500)
+                .json({ success: false, message: "Internal server error" });
+        }
+    });
+
+    function generateToken(email, role) {
+        const secretKey = "yourSecretKey"; // Replace with your actual secret key
+        const token = jwt.sign({ email, role }, secretKey, { expiresIn: "1h" });
+        return token;
+    }
+
+
+
+
     var filename = ''
     const upload = multer({
         storage: multer.diskStorage({
@@ -76,11 +158,25 @@ const initAPIRoute = (app) => {
         })
     });
 
+    function generateRandomPassword(length) {
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let password = "";
+        for (let i = 0; i < length; ++i) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            password += charset[randomIndex];
+        }
+        return password;
+    }
+
+
+
+
     router.post('/themgv', upload.single('file'), async (req, res) => {
 
         let { tenGV, email, sdt, ngaysinh, gioitinh } = req.body
         console.log(req.body)
         try {
+
             const [existingRows, existingFields] = await pool.execute("SELECT * FROM giang_vien WHERE email = ?", [email]);
 
             if (existingRows.length > 0) {
@@ -90,10 +186,33 @@ const initAPIRoute = (app) => {
                     'EM': 'Email đã tồn tại'
                 });
             }
+
+            // Tạo mật khẩu ngẫu nhiên
+            const password = generateRandomPassword(6);
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                service: 'gmail',
+                auth: {
+                    user: "ld7941682@gmail.com",
+                    pass: "ijippjqyfxuyqgxs",
+                },
+            });
+
+            const mailOptions = {
+                from: 'ld7941682@gmail.com',
+                to: email,
+                subject: ' Password',
+                text: `Your password is: ${password}`,
+            };
+
+            await transporter.sendMail(mailOptions);
             // Thêm giảng viên vào bảng giang_vien
             await pool.execute(
-                "INSERT INTO giang_vien (tenGV, email, sdt, ngaysinh, gioitinh) VALUES (?, ?, ?, ?, ?)",
-                [tenGV, email, sdt, ngaysinh, gioitinh]
+                "INSERT INTO giang_vien (tenGV, email, sdt, ngaysinh, gioitinh, password) VALUES (?, ?, ?, ?, ?, ?)",
+                [tenGV, email, sdt, ngaysinh, gioitinh, hashedPassword]
             );
 
             // Lấy giảng viên vừa thêm
@@ -111,7 +230,8 @@ const initAPIRoute = (app) => {
                     'email': email,
                     'sdt': sdt,
                     'ngaysinh': ngaysinh,
-                    'gioitinh': gioitinh
+                    'gioitinh': gioitinh,
+                    'password': password
                 },
                 'EC': 0,
                 'EM': 'Tạo thành công'
