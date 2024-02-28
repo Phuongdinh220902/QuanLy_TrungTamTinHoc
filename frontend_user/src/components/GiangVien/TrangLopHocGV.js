@@ -9,13 +9,12 @@ import {
     faGraduationCap,
     faRightFromBracket,
     faBars,
-    faGears,
-    faBoxOpen
+    faGears
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
-const TCGiangVien = () => {
+const TrangLopHocGV = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [classes, setClasses] = useState([]);
     const [data, setData] = useState([]);
@@ -46,13 +45,28 @@ const TCGiangVien = () => {
         fetchData()
     }, [maGV]);
 
+    const { maLopHoc } = useParams();
+    const [lopHoc, setLopHoc] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:2209/api/v1/layLopHocGiaoVien/${maLopHoc}`);
+                setLopHoc(response.data.LopHoc);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, [maLopHoc]);
 
     const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.removeItem('giangvien');
+        // setUser(null);
         navigate('/');
     };
-
 
     return (
         <div>
@@ -60,7 +74,7 @@ const TCGiangVien = () => {
                 backgroundColor: 'white',
                 padding: '15px',
                 display: 'flex',
-                justifyContent: 'space-between', // Để căn giữa và icon và các phần tử khác
+                justifyContent: 'space-between',
                 alignItems: 'center',
                 borderBottom: '1px solid #ccc',
                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
@@ -95,38 +109,55 @@ const TCGiangVien = () => {
                             ))}
                         </SubMenu>
 
-
                         <MenuItem >
                             <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
                             Cài đặt
                         </MenuItem>
-
                         <Link to="/" onClick={handleLogout} style={{ color: 'black' }}>
                             <MenuItem >
                                 <FontAwesomeIcon icon={faRightFromBracket} style={{ marginRight: '10px' }} />
                                 Thoát
                             </MenuItem>
                         </Link>
-
                     </Menu>
                 </Sidebar>
 
+                {/* Right Panel */}
+                <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                    <div style={{ padding: '15px', marginBottom: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '5px', display: 'flex', justifyContent: 'space-between' }}>
 
-                <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gridGap: '20px' }}>
-                    {data.map((item, index) => (
-                        <div key={index} style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '10px', textAlign: 'center', height: '250px' }}>
-                            <Link to={`/lophocgv/${item.maLopHoc}`}>
-                                <h3>{item.tenLopHoc}</h3>
-                            </Link>
+                        <ul style={{ display: 'flex', listStyleType: 'none', margin: 0, padding: 0 }}>
+                            <li style={{ marginRight: '20px' }}>
+                                <Link to="/dashboard">Bảng tin</Link>
+                            </li>
+                            <li>
+                                <Link to="/people">Mọi người</Link>
+                            </li>
+                            {/* Add more navigation options as needed */}
+                        </ul>
+                    </div>
+                    {/* <h1>{lopHoc.length > 0 && lopHoc[0].tenLopHoc}</h1> */}
+                    {/* Content */}
+                    <div>
+                        <h1 style={{ textAlign: 'center' }}>Lớp học {lopHoc.length > 0 && lopHoc[0].tenLopHoc}</h1>
 
-                            <p>{item.tenGV}</p>
+                        <div style={{ padding: '15px', marginBottom: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '5px', display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #ccc !important' }}>
+                            abc
                         </div>
-                    ))}
+
+                        <ul>
+                            {lopHoc.map((item, index) => (
+                                <li key={index}>{item.tenHV}</li>
+                            ))}
+                        </ul>
+                    </div>
+
                 </div>
+
             </div>
         </div>
 
     );
 };
 
-export default TCGiangVien;
+export default TrangLopHocGV;

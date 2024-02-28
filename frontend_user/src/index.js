@@ -23,6 +23,7 @@ import TrangCaNhan from './components/TrangCaNhan/TrangCaNhan';
 import ChinhSuaHoSo from './components/TrangCaNhan/ChinhSuaHoSo';
 import DoiMK from './components/TrangCaNhan/DoiMK';
 import TCGiangVien from './components/GiangVien/TrangChuGV';
+import TrangLopHocGV from './components/GiangVien/TrangLopHocGV';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -50,6 +51,10 @@ root.render(
 
         </Route>
         <Route path="giangvien" element={<TCGiangVien />} />
+
+
+        <Route path="/lophocgv/:maLopHoc" element={<TrangLopHocGV />} />
+
       </Routes>
 
     </BrowserRouter>

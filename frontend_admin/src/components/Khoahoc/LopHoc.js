@@ -92,6 +92,10 @@ const LopHoc = (props) => {
                 const newCheckboxStates = res.data.dataCD.map((item) => item.hoan_thanh === 1);
                 setCheckboxStates(newCheckboxStates);
                 setNewState(newCheckboxStates);
+
+                const newCheckboxStatesBD = res.data.dataCD.map((item) => item.bat_dau === 1);
+                setCheckboxStatesBD(newCheckboxStatesBD);
+                setNewStateBD(newCheckboxStatesBD);
             } else {
                 console.error("Lỗi khi gọi API:", res.statusText);
             }
@@ -116,14 +120,20 @@ const LopHoc = (props) => {
     };
 
     const [checkboxStates, setCheckboxStates] = useState([]);
+    const [checkboxStatesBD, setCheckboxStatesBD] = useState([]);
 
     const [newState, setNewState] = useState([]);
+    const [newStateBD, setNewStateBD] = useState([]);
 
     useEffect(() => {
         if (DSLopHoc.length > 0) {
             const initialCheckboxStates = DSLopHoc.map((item) => item.hoan_thanh === 1);
             setCheckboxStates(initialCheckboxStates);
-            setNewState(initialCheckboxStates); // Khởi tạo trạng thái mới ban đầu
+            setNewState(initialCheckboxStates);
+
+            const initialCheckboxStatesBD = DSLopHoc.map((item) => item.bat_dau === 1);
+            setCheckboxStatesBD(initialCheckboxStatesBD);
+            setNewStateBD(initialCheckboxStatesBD);
         }
     }, [DSLopHoc]);
 
@@ -146,6 +156,36 @@ const LopHoc = (props) => {
             const response = await axios.post('http://localhost:2209/api/v1/SaveCheckboxStatesLopHoc', {
                 maLopHoc: maLopHoc,
                 isChecked: dataToSave,
+            });
+
+            if (response.status === 200) {
+                toast.success('Cập nhật trạng thái thành công')
+            } else {
+                toast.error('Cập nhật trạng thái thất bại')
+            }
+        } catch (error) {
+            console.error('Lỗi khi gửi yêu cầu API:', error);
+        }
+    };
+
+    const handleCheckboxChangeBD = async (maDSHV, isChecked, index) => {
+        const newCheckboxStatesBD = [...checkboxStatesBD];
+        newCheckboxStatesBD[index] = !newCheckboxStatesBD[index];
+        setCheckboxStatesBD(newCheckboxStatesBD);
+
+        const newNewStateBD = [...newStateBD];
+        newNewStateBD[index] = !newNewStateBD[index];
+        setNewStateBD(newNewStateBD);
+
+        const dataToSaveBD = DSLopHoc.map((item, index) => ({
+            maLopHoc: item.maLopHoc, // Replace with the actual property name
+            isCheckedBD: newNewStateBD[index],
+        }));
+
+        try {
+            const response = await axios.post('http://localhost:2209/api/v1/SaveCheckboxStatesLopHocBatDau', {
+                maLopHoc: maLopHoc,
+                isCheckedBD: dataToSaveBD,
             });
 
             if (response.status === 200) {
@@ -214,8 +254,8 @@ const LopHoc = (props) => {
                                                 <td className="col-center">
                                                     <input
                                                         type="checkbox"
-                                                        checked={checkboxStates[index]}
-                                                        onChange={() => handleCheckboxChange(item.maLopHoc, checkboxStates[index], index)}
+                                                        checked={checkboxStatesBD[index]}
+                                                        onChange={() => handleCheckboxChangeBD(item.maLopHoc, checkboxStatesBD[index], index)}
                                                     />
                                                 </td>
                                                 <td className="col-center">

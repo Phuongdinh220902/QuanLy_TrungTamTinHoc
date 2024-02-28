@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { dangnhapnguoidung } from "../../services/apiService";
+
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { Link } from "react-router-dom";
-
+import { useParams } from "react-router-dom";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { jwtDecode } from "jwt-decode";
+
 const DangKyDangNhap = () => {
 
     const [tenHV, setTen] = useState('');
@@ -17,6 +18,7 @@ const DangKyDangNhap = () => {
     const [noisinh, setNoisinh] = useState('');
     const [password, setPassword] = useState('');
     const [gioitinh, setGioitinh] = useState('Nữ');
+
 
     const navigate = useNavigate();
 
