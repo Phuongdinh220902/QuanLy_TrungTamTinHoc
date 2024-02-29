@@ -65,7 +65,10 @@ const initAPIRoute = (app) => {
     router.get('/layLopHocGV/:maGV', APIController.layLopHocGV)
     // router.get('/layLopHocGV', APIController.layLopHocGV)
     router.get('/layThongTinTrangGiangVien/:maGV', APIController.layThongTinTrangGiangVien)
-
+    router.get('/layThongBaoGV/:maLopHoc/:maGV', APIController.layThongBaoGV)
+    router.get('/layThongBaoLopHoc/:maLopHoc', APIController.layThongBaoLopHoc)
+    router.get('/layThongBaoLopHocChiTiet/:maTB', APIController.layThongBaoLopHocChiTiet)
+    router.get('/layNguoiDung/:maLopHoc', APIController.layNguoiDung)
 
     function generateToken(email, role) {
         const secretKey = "yourSecretKey"; // Replace with your actual secret key
@@ -499,6 +502,38 @@ const initAPIRoute = (app) => {
             );
 
             res.json({ message: 'Data received successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    });
+
+    //user
+    router.post("/themthongbao", async (req, res) => {
+        try {
+
+            let { maLopHoc, maGV, ngaydang } = req.body;
+            const { noidung_thongbao } = req.body;
+            const { tieude_thongbao } = req.body;
+
+            console.log("maLH:", maLopHoc);
+            console.log("maGV:", maGV);
+            console.log("title:", tieude_thongbao);
+            console.log("Content:", noidung_thongbao);
+
+            // Kiểm tra dữ liệu đầu vào
+            if (!maLopHoc || !maGV || !noidung_thongbao || !tieude_thongbao) {
+                return res.status(400).json({ error: 'Missing required fields' });
+            }
+
+            await pool.execute(
+                "INSERT INTO thongbao (tieude_thongbao, noidung_thongbao, maLopHoc, maGV, ngaydang) VALUES (?, ?, ?, ?, ?)",
+                [tieude_thongbao, noidung_thongbao, maLopHoc, maGV, ngaydang]
+            );
+
+            res.status(200).json({
+                message: 'Data received successfully'
+            });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal server error' });

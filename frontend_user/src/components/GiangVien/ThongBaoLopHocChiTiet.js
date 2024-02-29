@@ -13,25 +13,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-import Image from '../../images/img_backtoschool.jpg';
-import Image1 from '../../images/img_clr.jpg';
-import Image2 from '../../images/img_code.jpg';
-const TrangLopHocGV = () => {
+
+
+
+const ThongBaoLopHocChiTiet = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [classes, setClasses] = useState([]);
     const [data, setData] = useState([]);
     const [thongbao, setThongBao] = useState([]);
+    const [thongbaoct, setThongBaoCT] = useState([]);
     const [tenGV, setTenGV] = useState("");
-    // const { maGV } = useParams();
     const maGV = localStorage.getItem('maGV');
     const [tenHA, setTenHA] = useState("");
-    const [randomImage, setRandomImage] = useState('');
-    const images = [Image, Image1, Image2];
-
-    const getRandomImage = () => {
-        const randomIndex = Math.floor(Math.random() * images.length);
-        return images[randomIndex];
-    };
 
 
     const handleToggleSidebar = () => {
@@ -58,6 +51,7 @@ const TrangLopHocGV = () => {
     }, [maGV]);
 
     const { maLopHoc } = useParams();
+    const { maTB } = useParams();
     const [lopHoc, setLopHoc] = useState([]);
 
     useEffect(() => {
@@ -65,8 +59,7 @@ const TrangLopHocGV = () => {
             try {
                 const response = await axios.get(`http://localhost:2209/api/v1/layLopHocGiaoVien/${maLopHoc}`);
                 setLopHoc(response.data.LopHoc);
-                setRandomImage(getRandomImage());
-
+                console.log(maTB)
 
                 const responseTB = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHoc/${maLopHoc}`);
                 console.log(responseTB)
@@ -79,6 +72,21 @@ const TrangLopHocGV = () => {
 
         fetchData();
     }, [maLopHoc]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const responseTBCT = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHocChiTiet/${maTB}`);
+                console.log(responseTBCT)
+                setThongBaoCT(responseTBCT.data.TBCT);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, [maTB]);
 
     const navigate = useNavigate();
     const handleLogout = () => {
@@ -157,55 +165,39 @@ const TrangLopHocGV = () => {
 
                 {/* Right Panel */}
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                    <div style={{ padding: '15px', marginBottom: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '5px', display: 'flex', justifyContent: 'space-between' }}>
-
-                        <ul style={{ display: 'flex', listStyleType: 'none', margin: 0, padding: 0 }}>
-                            <li style={{ marginRight: '20px' }}>
-                                <Link to={`/lophocgv/${maLopHoc}`}>
-                                    Bảng tin
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to={`/moinguoi/${maLopHoc}`}> Mọi người</Link>
-                            </li>
-
-                        </ul>
-                    </div>
-
-                    {/* Content */}
                     <div>
-                        {/* <h1 style={{ textAlign: 'center' }}>Lớp học {lopHoc.length > 0 && lopHoc[0].tenLopHoc}</h1> */}
-                        <div style={{ marginBottom: '50px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: '0' }}>
-                            <div style={{ position: 'relative', width: '80%', height: '250px', backgroundImage: `url(${randomImage})`, backgroundSize: 'cover', backgroundPosition: 'center', zIndex: '0', boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.5)', borderRadius: '10px' }}></div>
-                            <h1 style={{ textAlign: 'center', position: 'absolute', zIndex: '1', color: '#fff', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>Lớp học {lopHoc.length > 0 && lopHoc[0].tenLopHoc}</h1>
-                        </div>
+                        <h1>{thongbaoct.tieude_thongbao}</h1>
+                        <p>{thongbaoct.noidung_thongbao}</p>
+                        {/* <p>{formatDate(thongbaoct.ngaydang)}</p> */}
+                    </div>
+                    {/* Content */}
 
 
-                        <div className="centered-div user-info-container ">
+
+                    {/* <div className="centered-div user-info-container ">
                             <Link to={`/themthongbao/${maLopHoc}`}>
                                 <img src={`http://localhost:2209/images/${tenHA}`} alt="Avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
                                 Đăng nội dung nào đó cho lớp học của bạn
                             </Link>
-                        </div>
+                        </div> */}
 
-                        <div >
+                    {/* <div >
                             {thongbao ? (
                                 thongbao.map((tb, index) => (
-                                    <Link to={`/chitietthongbao/${tb.maTB}`}>
+                                    <div className="centered-div1" key={index}>
 
-                                        <div className="centered-div1" key={index}>
-
-                                            <p style={{ marginLeft: '60px', fontSize: '14px', fontWeight: 'bold' }}>{tb.tenGV} đã đăng một thông báo mới: {tb.tieude_thongbao}</p>
-                                            <p style={{ marginLeft: '60px', fontSize: '13px', opacity: 0.7 }}>{formatDate(tb.ngaydang)}</p>
-                                        </div>
-                                    </Link>
+                                        <p style={{ marginLeft: '60px', fontSize: '14px', fontWeight: 'bold' }}>{tb.tenGV} đã đăng một thông báo mới: {tb.tieude_thongbao}</p>
+                                        <p style={{ marginLeft: '60px', fontSize: '13px', opacity: 0.7 }}>{formatDate(tb.ngaydang)}</p>
+                                    </div>
                                 ))
                             ) : (
                                 <p>Không có thông báo nào.</p>
                             )}
-                        </div>
+                        </div> */}
 
-                    </div>
+
+
+
 
                 </div>
 
@@ -215,4 +207,4 @@ const TrangLopHocGV = () => {
     );
 };
 
-export default TrangLopHocGV;
+export default ThongBaoLopHocChiTiet;

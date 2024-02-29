@@ -16,7 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import Image from '../../images/img_backtoschool.jpg';
 import Image1 from '../../images/img_clr.jpg';
 import Image2 from '../../images/img_code.jpg';
-const TrangLopHocGV = () => {
+
+const NguoiDung = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [classes, setClasses] = useState([]);
     const [data, setData] = useState([]);
@@ -59,6 +60,9 @@ const TrangLopHocGV = () => {
 
     const { maLopHoc } = useParams();
     const [lopHoc, setLopHoc] = useState([]);
+    const [nguoiDung, setNguoiDung] = useState([]);
+    const [giangVien, setGiangVien] = useState([]);
+    const [hocVien, setHocVien] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -72,6 +76,25 @@ const TrangLopHocGV = () => {
                 console.log(responseTB)
                 setThongBao(responseTB.data.TB);
 
+                const responseND = await axios.get(`http://localhost:2209/api/v1/layNguoiDung/${maLopHoc}`);
+                // setNguoiDung(responseND.data.MN);
+
+                const { MN } = responseND.data;
+
+                // Tách danh sách thành giáo viên và học viên
+                const gv = [];
+                const hv = [];
+                MN.forEach((nguoi) => {
+                    if (nguoi.maGV) {
+                        gv.push(nguoi);
+                    } if (nguoi.maHV) {
+                        hv.push(nguoi);
+                    }
+                });
+
+                setGiangVien(gv);
+                setHocVien(hv);
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -83,17 +106,14 @@ const TrangLopHocGV = () => {
     const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.removeItem('giangvien');
-        // setUser(null);
         navigate('/');
     };
 
     const formatDate = (dateTimeString) => {
         // Tạo đối tượng Date từ chuỗi datetime
         const dateTime = new Date(dateTimeString);
-
-        // Trích xuất ngày, tháng và năm từ đối tượng Date
         const day = dateTime.getDate();
-        const month = dateTime.getMonth() + 1; // Lưu ý: Tháng trong JavaScript bắt đầu từ 0, nên cần cộng thêm 1
+        const month = dateTime.getMonth() + 1;
         const year = dateTime.getFullYear();
 
         // Định dạng lại ngày theo yêu cầu "dd-mm-yyyy"
@@ -173,8 +193,8 @@ const TrangLopHocGV = () => {
                     </div>
 
                     {/* Content */}
-                    <div>
-                        {/* <h1 style={{ textAlign: 'center' }}>Lớp học {lopHoc.length > 0 && lopHoc[0].tenLopHoc}</h1> */}
+                    {/* <div>
+                        
                         <div style={{ marginBottom: '50px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: '0' }}>
                             <div style={{ position: 'relative', width: '80%', height: '250px', backgroundImage: `url(${randomImage})`, backgroundSize: 'cover', backgroundPosition: 'center', zIndex: '0', boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.5)', borderRadius: '10px' }}></div>
                             <h1 style={{ textAlign: 'center', position: 'absolute', zIndex: '1', color: '#fff', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>Lớp học {lopHoc.length > 0 && lopHoc[0].tenLopHoc}</h1>
@@ -205,8 +225,41 @@ const TrangLopHocGV = () => {
                             )}
                         </div>
 
-                    </div>
+                    </div> */}
 
+                    {/* <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                        <h1>Danh sách người dùng trong lớp học</h1>
+                        <div>
+                            {nguoiDung.map((nguoi, index) => (
+                                <div key={index}>
+                                    <img src={`http://localhost:2209/images/${nguoi.tenHA}`} alt="Avatar" style={{ width: '50px', height: '50px' }} />
+                                    <p>Tên: {nguoi.tenHV}</p>
+                                    <p>Giáo viên: {nguoi.tenGV}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div> */}
+
+                    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                        <h1>Danh sách người dùng trong lớp học</h1>
+
+                        <div className='centered-div'>
+                            <h2>Giáo viên</h2>
+                            {giangVien.map((gv, index) => (
+                                <div className='user-info-container' key={index}>
+                                    <img src={`http://localhost:2209/images/${gv.tenHA}`} alt="Avatar" style={{ width: '50px', height: '50px' }} />
+                                    <p> {gv.tenGV}</p>
+                                </div>
+                            ))}
+                            <h2>Học viên</h2>
+                            {hocVien.map((hv, index) => (
+                                <div className='user-info-container' key={index}>
+                                    <img src={`http://localhost:2209/images/${hv.tenHinhAnhHV}`} alt="Avatar" style={{ width: '50px', height: '50px' }} />
+                                    <p> {hv.tenHV}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -215,4 +268,4 @@ const TrangLopHocGV = () => {
     );
 };
 
-export default TrangLopHocGV;
+export default NguoiDung;

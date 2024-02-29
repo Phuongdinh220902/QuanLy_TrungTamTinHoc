@@ -1510,6 +1510,73 @@ let layThongTinTrangGiangVien = async (req, res) => {
 
 };
 
+let layThongBaoGV = async (req, res) => {
+    const maGV = req.params.maGV;
+    const maLopHoc = req.params.maLopHoc;
+
+    try {
+        const [TB, a] = await pool.execute("SELECT giang_vien.maGV, tenGV, tieude_thongbao, noidung_thongbao, ngaydang, maTB, lop_hoc.maLopHoc FROM giang_vien, thongbao, lop_hoc where lop_hoc.maLopHoc = ? and giang_vien.trang_thai = 1 and giang_vien.maGV = ? and giang_vien.maGV = thongbao.maGV and thongbao.maLopHoc = lop_hoc.maLopHoc", [maLopHoc, maGV]);
+
+        return res.status(200).json({
+            TB: TB
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let layThongBaoLopHoc = async (req, res) => {
+    const maLopHoc = req.params.maLopHoc;
+    try {
+        const [TB, a] = await pool.execute("SELECT maTB, tieude_thongbao, noidung_thongbao, ngaydang, tenGV, giang_vien.maGV, lop_hoc.maLopHoc FROM thongbao, lop_hoc, giang_vien where thongbao.maLopHoc = ? and thongbao.maLopHoc = lop_hoc.maLopHoc and thongbao.maGV = giang_vien.maGV", [maLopHoc]);
+        return res.status(200).json({
+            TB: TB
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let layThongBaoLopHocChiTiet = async (req, res) => {
+    const maTB = req.params.maTB;
+    try {
+        const [TBCT, a] = await pool.execute("SELECT maTB, tieude_thongbao, noidung_thongbao, ngaydang, tenGV, giang_vien.maGV, lop_hoc.maLopHoc FROM thongbao, lop_hoc, giang_vien where thongbao.maTB = ? and thongbao.maLopHoc = lop_hoc.maLopHoc and thongbao.maGV = giang_vien.maGV", [maTB]);
+        return res.status(200).json({
+            TBCT: TBCT
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let layNguoiDung = async (req, res) => {
+    const maLopHoc = req.params.maLopHoc;
+    try {
+        const [MN, a] = await pool.execute("SELECT giang_vien.maGV, hoc_vien.maHV, tenGV, lop_hoc.maLopHoc, tenHV, hinhanh_hocvien.tenHinhAnhHV, hinh_anh.tenHA FROM giang_vien, lop_hoc , hoc_vien, hinhanh_hocvien, dshv, hinh_anh where lop_hoc.maLopHoc = ? and giang_vien.trang_thai = 1 and giang_vien.maGV = hinh_anh.maGV and lop_hoc.maGV = giang_vien.maGV and dshv.maHV = hoc_vien.maHV and dshv.maLopHoc = lop_hoc.maLopHoc and hoc_vien.maHV = hinhanh_hocvien.maHV;", [maLopHoc]);
+        return res.status(200).json({
+            MN: MN
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
 
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
@@ -1519,5 +1586,6 @@ module.exports = {
     dangnhapnguoidung, dangkyTKNguoiDung,
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
-    layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau
+    layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,
+    layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung
 }
