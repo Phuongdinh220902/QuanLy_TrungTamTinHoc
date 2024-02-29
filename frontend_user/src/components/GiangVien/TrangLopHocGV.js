@@ -143,8 +143,10 @@ const TrangLopHocGV = () => {
                         </SubMenu>
 
                         <MenuItem >
-                            <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
-                            Cài đặt
+                            <Link to={`/chinhsua`}>
+                                <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
+                                Cài đặt
+                            </Link>
                         </MenuItem>
                         <Link to="/" onClick={handleLogout} style={{ color: 'black' }}>
                             <MenuItem >
@@ -191,18 +193,17 @@ const TrangLopHocGV = () => {
                         <div >
                             {thongbao ? (
                                 thongbao.map((tb, index) => (
-                                    <Link to={`/chitietthongbao/${tb.maTB}`}>
-
-                                        <div className="centered-div1" key={index}>
-
+                                    <div className="centered-div1" key={index}>
+                                        <Link to={`/chitietthongbao/${tb.maTB}`}>
                                             <p style={{ marginLeft: '60px', fontSize: '14px', fontWeight: 'bold' }}>{tb.tenGV} đã đăng một thông báo mới: {tb.tieude_thongbao}</p>
                                             <p style={{ marginLeft: '60px', fontSize: '13px', opacity: 0.7 }}>{formatDate(tb.ngaydang)}</p>
-                                        </div>
-                                    </Link>
+                                        </Link>
+                                    </div>
                                 ))
                             ) : (
                                 <p>Không có thông báo nào.</p>
                             )}
+
                         </div>
 
                     </div>

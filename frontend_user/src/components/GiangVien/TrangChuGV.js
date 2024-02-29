@@ -112,15 +112,16 @@ const TCGiangVien = () => {
                 </Sidebar>
 
 
-                <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gridGap: '20px' }}>
+                <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gridGap: '40px', marginLeft: '50px', marginTop: '30px' }}>
                     {data.map((item, index) => (
-                        <div key={index} style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '10px', textAlign: 'center', height: '250px' }}>
+                        <div key={index} className="class-for-image-container" style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '10px', textAlign: 'center', height: '260px' }}>
+                            <img src={`http://localhost:2209/images/${item.tenHinhAnhKH}`} className="class-for-image" />
                             <Link to={`/lophocgv/${item.maLopHoc}`}>
                                 <h3>{item.tenLopHoc}</h3>
                             </Link>
-
                             <p>{item.tenGV}</p>
                         </div>
+
                     ))}
                 </div>
             </div>

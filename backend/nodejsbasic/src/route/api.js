@@ -69,6 +69,7 @@ const initAPIRoute = (app) => {
     router.get('/layThongBaoLopHoc/:maLopHoc', APIController.layThongBaoLopHoc)
     router.get('/layThongBaoLopHocChiTiet/:maTB', APIController.layThongBaoLopHocChiTiet)
     router.get('/layNguoiDung/:maLopHoc', APIController.layNguoiDung)
+    router.get('/layTrangCaNhanGV/:maGV', APIController.layTrangCaNhanGV)
 
     function generateToken(email, role) {
         const secretKey = "yourSecretKey"; // Replace with your actual secret key
@@ -537,6 +538,42 @@ const initAPIRoute = (app) => {
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal server error' });
+        }
+    });
+
+    router.post("/updateGiangVien", upload.single("file"), async (req, res) => {
+        let { maGV, tenGV, email, sdt, ngaysinh, gioitinh, mota, kinhnghiem, gioithieu } = req.body;
+
+        console.log(req.body);
+        const { file } = req; // Lấy thông tin về file từ request
+        let filename = file ? file.filename : undefined;
+
+        try {
+            if (file && file.filename) {
+                filename = file.filename;
+            }
+
+            // Cập nhật thông tin đoàn viên
+            await pool.execute("UPDATE giang_vien SET tenGV = ?, email =?, sdt = ?, ngaysinh=STR_TO_DATE(?, '%Y-%m-%d'), gioitinh = ?, mota = ?,kinhnghiem = ?, gioithieu= ?,  WHERE maGV=?", [tenGV, email, sdt, ngaysinh, gioitinh, mota, kinhnghiem, gioithieu, maGV])
+
+
+            if (file && file.filename) {
+                filename = file.filename;
+
+                // Cập nhật tên ảnh trong bảng 'anh'
+                await pool.execute("UPDATE hinh_anh SET tenHA = ? WHERE maGV = ?", [
+                    filename,
+                    maGV,
+                ]);
+                console.log(filename)
+            }
+
+            return res.status(200).json({
+                message: "Cập nhật thành công!",
+            });
+        } catch (error) {
+            console.log("Không cập nhật được!", error);
+            return res.status(500).json({ error: "Không hiển thị được!" });
         }
     });
 

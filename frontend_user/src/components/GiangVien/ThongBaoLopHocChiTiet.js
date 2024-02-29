@@ -14,14 +14,12 @@ import {
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
-
-
 const ThongBaoLopHocChiTiet = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [classes, setClasses] = useState([]);
     const [data, setData] = useState([]);
     const [thongbao, setThongBao] = useState([]);
-    const [thongbaoct, setThongBaoCT] = useState([]);
+    const [thongBao, setThongBaoCT] = useState(null);
     const [tenGV, setTenGV] = useState("");
     const maGV = localStorage.getItem('maGV');
     const [tenHA, setTenHA] = useState("");
@@ -77,11 +75,9 @@ const ThongBaoLopHocChiTiet = () => {
         const fetchData = async () => {
             try {
                 const responseTBCT = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHocChiTiet/${maTB}`);
-                console.log(responseTBCT)
-                setThongBaoCT(responseTBCT.data.TBCT);
-
+                setThongBaoCT(responseTBCT.data.TBCT[0]); // Lấy thông báo đầu tiên từ mảng kết quả
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching thong bao:', error);
             }
         };
 
@@ -163,43 +159,38 @@ const ThongBaoLopHocChiTiet = () => {
                     </Menu>
                 </Sidebar>
 
-                {/* Right Panel */}
-                <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                <div className='centered-divtb' >
                     <div>
-                        <h1>{thongbaoct.tieude_thongbao}</h1>
-                        <p>{thongbaoct.noidung_thongbao}</p>
-                        {/* <p>{formatDate(thongbaoct.ngaydang)}</p> */}
+                        {thongBao ? (
+                            <div>
+                                <div style={{ borderBottom: '2px solid rgb(25, 103, 210)', paddingBottom: '10px' }}>
+                                    <div style={{ color: 'rgb(25, 103, 210)', fontSize: '35px' }}>
+                                        {thongBao.tieude_thongbao}</div>
+                                    <p>{thongBao.tenGV} {formatDate(thongBao.ngaydang)}</p>
+                                </div>
+                                <div dangerouslySetInnerHTML={{ __html: thongBao.noidung_thongbao }}></div>
+                            </div>
+                        ) : (
+                            <p>Loading...</p>
+                        )}
                     </div>
-                    {/* Content */}
-
-
-
-                    {/* <div className="centered-div user-info-container ">
-                            <Link to={`/themthongbao/${maLopHoc}`}>
-                                <img src={`http://localhost:2209/images/${tenHA}`} alt="Avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
-                                Đăng nội dung nào đó cho lớp học của bạn
-                            </Link>
-                        </div> */}
-
-                    {/* <div >
-                            {thongbao ? (
-                                thongbao.map((tb, index) => (
-                                    <div className="centered-div1" key={index}>
-
-                                        <p style={{ marginLeft: '60px', fontSize: '14px', fontWeight: 'bold' }}>{tb.tenGV} đã đăng một thông báo mới: {tb.tieude_thongbao}</p>
-                                        <p style={{ marginLeft: '60px', fontSize: '13px', opacity: 0.7 }}>{formatDate(tb.ngaydang)}</p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>Không có thông báo nào.</p>
-                            )}
-                        </div> */}
-
-
-
-
-
                 </div>
+
+
+                {/* <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                    {thongBao ? (
+                        <div>
+                            <div style={{ borderBottom: '2px solid green', paddingBottom: '10px' }}>
+                                <h2>{thongBao.tieude_thongbao}</h2>
+                                <p>{thongBao.tenGV} {formatDate(thongBao.ngaydang)}</p>
+                            </div>
+                            <div dangerouslySetInnerHTML={{ __html: thongBao.noidung_thongbao }}></div>
+                        </div>
+                    ) : (
+                        <p>Loading...</p>
+                    )}
+                </div> */}
+
 
             </div>
         </div>

@@ -1478,7 +1478,7 @@ let layLopHocGV = async (req, res) => {
     const maGV = req.params.maGV;
     console.log(maGV)
     try {
-        const [KH, a] = await pool.execute("SELECT giang_vien.maGV, tenGV, gioithieu, kinhnghiem, giang_vien.mota, tenHA, maHA, khoa_hoc.tenKH, khoa_hoc.maKH, lop_hoc.maLopHoc, lop_hoc.tenLopHoc FROM giang_vien, hinh_anh, khoa_hoc, lop_hoc where giang_vien.maGV = ? and giang_vien.trang_thai = 1 and giang_vien.maGV = hinh_anh.maGV and giang_vien.maGV = lop_hoc.maGV and lop_hoc.maKH = khoa_hoc.maKH", [maGV]);
+        const [KH, a] = await pool.execute("SELECT giang_vien.maGV, tenGV, gioithieu, kinhnghiem, giang_vien.mota, tenHA, maHA, khoa_hoc.tenKH, khoa_hoc.maKH, lop_hoc.maLopHoc, lop_hoc.tenLopHoc, hinhanh_khoahoc.tenHinhAnhKH, hinhanh_khoahoc.maHinhAnh FROM giang_vien, hinh_anh, khoa_hoc, lop_hoc, hinhanh_khoahoc where giang_vien.maGV = ? and giang_vien.trang_thai = 1 and giang_vien.maGV = hinh_anh.maGV and giang_vien.maGV = lop_hoc.maGV and lop_hoc.maKH = khoa_hoc.maKH and hinhanh_khoahoc.maKH = khoa_hoc.maKH", [maGV]);
 
         return res.status(200).json({
             KH: KH
@@ -1577,6 +1577,22 @@ let layNguoiDung = async (req, res) => {
     }
 };
 
+let layTrangCaNhanGV = async (req, res) => {
+    const maGV = req.params.maGV;
+    try {
+        const [TCN, a] = await pool.execute("SELECT giang_vien.maGV, tenGV, email, sdt, DATE_FORMAT(STR_TO_DATE(ngaysinh, '%Y-%m-%d'), '%d-%m-%Y') AS ngaysinh, gioitinh, mota, kinhnghiem, gioithieu, tenHA, hinh_anh.maHA FROM giang_vien, hinh_anh where giang_vien.maGV = ? and giang_vien.trang_thai = 1 and giang_vien.maGV = hinh_anh.maGV", [maGV]);
+        return res.status(200).json({
+            TCN: TCN
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
 
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
@@ -1587,5 +1603,5 @@ module.exports = {
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
     layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,
-    layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung
+    layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV
 }
