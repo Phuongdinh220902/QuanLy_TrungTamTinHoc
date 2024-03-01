@@ -554,7 +554,7 @@ const initAPIRoute = (app) => {
             }
 
             // Cập nhật thông tin đoàn viên
-            await pool.execute("UPDATE giang_vien SET tenGV = ?, email =?, sdt = ?, ngaysinh=STR_TO_DATE(?, '%Y-%m-%d'), gioitinh = ?, mota = ?,kinhnghiem = ?, gioithieu= ?,  WHERE maGV=?", [tenGV, email, sdt, ngaysinh, gioitinh, mota, kinhnghiem, gioithieu, maGV])
+            await pool.execute("UPDATE giang_vien SET tenGV = ?, email =?, sdt = ?, ngaysinh=STR_TO_DATE(?, '%Y-%m-%d'), gioitinh = ?, mota = ?,kinhnghiem = ?, gioithieu= ?  WHERE maGV = ? ", [tenGV, email, sdt, ngaysinh, gioitinh, mota, kinhnghiem, gioithieu, maGV])
 
 
             if (file && file.filename) {

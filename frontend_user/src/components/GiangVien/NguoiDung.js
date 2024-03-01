@@ -23,11 +23,12 @@ const NguoiDung = () => {
     const [data, setData] = useState([]);
     const [thongbao, setThongBao] = useState([]);
     const [tenGV, setTenGV] = useState("");
-    // const { maGV } = useParams();
     const maGV = localStorage.getItem('maGV');
     const [tenHA, setTenHA] = useState("");
     const [randomImage, setRandomImage] = useState('');
     const images = [Image, Image1, Image2];
+    const [currentMaLopHoc, setCurrentMaLopHoc] = useState('');
+
 
     const getRandomImage = () => {
         const randomIndex = Math.floor(Math.random() * images.length);
@@ -60,7 +61,6 @@ const NguoiDung = () => {
 
     const { maLopHoc } = useParams();
     const [lopHoc, setLopHoc] = useState([]);
-    const [nguoiDung, setNguoiDung] = useState([]);
     const [giangVien, setGiangVien] = useState([]);
     const [hocVien, setHocVien] = useState([]);
 
@@ -102,6 +102,11 @@ const NguoiDung = () => {
 
         fetchData();
     }, [maLopHoc]);
+
+    useEffect(() => {
+        setCurrentMaLopHoc(maLopHoc);
+    }, [maLopHoc]);
+
 
     const navigate = useNavigate();
     const handleLogout = () => {
@@ -145,7 +150,7 @@ const NguoiDung = () => {
 
 
             <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', minHeight: '100vh' }}>
-                {/* Sidebar */}
+
                 <Sidebar collapsed={collapsed}>
                     <Menu>
                         <MenuItem >
@@ -154,13 +159,14 @@ const NguoiDung = () => {
                         </MenuItem>
                         <SubMenu defaultOpen label={<span><FontAwesomeIcon icon={faGraduationCap} style={{ marginRight: '10px' }} />Lớp học</span>}>
                             {data.map((item, index) => (
-                                <MenuItem key={index}>
+                                <MenuItem key={index} className={currentMaLopHoc === item.maLopHoc ? 'highlighted-menu-item' : ''}>
                                     <Link to={`/lophocgv/${item.maLopHoc}`}>
                                         {item.tenLopHoc}
                                     </Link>
                                 </MenuItem>
                             ))}
                         </SubMenu>
+
 
                         <MenuItem >
                             <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
@@ -178,86 +184,45 @@ const NguoiDung = () => {
                 {/* Right Panel */}
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <div style={{ padding: '15px', marginBottom: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '5px', display: 'flex', justifyContent: 'space-between' }}>
-
-                        <ul style={{ display: 'flex', listStyleType: 'none', margin: 0, padding: 0 }}>
-                            <li style={{ marginRight: '20px' }}>
-                                <Link to={`/lophocgv/${maLopHoc}`}>
+                        <ul style={{ display: 'flex', listStyleType: 'none', margin: 0, padding: 0, marginLeft: '25px', fontSize: '16px' }}>
+                            <li style={{ marginRight: '20px', marginLeft: '17px' }}>
+                                <Link to={`/lophocgv/${maLopHoc}`} style={{ color: 'black' }}>
                                     Bảng tin
                                 </Link>
                             </li>
-                            <li>
-                                <Link to={`/moinguoi/${maLopHoc}`}> Mọi người</Link>
+                            <li >
+                                <Link to={`/moinguoi/${maLopHoc}`} className="highlighted-link" > Mọi người</Link>
                             </li>
-
                         </ul>
                     </div>
 
                     {/* Content */}
-                    {/* <div>
-                        
-                        <div style={{ marginBottom: '50px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: '0' }}>
-                            <div style={{ position: 'relative', width: '80%', height: '250px', backgroundImage: `url(${randomImage})`, backgroundSize: 'cover', backgroundPosition: 'center', zIndex: '0', boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.5)', borderRadius: '10px' }}></div>
-                            <h1 style={{ textAlign: 'center', position: 'absolute', zIndex: '1', color: '#fff', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>Lớp học {lopHoc.length > 0 && lopHoc[0].tenLopHoc}</h1>
-                        </div>
-
-
-                        <div className="centered-div user-info-container ">
-                            <Link to={`/themthongbao/${maLopHoc}`}>
-                                <img src={`http://localhost:2209/images/${tenHA}`} alt="Avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
-                                Đăng nội dung nào đó cho lớp học của bạn
-                            </Link>
-                        </div>
-
-                        <div >
-                            {thongbao ? (
-                                thongbao.map((tb, index) => (
-                                    <Link to={`/chitietthongbao/${tb.maTB}`}>
-
-                                        <div className="centered-div1" key={index}>
-
-                                            <p style={{ marginLeft: '60px', fontSize: '14px', fontWeight: 'bold' }}>{tb.tenGV} đã đăng một thông báo mới: {tb.tieude_thongbao}</p>
-                                            <p style={{ marginLeft: '60px', fontSize: '13px', opacity: 0.7 }}>{formatDate(tb.ngaydang)}</p>
-                                        </div>
-                                    </Link>
-                                ))
-                            ) : (
-                                <p>Không có thông báo nào.</p>
-                            )}
-                        </div>
-
-                    </div> */}
-
-                    {/* <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                        <h1>Danh sách người dùng trong lớp học</h1>
-                        <div>
-                            {nguoiDung.map((nguoi, index) => (
-                                <div key={index}>
-                                    <img src={`http://localhost:2209/images/${nguoi.tenHA}`} alt="Avatar" style={{ width: '50px', height: '50px' }} />
-                                    <p>Tên: {nguoi.tenHV}</p>
-                                    <p>Giáo viên: {nguoi.tenGV}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div> */}
 
                     <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                        <h1>Danh sách người dùng trong lớp học</h1>
 
-                        <div className='centered-div'>
-                            <h2>Giáo viên</h2>
-                            {giangVien.map((gv, index) => (
-                                <div className='user-info-container' key={index}>
-                                    <img src={`http://localhost:2209/images/${gv.tenHA}`} alt="Avatar" style={{ width: '50px', height: '50px' }} />
-                                    <p> {gv.tenGV}</p>
-                                </div>
-                            ))}
-                            <h2>Học viên</h2>
-                            {hocVien.map((hv, index) => (
-                                <div className='user-info-container' key={index}>
-                                    <img src={`http://localhost:2209/images/${hv.tenHinhAnhHV}`} alt="Avatar" style={{ width: '50px', height: '50px' }} />
-                                    <p> {hv.tenHV}</p>
-                                </div>
-                            ))}
+
+                        <div className='centered-div-nd'>
+                            <div style={{ marginBottom: '70px' }}>
+                                <h2 className='gv'>Giáo viên</h2>
+                                {giangVien.map((gv, index) => (
+                                    <div className='user-info-container' key={index} style={{ marginLeft: '20px', marginBottom: '25px' }}>
+                                        <img src={`http://localhost:2209/images/${gv.tenHA}`} alt="Avatar" style={{ width: '40px', height: '40px' }} />
+                                        <p style={{ fontSize: '14px', marginTop: '10px' }}> {gv.tenGV}</p>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div >
+                                <h2 className='gv'>Bạn học</h2>
+                                {hocVien.map((hv, index) => (
+                                    <div className='user-info-container' key={index} style={{ marginLeft: '20px', marginBottom: '25px' }}>
+                                        <img src={`http://localhost:2209/images/${hv.tenHinhAnhHV}`} alt="Avatar" style={{ width: '40px', height: '40px' }} />
+                                        <p style={{ fontSize: '14px', marginTop: '10px' }}> {hv.tenHV}</p>
+                                    </div>
+                                ))}
+                            </div>
+
+
                         </div>
                     </div>
                 </div>

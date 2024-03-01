@@ -15,6 +15,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
+
 const TCGiangVien = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [classes, setClasses] = useState([]);
@@ -23,6 +24,8 @@ const TCGiangVien = () => {
     // const { maGV } = useParams();
     const maGV = localStorage.getItem('maGV');
     const [tenHA, setTenHA] = useState("");
+
+
 
     const handleToggleSidebar = () => {
         setCollapsed(!collapsed);
@@ -87,7 +90,7 @@ const TCGiangVien = () => {
                         </MenuItem>
                         <SubMenu defaultOpen label={<span><FontAwesomeIcon icon={faGraduationCap} style={{ marginRight: '10px' }} />Lớp học</span>}>
                             {data.map((item, index) => (
-                                <MenuItem key={index}>
+                                <MenuItem key={index} >
                                     <Link to={`/lophocgv/${item.maLopHoc}`}>
                                         {item.tenLopHoc}
                                     </Link>
@@ -95,11 +98,12 @@ const TCGiangVien = () => {
                             ))}
                         </SubMenu>
 
-
-                        <MenuItem >
-                            <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
-                            Cài đặt
-                        </MenuItem>
+                        <Link to='/chinhsua' style={{ color: 'black' }}>
+                            <MenuItem >
+                                <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
+                                Cài đặt
+                            </MenuItem>
+                        </Link>
 
                         <Link to="/" onClick={handleLogout} style={{ color: 'black' }}>
                             <MenuItem >

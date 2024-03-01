@@ -797,9 +797,7 @@ h2,
 .user-info-container img {
   height: 40px;
   border-radius: 50%;
-  /* Làm tròn góc cho hình ảnh */
   margin-right: 10px;
-  /* Tạo khoảng cách giữa hình ảnh và tên */
 }
 
 
@@ -1029,4 +1027,53 @@ h2,
   max-width: 800px;
   border-radius: 5px;
   margin-bottom: 30px;
+}
+
+.highlighted-class {
+  background-color: #B2D9EA;
+  border-radius: 0 2rem 2rem 0;
+  /* Màu nền của mục được chọn */
+}
+
+/* bảng tin */
+.highlighted-link {
+  border-bottom: 3.5px solid #007bff;
+  padding-bottom: 5px;
+  color: #007bff;
+  padding: 16px;
+  border-top-width: 0.25rem;
+
+}
+
+/* mọi người */
+
+.centered-div-nd {
+  padding-top: 10px;
+  padding: 15px;
+  margin: 0 auto;
+  width: 60%;
+  max-width: 800px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.gv {
+  border-bottom: 1px solid rgb(66, 133, 244);
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-left: 1rem;
+  height: 3rem;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 2.5rem;
+  color: rgb(25, 103, 210);
+}
+
+.user-info-container.with-border-top+.user-info-container {
+  border-top: 1px solid #000;
+  /* Màu và kiểu border tùy chọn */
+}
+
+.ps-sidebar-container {
+  background-color: white !important;
 }

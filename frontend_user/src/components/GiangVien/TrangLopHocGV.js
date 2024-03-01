@@ -27,7 +27,7 @@ const TrangLopHocGV = () => {
     const [tenHA, setTenHA] = useState("");
     const [randomImage, setRandomImage] = useState('');
     const images = [Image, Image1, Image2];
-
+    const [selectedClass, setSelectedClass] = useState(null);
     const getRandomImage = () => {
         const randomIndex = Math.floor(Math.random() * images.length);
         return images[randomIndex];
@@ -126,16 +126,16 @@ const TrangLopHocGV = () => {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', minHeight: '100vh' }}>
                 {/* Sidebar */}
-                <Sidebar collapsed={collapsed}>
-                    <Menu>
+                <Sidebar collapsed={collapsed} >
+                    <Menu >
                         <MenuItem >
                             <FontAwesomeIcon icon={faHouseChimney} style={{ marginRight: '10px' }} />
                             Màn hình chính
                         </MenuItem>
                         <SubMenu defaultOpen label={<span><FontAwesomeIcon icon={faGraduationCap} style={{ marginRight: '10px' }} />Lớp học</span>}>
                             {data.map((item, index) => (
-                                <MenuItem key={index}>
-                                    <Link to={`/lophocgv/${item.maLopHoc}`}>
+                                <MenuItem key={index} className={selectedClass === item.maLopHoc ? 'highlighted-class' : ''} onClick={() => setSelectedClass(item.maLopHoc)}>
+                                    <Link to={`/lophocgv/${item.maLopHoc}`} style={{ color: 'black' }}>
                                         {item.tenLopHoc}
                                     </Link>
                                 </MenuItem>
@@ -143,8 +143,8 @@ const TrangLopHocGV = () => {
                         </SubMenu>
 
                         <MenuItem >
-                            <Link to={`/chinhsua`}>
-                                <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
+                            <Link to={`/chinhsua`} style={{ color: 'black' }}>
+                                <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px', color: 'black' }} />
                                 Cài đặt
                             </Link>
                         </MenuItem>
@@ -160,23 +160,25 @@ const TrangLopHocGV = () => {
                 {/* Right Panel */}
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <div style={{ padding: '15px', marginBottom: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '5px', display: 'flex', justifyContent: 'space-between' }}>
-
-                        <ul style={{ display: 'flex', listStyleType: 'none', margin: 0, padding: 0 }}>
+                        <ul style={{ display: 'flex', listStyleType: 'none', margin: 0, padding: 0, marginLeft: '25px', fontSize: '16px' }}>
                             <li style={{ marginRight: '20px' }}>
-                                <Link to={`/lophocgv/${maLopHoc}`}>
+                                <Link to={`/lophocgv/${maLopHoc}`} className="highlighted-link">
                                     Bảng tin
                                 </Link>
                             </li>
                             <li>
-                                <Link to={`/moinguoi/${maLopHoc}`}> Mọi người</Link>
+                                <Link to={`/moinguoi/${maLopHoc}`} className="highlighted-link1" style={{ color: 'black' }}>
+                                    Mọi người
+                                </Link>
                             </li>
-
                         </ul>
                     </div>
 
+
+
                     {/* Content */}
                     <div>
-                        {/* <h1 style={{ textAlign: 'center' }}>Lớp học {lopHoc.length > 0 && lopHoc[0].tenLopHoc}</h1> */}
+
                         <div style={{ marginBottom: '50px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: '0' }}>
                             <div style={{ position: 'relative', width: '80%', height: '250px', backgroundImage: `url(${randomImage})`, backgroundSize: 'cover', backgroundPosition: 'center', zIndex: '0', boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.5)', borderRadius: '10px' }}></div>
                             <h1 style={{ textAlign: 'center', position: 'absolute', zIndex: '1', color: '#fff', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>Lớp học {lopHoc.length > 0 && lopHoc[0].tenLopHoc}</h1>
@@ -195,8 +197,8 @@ const TrangLopHocGV = () => {
                                 thongbao.map((tb, index) => (
                                     <div className="centered-div1" key={index}>
                                         <Link to={`/chitietthongbao/${tb.maTB}`}>
-                                            <p style={{ marginLeft: '60px', fontSize: '14px', fontWeight: 'bold' }}>{tb.tenGV} đã đăng một thông báo mới: {tb.tieude_thongbao}</p>
-                                            <p style={{ marginLeft: '60px', fontSize: '13px', opacity: 0.7 }}>{formatDate(tb.ngaydang)}</p>
+                                            <p style={{ marginLeft: '60px', fontSize: '0.875rem', fontWeight: '500', color: '#3c4043', fontFamily: "Google Sans, Roboto, Arial, sans-serif", letterSpacing: '.01785714em', lineHeight: '1.25rem' }}>{tb.tenGV} đã đăng một thông báo mới: {tb.tieude_thongbao}</p>
+                                            <p style={{ marginLeft: '60px', fontSize: '13px', opacity: 0.7, color: 'black' }}>{formatDate(tb.ngaydang)}</p>
                                         </Link>
                                     </div>
                                 ))
