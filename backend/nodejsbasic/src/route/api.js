@@ -568,8 +568,17 @@ const initAPIRoute = (app) => {
                 console.log(filename)
             }
 
+            if (filename != undefined) {
+                return res.status(200).json({
+                    message: "Cập nhật thành công!",
+                    tenHA: filename,
+                    tenGV: tenGV,
+                });
+            }
+
             return res.status(200).json({
                 message: "Cập nhật thành công!",
+                tenGV: tenGV
             });
         } catch (error) {
             console.log("Không cập nhật được!", error);

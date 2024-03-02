@@ -63,7 +63,7 @@ const TCGiangVien = () => {
                 backgroundColor: 'white',
                 padding: '15px',
                 display: 'flex',
-                justifyContent: 'space-between', // Để căn giữa và icon và các phần tử khác
+                justifyContent: 'space-between',
                 alignItems: 'center',
                 borderBottom: '1px solid #ccc',
                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
@@ -71,8 +71,6 @@ const TCGiangVien = () => {
             }}>
                 <FontAwesomeIcon icon={faBars} onClick={handleToggleSidebar} style={{ cursor: 'pointer' }} />
                 <div className="user-info-container" style={{ display: 'flex', alignItems: 'center' }}>
-
-
                     <img src={`http://localhost:2209/images/${tenHA}`} alt="Avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} /> {/* Hiển thị hình ảnh */}
                     <h3>{tenGV}</h3>
 
@@ -91,7 +89,7 @@ const TCGiangVien = () => {
                         <SubMenu defaultOpen label={<span><FontAwesomeIcon icon={faGraduationCap} style={{ marginRight: '10px' }} />Lớp học</span>}>
                             {data.map((item, index) => (
                                 <MenuItem key={index} >
-                                    <Link to={`/lophocgv/${item.maLopHoc}`}>
+                                    <Link to={`/lophocgv/${item.maLopHoc}`} style={{ color: 'black' }}>
                                         {item.tenLopHoc}
                                     </Link>
                                 </MenuItem>

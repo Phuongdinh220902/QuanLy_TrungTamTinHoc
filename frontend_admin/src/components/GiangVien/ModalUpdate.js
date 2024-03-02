@@ -18,7 +18,7 @@ const ModalUpdateGV = ({ show, handleClose, selectedGiangVien, onUpdate }) => {
     const [gioitinh, setGioitinh] = useState('Nam');
     const [image, setImage] = useState('');
     const [previewImage, setPreviewImage] = useState('');
-    // const newns = format(new Date(ngaysinh), "dd/MM/yyyy");
+
     function check_date(cur_date) {
         // // Kiểm tra nếu cur_date không tồn tại hoặc là chuỗi rỗng
         console.log(cur_date)

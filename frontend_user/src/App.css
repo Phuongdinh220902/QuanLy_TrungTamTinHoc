@@ -992,6 +992,9 @@ h2,
 }
 
 .centered-div1 {
+  display: flex;
+  align-items: center;
+  /* Căn nội dung theo chiều dọc */
   border-top: 1px solid #ccc;
   padding-top: 10px;
   padding: 10px;
@@ -1001,6 +1004,11 @@ h2,
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   margin-bottom: 30px;
+}
+
+.centered-div1 .icon {
+  margin-right: 10px;
+  /* Khoảng cách giữa icon và nội dung */
 }
 
 /* Trong file CSS của bạn */
@@ -1076,4 +1084,12 @@ h2,
 
 .ps-sidebar-container {
   background-color: white !important;
+}
+
+/* ckeditor */
+.ck-editor__editable {
+  min-height: 300px;
+  /* Chiều cao tối thiểu */
+  height: 500px;
+  /* Chiều cao mặc định */
 }

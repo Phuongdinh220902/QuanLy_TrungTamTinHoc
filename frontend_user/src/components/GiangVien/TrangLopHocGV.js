@@ -9,7 +9,8 @@ import {
     faGraduationCap,
     faRightFromBracket,
     faBars,
-    faGears
+    faGears,
+    faBell
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
@@ -65,6 +66,7 @@ const TrangLopHocGV = () => {
             try {
                 const response = await axios.get(`http://localhost:2209/api/v1/layLopHocGiaoVien/${maLopHoc}`);
                 setLopHoc(response.data.LopHoc);
+                console.log(response, 'lh')
                 setRandomImage(getRandomImage());
 
 
@@ -128,10 +130,13 @@ const TrangLopHocGV = () => {
                 {/* Sidebar */}
                 <Sidebar collapsed={collapsed} >
                     <Menu >
-                        <MenuItem >
-                            <FontAwesomeIcon icon={faHouseChimney} style={{ marginRight: '10px' }} />
-                            Màn hình chính
-                        </MenuItem>
+                        <Link to={'/giangvien'} style={{ color: 'black' }}>
+                            <MenuItem >
+                                <FontAwesomeIcon icon={faHouseChimney} style={{ marginRight: '10px' }} />
+                                Màn hình chính
+                            </MenuItem>
+                        </Link>
+
                         <SubMenu defaultOpen label={<span><FontAwesomeIcon icon={faGraduationCap} style={{ marginRight: '10px' }} />Lớp học</span>}>
                             {data.map((item, index) => (
                                 <MenuItem key={index} className={selectedClass === item.maLopHoc ? 'highlighted-class' : ''} onClick={() => setSelectedClass(item.maLopHoc)}>
@@ -192,21 +197,27 @@ const TrangLopHocGV = () => {
                             </Link>
                         </div>
 
-                        <div >
+                        <div>
                             {thongbao ? (
                                 thongbao.map((tb, index) => (
                                     <div className="centered-div1" key={index}>
                                         <Link to={`/chitietthongbao/${tb.maTB}`}>
-                                            <p style={{ marginLeft: '60px', fontSize: '0.875rem', fontWeight: '500', color: '#3c4043', fontFamily: "Google Sans, Roboto, Arial, sans-serif", letterSpacing: '.01785714em', lineHeight: '1.25rem' }}>{tb.tenGV} đã đăng một thông báo mới: {tb.tieude_thongbao}</p>
-                                            <p style={{ marginLeft: '60px', fontSize: '13px', opacity: 0.7, color: 'black' }}>{formatDate(tb.ngaydang)}</p>
+                                            <div>
+                                                <FontAwesomeIcon icon={faBell} className="icon" />
+                                                <div>
+                                                    <p style={{ marginLeft: '60px', fontSize: '0.875rem', fontWeight: '500', color: '#3c4043', fontFamily: "Google Sans, Roboto, Arial, sans-serif", letterSpacing: '.01785714em', lineHeight: '1.25rem' }}>{tb.tenGV} đã đăng một thông báo mới: {tb.tieude_thongbao}</p>
+                                                    <p style={{ marginLeft: '60px', fontSize: '13px', opacity: 0.7, color: 'black' }}>{formatDate(tb.ngaydang)}</p>
+                                                </div>
+                                            </div>
                                         </Link>
                                     </div>
+
                                 ))
                             ) : (
                                 <p>Không có thông báo nào.</p>
                             )}
-
                         </div>
+
 
                     </div>
 

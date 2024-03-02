@@ -153,14 +153,16 @@ const NguoiDung = () => {
 
                 <Sidebar collapsed={collapsed}>
                     <Menu>
-                        <MenuItem >
-                            <FontAwesomeIcon icon={faHouseChimney} style={{ marginRight: '10px' }} />
-                            Màn hình chính
-                        </MenuItem>
+                        <Link to={'/giangvien'} style={{ color: 'black' }}>
+                            <MenuItem >
+                                <FontAwesomeIcon icon={faHouseChimney} style={{ marginRight: '10px' }} />
+                                Màn hình chính
+                            </MenuItem>
+                        </Link>
                         <SubMenu defaultOpen label={<span><FontAwesomeIcon icon={faGraduationCap} style={{ marginRight: '10px' }} />Lớp học</span>}>
                             {data.map((item, index) => (
                                 <MenuItem key={index} className={currentMaLopHoc === item.maLopHoc ? 'highlighted-menu-item' : ''}>
-                                    <Link to={`/lophocgv/${item.maLopHoc}`}>
+                                    <Link to={`/lophocgv/${item.maLopHoc}`} style={{ color: 'black' }}>
                                         {item.tenLopHoc}
                                     </Link>
                                 </MenuItem>
@@ -169,8 +171,10 @@ const NguoiDung = () => {
 
 
                         <MenuItem >
-                            <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
-                            Cài đặt
+                            <Link to={`/chinhsua`} style={{ color: 'black' }}>
+                                <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px', color: 'black' }} />
+                                Cài đặt
+                            </Link>
                         </MenuItem>
                         <Link to="/" onClick={handleLogout} style={{ color: 'black' }}>
                             <MenuItem >
