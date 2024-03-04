@@ -6,7 +6,6 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import logoImage from '../../images/logo.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Carousel } from 'react-bootstrap';
 import {
     faHouse, faRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
@@ -90,13 +89,35 @@ const Header = () => {
         navigate('/dangnhap');
     };
 
-    const [showUserMenu, setShowUserMenu] = useState(false);
+
+    const [isFixed, setIsFixed] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.scrollY;
+            const threshold = 120; // Ngưỡng cuộn xuống trước khi áp dụng navbar cố định
+
+            if (scrollPosition > threshold) {
+                setIsFixed(true);
+            } else {
+                setIsFixed(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        // Clean up
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
 
     return (
         <>
             <div className="container hidden-xs" style={{ position: 'relative' }}>
                 <div className="logo clearfix">
-                    <a href="/" title="Responsive Slide Menus">
+                    <a title="Responsive Slide Menus">
                         <img src={logoImage} alt="" />
                     </a>
                 </div>
@@ -127,7 +148,7 @@ const Header = () => {
 
                 </div>
             </div>
-            <Navbar expand="lg" className="header-menu">
+            <Navbar expand="lg" className={`header-menu ${isFixed ? 'fixed-top-navbar' : ''}`}>
                 <Container>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">

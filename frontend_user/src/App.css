@@ -359,6 +359,18 @@ code {
   padding-right: 10px;
 }
 
+.header-menu {
+  background-color: #0082c8;
+}
+
+.fixed-top-navbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
 .searchdestop {
   display: block;
   position: absolute;
@@ -548,9 +560,7 @@ textarea {
   display: block;
 } */
 
-.header-menu {
-  background-color: #0082c8;
-}
+
 
 /* CSS cho menu */
 .menu-wrapper {
@@ -921,6 +931,7 @@ h2,
   color: #888;
 }
 
+
 @media (max-width: 768px) {
   .profile-container {
     padding: 15px;
@@ -1050,7 +1061,11 @@ h2,
   color: #007bff;
   padding: 16px;
   border-top-width: 0.25rem;
+}
 
+.highlighted-link1 {
+  padding: 16px;
+  border-top-width: 0.25rem;
 }
 
 /* mọi người */
@@ -1092,4 +1107,31 @@ h2,
   /* Chiều cao tối thiểu */
   height: 500px;
   /* Chiều cao mặc định */
+}
+
+/* phân trang cảm nhận */
+.phan-trang {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.phan-trang li {
+  margin: 0 5px;
+}
+
+.phan-trang li a {
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #333;
+}
+
+.phan-trang li.active a {
+  background-color: #007bff;
+  color: #fff;
 }

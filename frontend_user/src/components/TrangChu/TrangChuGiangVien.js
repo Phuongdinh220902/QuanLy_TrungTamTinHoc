@@ -10,7 +10,23 @@ const TrangChuGV = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get('http://localhost:2209/api/v1/layTrangChuGiangVien');
-                setDanhSachGiaoVien(response.data.TCGV);
+                // Lấy danh sách giáo viên từ response
+                const danhSach = response.data.TCGV;
+                // Nếu danh sách có ít hơn hoặc bằng 8 phần tử, không cần lọc ngẫu nhiên
+                if (danhSach.length <= 8) {
+                    setDanhSachGiaoVien(danhSach);
+                } else {
+                    // Nếu danh sách có hơn 8 phần tử, lấy ngẫu nhiên 8 phần tử
+                    const randomIndexes = [];
+                    while (randomIndexes.length < 8) {
+                        const randomIndex = Math.floor(Math.random() * danhSach.length);
+                        if (!randomIndexes.includes(randomIndex)) {
+                            randomIndexes.push(randomIndex);
+                        }
+                    }
+                    const randomGiaoVien = randomIndexes.map(index => danhSach[index]);
+                    setDanhSachGiaoVien(randomGiaoVien);
+                }
             } catch (error) {
                 console.error('Lỗi khi gọi API: ', error);
             }
@@ -48,7 +64,6 @@ const TrangChuGV = () => {
                                         <div className="giang-vien-title">
                                             <a href={`/thongtingiangvien/${giaoVien.maGV}`}>{giaoVien.tenGV}</a>
                                         </div>
-                                        {/* <div className="giang-vien-subtitle">{giaoVien.tenHA}</div> */}
                                     </div>
                                 </div>
                             </div>

@@ -1289,6 +1289,39 @@ let layTrangCaNhanHV = async (req, res) => {
     }
 };
 
+let layKhoaHocDaDK = async (req, res) => {
+    const maHV = req.params.maHV;
+    console.log(maHV)
+    try {
+        const [KH, a] = await pool.execute("SELECT tenKH, tenHinhAnhKH,lop_hoc.tenLopHoc, hoc_vien.tenHV, lop_hoc.tenLopHoc, lop_hoc.maLopHoc from khoa_hoc, lop_hoc, dshv, hoc_phi, hinhanh_khoahoc, hoc_vien where hoc_phi.trang_thai = 1 and lop_hoc.bat_dau = 1 and hoc_vien.maHV = ? and khoa_hoc.maKH = lop_hoc.maKH and dshv.maHV = hoc_vien.maHV and lop_hoc.maLopHoc = dshv.maLopHoc and dshv.maDSHV = hoc_phi.maDSHV and hinhanh_khoahoc.maKH = khoa_hoc.maKH", [maHV]);
+        return res.status(200).json({
+            KH: KH
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let layThongBaoLopHocHV = async (req, res) => {
+    const maLopHoc = req.params.maLopHoc;
+    try {
+        const [TB, a] = await pool.execute("SELECT maTB, tieude_thongbao, noidung_thongbao, ngaydang, tenGV, giang_vien.maGV, lop_hoc.maLopHoc, tenHA, lop_hoc.tenLopHoc FROM thongbao, lop_hoc, giang_vien, hinh_anh where thongbao.maLopHoc = ? and thongbao.maLopHoc = lop_hoc.maLopHoc and thongbao.maGV = giang_vien.maGV and giang_vien.maGV = hinh_anh.maGV", [maLopHoc]);
+        return res.status(200).json({
+            TB: TB
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
 let updateHV1 = async (req, res) => {
     let { maHV, tenHV, email, sdt, ngaysinh, gioitinh, noisinh } = req.body;
     console.log(req.body);
@@ -1594,6 +1627,8 @@ let layTrangCaNhanGV = async (req, res) => {
 };
 
 
+
+
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
     laydskh, deleteKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien, laydsHocVien, deleteHVLopHoc, themLopHoc,
@@ -1601,7 +1636,7 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung,
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
-    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
+    updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
     layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,
     layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV
 }

@@ -185,13 +185,12 @@ import Slider from 'react-slick';
 import logoImage from '../../images/cam-nhan-hoc-vien-icon.png';
 import logoImage1 from '../../images/lien-he-tu-van-ghi-danh.png';
 import logoImage2 from '../../images/ban-do.png';
-import logoImage3 from '../../images/LTDao.jpg';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faLocationDot,
     faQuoteLeft,
-    faChevronLeft,
-    faChevronRight
+
 } from "@fortawesome/free-solid-svg-icons";
 
 import "slick-carousel/slick/slick.css";
@@ -260,10 +259,13 @@ const CamNhanHocVien = () => {
                                                 {/* <img src={logoImage3} alt="" style={{ maxWidth: "100%", height: "auto" }} /> */}
                                             </div>
                                             <div className="item-text">
-                                                <p className="noi-dung-cam-nhan mb-5">
-                                                    <a href={camNhan.link} target="_blank">{camNhan.noidung}</a>
-                                                </p>
-                                                <p className="name"><a href={camNhan.link} target="_blank">{camNhan.tenHV}</a></p>
+                                                <Link to='/camnhan'>
+                                                    <p className="noi-dung-cam-nhan mb-5">
+                                                        <a>{camNhan.noidung}</a>
+                                                    </p>
+                                                </Link>
+
+                                                <p className="name"><a href={camNhan.link} >{camNhan.tenHV}</a></p>
                                                 <span className="position">{camNhan.tenKH}</span>
                                             </div>
                                         </div>

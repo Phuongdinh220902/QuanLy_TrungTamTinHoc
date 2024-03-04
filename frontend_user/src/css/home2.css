@@ -658,6 +658,7 @@ div:has(> .lazy-down) {
     display: none;
 }
 
+
 @media screen and (max-width: 480px) {
     .khoa-hoc-container .tieu-de-muc {
         font-size: 28px;

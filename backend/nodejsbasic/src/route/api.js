@@ -58,12 +58,14 @@ const initAPIRoute = (app) => {
     router.get('/layThongTinDiemThi', APIController.layThongTinDiemThi)
     router.post("/updateTTDT", APIController.updateTTDT)
     router.get('/layTrangCaNhanHV/:maHV', APIController.layTrangCaNhanHV)
+    router.get('/layThongBaoLopHocHV/:maLopHoc', APIController.layThongBaoLopHocHV)
     router.post("/SaveCheckboxStates", APIController.SaveCheckboxStates);
     router.post("/SaveCheckboxStatesLopHoc", APIController.SaveCheckboxStatesLopHoc);
     router.post("/SaveCheckboxStatesLopHocBatDau", APIController.SaveCheckboxStatesLopHocBatDau);
     router.get('/layLopHocGiaoVien/:maLopHoc', APIController.layLopHocGiaoVien)
     router.get('/layLopHocGV/:maGV', APIController.layLopHocGV)
-    // router.get('/layLopHocGV', APIController.layLopHocGV)
+
+    router.get('/layKhoaHocDaDK/:maHV', APIController.layKhoaHocDaDK)
     router.get('/layThongTinTrangGiangVien/:maGV', APIController.layThongTinTrangGiangVien)
     router.get('/layThongBaoGV/:maLopHoc/:maGV', APIController.layThongBaoGV)
     router.get('/layThongBaoLopHoc/:maLopHoc', APIController.layThongBaoLopHoc)

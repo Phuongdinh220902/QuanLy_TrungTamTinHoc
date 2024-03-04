@@ -28,6 +28,8 @@ import ThemThongBao from './components/GiangVien/ThemThongBao';
 import ThongBaoLopHocChiTiet from './components/GiangVien/ThongBaoLopHocChiTiet';
 import NguoiDung from './components/GiangVien/NguoiDung';
 import ChinhSua from './components/GiangVien/ChinhSua';
+import CamNhanHocVien from './components/CamNhan/CamNhan';
+import TrangLopHocHV from './components/TrangCaNhan/TrangLopHocHV';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -50,7 +52,8 @@ root.render(
           <Route path="trangcanhan" element={<TrangCaNhan />} />
           <Route path="chinhsuahoso" element={<ChinhSuaHoSo />} />
           <Route path="doimk" element={<DoiMK />} />
-
+          <Route path="camnhan" element={<CamNhanHocVien />} />
+          <Route path="/lophoccuaban/:maLopHoc" element={<TrangLopHocHV />} />
 
 
         </Route>

@@ -116,20 +116,25 @@ const ProfilePage = () => {
                                 <div className="container mt-3" style={{ maxWidth: '600px', height: '290px', overflow: 'auto' }}>
                                     <h2>Các khoá học</h2>
                                     <div className="list-group" style={{ maxWidth: '520px' }}>
-                                        {registeredCourses.map((course, index) => (
-                                            <a href="/" className="list-group-item list-group-item-action" key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                                                {/* Hiển thị hình ảnh khóa học */}
-                                                <div style={{ marginRight: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.75)', borderRadius: '10px' }}>
-                                                    <img src={`http://localhost:2209/images/${course.tenHinhAnhKH}`} alt={course.tenKH} style={{ width: '100px', height: 'auto', borderRadius: '10px' }} />
-                                                </div>
 
-                                                {/* Hiển thị thông tin khóa học */}
-                                                <div style={{ flex: 1 }}>
-                                                    <h5 style={{ fontSize: '18px', fontWeight: 'bold' }}>{course.tenKH}</h5>
-                                                    <p className="mb-1" style={{ fontSize: '16px' }}>Lớp: {course.tenLopHoc}</p>
-                                                </div>
-                                            </a>
+                                        {registeredCourses.map((course, index) => (
+                                            <Link to={`/lophoccuaban/${course.maLopHoc}`}>
+                                                <a className="list-group-item list-group-item-action" key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                                    {/* Hiển thị hình ảnh khóa học */}
+                                                    <div style={{ marginRight: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.75)', borderRadius: '10px' }}>
+                                                        <img src={`http://localhost:2209/images/${course.tenHinhAnhKH}`} alt={course.tenKH} style={{ width: '100px', height: 'auto', borderRadius: '10px' }} />
+                                                    </div>
+
+                                                    {/* Hiển thị thông tin khóa học */}
+                                                    <div style={{ flex: 1 }}>
+                                                        <h5 style={{ fontSize: '18px', fontWeight: 'bold' }}>{course.tenKH}</h5>
+                                                        <p className="mb-1" style={{ fontSize: '16px' }}>Lớp: {course.tenLopHoc}</p>
+                                                    </div>
+                                                </a>
+                                            </Link>
                                         ))}
+
+
 
                                     </div>
                                 </div>
