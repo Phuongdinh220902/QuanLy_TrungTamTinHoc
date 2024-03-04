@@ -588,6 +588,30 @@ const initAPIRoute = (app) => {
         }
     });
 
+    router.post('/themHACC', upload.single('file'), async (req, res) => {
+
+        let { tenHinhAnhCC } = req.body;
+        console.log(req.body);
+        try {
+            // Thêm ảnh vào bảng hinh_anh
+            await pool.execute(
+                "INSERT INTO chung_chi (tenHinhAnhCC) VALUES ( ?)",
+                [filename]
+            );
+            res.status(200).json({
+                'DT': {
+                    'tenHinhAnhCC': tenHinhAnhCC
+                },
+                'EC': 0,
+                'EM': 'Tạo thành công'
+            });
+
+        } catch (error) {
+            console.log("Lỗi khi thêm khoá học: ", error);
+            return res.status(500).json({ error: "Lỗi khi thêm khoá học" });
+        }
+    });
+
 
 
     return app.use('/api/v1/', router)

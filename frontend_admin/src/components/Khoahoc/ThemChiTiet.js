@@ -7,6 +7,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import ModalThemCC from "./ModalThemCC";
 
 function uploadAdapter(loader) {
     return loader.file.then(file => {
@@ -31,6 +32,14 @@ function ThemChiTiet() {
     const editorInstance = useRef(null);
     const { maKH } = useParams();
     const navigate = useNavigate();
+    // const [showModalCreateHACC, setShowModalCreateHACC] = useState(false);
+    // const handleShowModalCreateHACC = () => {
+    //     setShowModalCreateHACC(true);
+    // };
+
+    // const handleCloseModalHACC = () => {
+    //     setShowModalCreateHACC(false);
+    // };
 
     const handleSendData = async () => {
         try {
@@ -63,11 +72,17 @@ function ThemChiTiet() {
     return (
         <>
             <div className="">
-                <Link to={`/themnoidungkhoahoc/${maKH}`}>
-                    <button style={{ marginLeft: '1200px', marginBottom: '10px' }} className="formatButton addButton">
+
+                <button style={{ marginLeft: '1200px', marginBottom: '10px', color: 'white', textDecoration: 'none', border: 'none' }} className="formatButton addButton">
+                    <Link to={`/themnoidungkhoahoc/${maKH}`} style={{ textDecoration: 'none', color: 'white' }}>
                         Thêm nội dung khoá học
-                    </button>
-                </Link>
+                    </Link>
+                </button>
+
+                {/* <button style={{ marginBottom: '10px', color: 'white', textDecoration: 'none', border: 'none' }} className="formatButton addButton" onClick={handleShowModalCreateHACC}>
+                    Thêm ảnh chứng chỉ
+                </button> */}
+
                 <CKEditor
                     editor={ClassicEditor}
 
@@ -98,6 +113,11 @@ function ThemChiTiet() {
                     theme="light"
                     onClose={handleToastClose}
                 />
+
+                {/* <ModalThemCC
+                    show={showModalCreateHACC}
+                    handleCloseModalHACC={handleCloseModalHACC}
+                /> */}
             </div>
         </>
     );

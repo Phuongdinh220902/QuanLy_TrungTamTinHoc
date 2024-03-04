@@ -196,7 +196,7 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from 'react-toastify';
-import zxcvbn from 'zxcvbn'; // Import thư viện zxcvbn
+import zxcvbn from 'zxcvbn';
 
 const DoiMK = () => {
     const [password, setPassword] = useState('');
@@ -213,8 +213,8 @@ const DoiMK = () => {
             return;
         }
 
-        const passwordScore = zxcvbn(newPassword).score; // Đánh giá điểm mật khẩu
-        if (passwordScore < 3) {
+        const passwordScore = zxcvbn(newPassword).score;
+        if (passwordScore < 2) {
             setError('Mật khẩu quá yếu. Vui lòng chọn một mật khẩu mạnh hơn.');
             return;
         }

@@ -17,6 +17,9 @@ import { useNavigate } from 'react-router-dom';
 import Image from '../../images/img_backtoschool.jpg';
 import Image1 from '../../images/img_clr.jpg';
 import Image2 from '../../images/img_code.jpg';
+import moment from 'moment';
+
+
 const TrangLopHocGV = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [classes, setClasses] = useState([]);
@@ -72,7 +75,8 @@ const TrangLopHocGV = () => {
 
                 const responseTB = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHoc/${maLopHoc}`);
                 console.log(responseTB)
-                setThongBao(responseTB.data.TB);
+                const sortedThongBao = responseTB.data.TB.sort((a, b) => moment(b.ngaydang) - moment(a.ngaydang));
+                setThongBao(sortedThongBao);
 
             } catch (error) {
                 console.error('Error fetching data:', error);

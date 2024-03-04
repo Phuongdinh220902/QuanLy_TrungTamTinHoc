@@ -3,6 +3,11 @@ import axios from "axios"
 import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faMagnifyingGlass
+} from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const TraCuuDiemThi = () => {
     const [noiDungBaiViet, setNoiDungBaiViet] = useState('');
@@ -29,11 +34,11 @@ const TraCuuDiemThi = () => {
                 <h1 style={{ 'textAlign': 'center', color: '#0082c8', fontSize: '24px', fontWeight: '500', margin: "40px 0px" }}>TRA CỨU THÔNG TIN ĐIỂM THI</h1>
                 <div class="col-xs-12 col-md-8 col-md-offset-2" style={{ marginBottom: '30px' }}>
                     <div class="form-group">
-                        <label class="control-label col-sm-4" style={{ paddingRight: '0', textAlign: 'right', paddingTop: "8px" }}>Họ tên/Email/Điện thoại: </label>
+                        <label class="control-label col-sm-4" style={{ paddingRight: '0', textAlign: 'right', paddingTop: "8px" }}>Email/Điện thoại: </label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control tieuchi" placeholder="Họ và tên/ Email/ Điện thoại" style={{ "width": '80%', 'display': 'inline' }} id="Th_Tieu_chi" name="Th_Tieu_chi" onkeydown="keyPress(event)" />
+                            <input type="text" class="form-control tieuchi" placeholder="Email/ Điện thoại" style={{ "width": '80%', 'display': 'inline' }} id="Th_Tieu_chi" name="Th_Tieu_chi" onkeydown="keyPress(event)" />
                             <button type="button" class="btn btn-default" onclick="tra_cuu_diem()" style={{ fontSize: '20px', 'backgroundColor': '#0082c8', color: '#FFF', borderColor: '#0082c8', marginLeft: "5px" }}>
-                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                <FontAwesomeIcon icon={faMagnifyingGlass} />
                             </button>
                         </div>
                     </div>

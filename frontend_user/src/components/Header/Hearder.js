@@ -95,7 +95,7 @@ const Header = () => {
     useEffect(() => {
         const handleScroll = () => {
             const scrollPosition = window.scrollY;
-            const threshold = 120; // Ngưỡng cuộn xuống trước khi áp dụng navbar cố định
+            const threshold = 165; // Ngưỡng cuộn xuống trước khi áp dụng navbar cố định
 
             if (scrollPosition > threshold) {
                 setIsFixed(true);
@@ -180,7 +180,7 @@ const Header = () => {
                                 </div>
 
                             </NavLink>
-                            <NavLink to='/tintuc' className='nav-link text-white' style={{ marginLeft: '30px' }}>Tin tức</NavLink>
+                            {/* <NavLink to='/tintuc' className='nav-link text-white' style={{ marginLeft: '30px' }}>Tin tức</NavLink> */}
                             <NavLink to='/thanhtoan' className='nav-link text-white' style={{ marginLeft: '30px' }}>Hướng dẫn thanh toán</NavLink>
                             <NavLink to='/lienhe' className='nav-link text-white' style={{ marginLeft: '30px' }}>Liên hệ</NavLink>
                             <NavLink to='/tracuuketqua' className='nav-link text-white' style={{ marginLeft: '30px' }}>Tra cứu kết quả thi</NavLink>

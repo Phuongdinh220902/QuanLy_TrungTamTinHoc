@@ -1597,7 +1597,7 @@ let layThongBaoLopHocChiTiet = async (req, res) => {
 let layNguoiDung = async (req, res) => {
     const maLopHoc = req.params.maLopHoc;
     try {
-        const [MN, a] = await pool.execute("SELECT giang_vien.maGV, hoc_vien.maHV, tenGV, lop_hoc.maLopHoc, tenHV, hinhanh_hocvien.tenHinhAnhHV, hinh_anh.tenHA FROM giang_vien, lop_hoc , hoc_vien, hinhanh_hocvien, dshv, hinh_anh, hoc_phi where lop_hoc.maLopHoc = ? and giang_vien.trang_thai = 1 and hoc_phi.trang_thai = 1 and giang_vien.maGV = hinh_anh.maGV and lop_hoc.maGV = giang_vien.maGV and dshv.maHV = hoc_vien.maHV and dshv.maLopHoc = lop_hoc.maLopHoc and hoc_vien.maHV = hinhanh_hocvien.maHV and hoc_phi.maDSHV = dshv.maDSHV", [maLopHoc]);
+        const [MN, a] = await pool.execute("SELECT DISTINCT giang_vien.maGV, hoc_vien.maHV, tenGV, lop_hoc.maLopHoc, tenHV, hinhanh_hocvien.tenHinhAnhHV, hinh_anh.tenHA FROM giang_vien, lop_hoc , hoc_vien, hinhanh_hocvien, dshv, hinh_anh, hoc_phi where lop_hoc.maLopHoc = ? and giang_vien.trang_thai = 1 and hoc_phi.trang_thai = 1 and giang_vien.maGV = hinh_anh.maGV and lop_hoc.maGV = giang_vien.maGV and dshv.maHV = hoc_vien.maHV and dshv.maLopHoc = lop_hoc.maLopHoc and hoc_vien.maHV = hinhanh_hocvien.maHV and hoc_phi.maDSHV = dshv.maDSHV", [maLopHoc]);
         return res.status(200).json({
             MN: MN
         })

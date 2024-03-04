@@ -22,9 +22,10 @@ const DichVu = () => {
                                     <img className="img-responsive hidden-xs"
                                         src={logoImage6} alt="" />
                                 </Link>
-                                <h3><img className="visible-xs"
-                                    src={logoImage6}
-                                    alt="" /> <Link to='tracuudiemthi'>
+                                <h3>
+                                    <img className="visible-xs"
+                                        src={logoImage6}
+                                        alt="" /> <Link to='tracuudiemthi'>
                                         Tra cứu kết quả thi
                                     </Link>
                                 </h3>
