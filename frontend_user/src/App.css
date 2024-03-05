@@ -1135,3 +1135,64 @@ h2,
   background-color: #007bff;
   color: #fff;
 }
+
+/* CSS cho modal */
+.modal {
+  display: none;
+  /* Ẩn modal mặc định */
+  position: fixed;
+  /* Vị trí cố định trên màn hình */
+  z-index: 1;
+  /* Hiển thị trên tất cả các phần khác */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Chiều rộng cửa sổ modal */
+  height: 100%;
+  /* Chiều cao cửa sổ modal */
+  overflow: auto;
+  /* Hiển thị thanh cuộn nếu nội dung quá dài */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Một lớp nền đen với độ mờ */
+}
+
+/* CSS cho nội dung của modal */
+.modal-content {
+  background-color: #fefefe;
+  /* Màu nền cho nội dung modal */
+  margin: 15% auto;
+  /* Căn giữa nội dung modal trên trang */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  /* Chiều rộng của nội dung modal */
+}
+
+/* CSS cho nút đóng */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.file-container {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.file-container:hover {
+  background-color: #e0e0e0;
+  /* Màu nền khi di chuột qua */
+}

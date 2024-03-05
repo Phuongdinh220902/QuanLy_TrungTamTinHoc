@@ -331,8 +331,10 @@ const ChinhSua = () => {
 
 
                         <MenuItem >
-                            <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
-                            Cài đặt
+                            <Link to={`/chinhsua`} style={{ color: 'black' }}>
+                                <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px', color: 'black' }} />
+                                Cài đặt
+                            </Link>
                         </MenuItem>
 
                         <Link to="/" onClick={handleLogout} style={{ color: 'black' }}>
@@ -452,11 +454,11 @@ const ChinhSua = () => {
                                                     </Link>
 
                                                     &nbsp;<button type="button" id="submit" name="submit" className="btn btn-primary" onClick={handleUpdateProfile}>Cập nhật</button>&nbsp;
-                                                    <Link to='/doimk'>
+                                                    {/* <Link to='/doimk'>
                                                         <button type="button" className="btn btn-primary" >
                                                             Đổi mật khẩu
                                                         </button>
-                                                    </Link>
+                                                    </Link> */}
                                                 </div>
                                             </div>
                                         </div>

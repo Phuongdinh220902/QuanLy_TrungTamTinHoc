@@ -7,7 +7,6 @@ import "../../css/color-theme.css"
 import "../../css/home.css"
 import "../../css/home2.css"
 import "../../css/t3h.nganh.css"
-// import "../../css/owl.carousel.min.css"
 import "../../css/owl.carousel.custom.css"
 import axios from 'axios';
 import { Link } from "react-router-dom";

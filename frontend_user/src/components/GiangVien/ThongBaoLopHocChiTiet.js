@@ -75,7 +75,8 @@ const ThongBaoLopHocChiTiet = () => {
         const fetchData = async () => {
             try {
                 const responseTBCT = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHocChiTiet/${maTB}`);
-                setThongBaoCT(responseTBCT.data.TBCT[0]); // Lấy thông báo đầu tiên từ mảng kết quả
+                setThongBaoCT(responseTBCT.data.TBCT[0]);
+                console.log(responseTBCT.data.TBCT[0].tenFile)
             } catch (error) {
                 console.error('Error fetching thong bao:', error);
             }
@@ -103,6 +104,7 @@ const ThongBaoLopHocChiTiet = () => {
         // Định dạng lại ngày theo yêu cầu "dd-mm-yyyy"
         return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
     };
+
 
 
     return (
@@ -139,7 +141,7 @@ const ThongBaoLopHocChiTiet = () => {
                         <SubMenu defaultOpen label={<span><FontAwesomeIcon icon={faGraduationCap} style={{ marginRight: '10px' }} />Lớp học</span>}>
                             {data.map((item, index) => (
                                 <MenuItem key={index}>
-                                    <Link to={`/lophocgv/${item.maLopHoc}`}>
+                                    <Link to={`/lophocgv/${item.maLopHoc}`} style={{ color: 'black' }}>
                                         {item.tenLopHoc}
                                     </Link>
                                 </MenuItem>
@@ -169,28 +171,20 @@ const ThongBaoLopHocChiTiet = () => {
                                     <p>{thongBao.tenGV} {formatDate(thongBao.ngaydang)}</p>
                                 </div>
                                 <div dangerouslySetInnerHTML={{ __html: thongBao.noidung_thongbao }}></div>
+                                <div>
+                                    <Link to={`/preview/${thongBao.tenFile}`} target="_blank">
+                                        <div className="file-container">
+                                            {thongBao.tenFile}
+                                        </div>
+                                    </Link>
+                                </div>
+
                             </div>
                         ) : (
                             <p>Loading...</p>
                         )}
                     </div>
                 </div>
-
-
-                {/* <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                    {thongBao ? (
-                        <div>
-                            <div style={{ borderBottom: '2px solid green', paddingBottom: '10px' }}>
-                                <h2>{thongBao.tieude_thongbao}</h2>
-                                <p>{thongBao.tenGV} {formatDate(thongBao.ngaydang)}</p>
-                            </div>
-                            <div dangerouslySetInnerHTML={{ __html: thongBao.noidung_thongbao }}></div>
-                        </div>
-                    ) : (
-                        <p>Loading...</p>
-                    )}
-                </div> */}
-
 
             </div>
         </div>

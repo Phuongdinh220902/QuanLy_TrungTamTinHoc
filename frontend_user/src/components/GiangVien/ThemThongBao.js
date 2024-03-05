@@ -7,9 +7,14 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import {
+    faFileImport
+} from "@fortawesome/free-solid-svg-icons";
 
 function uploadAdapter(loader) {
-    return loader.file.then(file => {
+    return loader.file.then(file1 => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
 
@@ -21,7 +26,7 @@ function uploadAdapter(loader) {
                 reject(error);
             };
 
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file1);
         });
     });
 }
@@ -33,6 +38,8 @@ function ThemThongBao() {
     const { maLopHoc } = useParams();
     const [tieude_thongbao, setTitle] = useState("")
     const navigate = useNavigate();
+    const [files, setFiles] = useState([]);
+    const [previewFile, setPreviewFile] = useState('');
 
     const getCurrentDateTime = () => {
         const currentDateTime = new Date();
@@ -46,23 +53,32 @@ function ThemThongBao() {
         return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
     };
 
+    const handleUpLoad = (event) => {
+        if (event.target && event.target.files) {
+            const selectedFiles = Array.from(event.target.files);
+            setFiles(prevFiles => [...prevFiles, ...selectedFiles]);
+            const previews = selectedFiles.map(file => URL.createObjectURL(file));
+            setPreviewFile(previews);
+        }
+    };
+
+
     const handleSendData = async () => {
         try {
-
+            const formData = new FormData();
             const noidung_thongbao = editorInstance.current.getData();
             const ngaydang = getCurrentDateTime();
-
-            const response = await axios.post(
-                "http://localhost:2209/api/v1/themthongbao",
-                { tieude_thongbao, noidung_thongbao, maLopHoc, maGV, ngaydang },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                },
-                console.log(maGV),
-                console.log(maLopHoc)
-            );
+            formData.append('tieude_thongbao', tieude_thongbao);
+            formData.append('noidung_thongbao', noidung_thongbao);
+            formData.append('maLopHoc', maLopHoc);
+            formData.append('maGV', maGV);
+            formData.append('ngaydang', ngaydang);
+            files.forEach((file, index) => {
+                formData.append(`file`, file, file.name);
+            });
+            const response = await axios.post("http://localhost:2209/api/v1/themthongbao1", formData);
+            console.log(maGV);
+            console.log(maLopHoc);
             toast.success('Thêm thành công');
             setTimeout(() => {
                 navigate(`/lophocgv/${maLopHoc}`);
@@ -104,7 +120,29 @@ function ThemThongBao() {
                 />
                 <div className="button-container">
                     <button className="btn btn-info" onClick={handleSendData}>Thêm</button>
+
+                    <div className="">
+                        <label className="form-label label-upload" htmlFor="labelUpload">
+                            <FontAwesomeIcon icon={faFileImport} /> Tải file lên </label>
+                        <input type="file" id="labelUpload" hidden
+                            onChange={(event) => handleUpLoad(event)} />
+                    </div>
                 </div>
+
+                <div className="file-info">
+                    {files.length > 0 && (
+                        <div>
+                            <p>Các tệp đã chọn:</p>
+                            <ul>
+                                {files.map((file, index) => (
+                                    <li key={index}>{file.name}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
+
+
                 <ToastContainer
                     position="top-right"
                     autoClose={4000}

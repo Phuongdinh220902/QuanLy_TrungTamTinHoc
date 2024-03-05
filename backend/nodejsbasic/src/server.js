@@ -2,6 +2,7 @@ import express from 'express';
 import configViewEngine from './configs/viewEngine';
 // import initWebRoute from './route/web';
 import initAPIRoute from './route/api';
+import initAPIRoute1 from './route/api_upload_file';
 const cors = require('cors');
 // import connection from './configs/connectDB';
 require('dotenv').config()
@@ -30,6 +31,7 @@ configViewEngine(app);
 // initWebRoute(app);
 
 initAPIRoute(app);
+initAPIRoute1(app);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)

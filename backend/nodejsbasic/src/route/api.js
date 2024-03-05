@@ -175,8 +175,6 @@ const initAPIRoute = (app) => {
     }
 
 
-
-
     router.post('/themgv', upload.single('file'), async (req, res) => {
 
         let { tenGV, email, sdt, ngaysinh, gioitinh } = req.body
@@ -611,7 +609,6 @@ const initAPIRoute = (app) => {
             return res.status(500).json({ error: "Lỗi khi thêm khoá học" });
         }
     });
-
 
 
     return app.use('/api/v1/', router)

@@ -31,6 +31,8 @@ import ChinhSua from './components/GiangVien/ChinhSua';
 import CamNhanHocVien from './components/CamNhan/CamNhan';
 import TrangLopHocHV from './components/TrangCaNhan/TrangLopHocHV';
 import ThongBaoLopHocChiTietHV from './components/TrangCaNhan/ThongBaoLopHocHV';
+import FilePreview from './components/GiangVien/FilePreview';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -65,6 +67,8 @@ root.render(
         <Route path="chinhsua" element={<ChinhSua />} />
 
         <Route path="moinguoi/:maLopHoc" element={<NguoiDung />} />
+        <Route path="preview/:tenFile" element={<FilePreview />} />
+
       </Routes>
 
     </BrowserRouter>

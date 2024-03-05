@@ -1492,7 +1492,6 @@ let layTrangChuCamNhan = async (req, res) => {
 
 let layLopHocGiaoVien = async (req, res) => {
     const maLopHoc = req.params.maLopHoc;
-    console.log(maLopHoc)
     try {
         const [LopHoc, a] = await pool.execute("SELECT lop_hoc.tenLopHoc, lop_hoc.maLopHoc, dshv.maDSHV, hoc_vien.tenHV, hoc_vien.maHV from lop_hoc, dshv, hoc_vien where lop_hoc.maLopHoc = ? and dshv.maHV = hoc_vien.maHV and lop_hoc.maLopHoc = dshv.maLopHoc;", [maLopHoc]);
         return res.status(200).json({
@@ -1509,7 +1508,6 @@ let layLopHocGiaoVien = async (req, res) => {
 
 let layLopHocGV = async (req, res) => {
     const maGV = req.params.maGV;
-    console.log(maGV)
     try {
         const [KH, a] = await pool.execute("SELECT giang_vien.maGV, tenGV, gioithieu, kinhnghiem, giang_vien.mota, tenHA, maHA, khoa_hoc.tenKH, khoa_hoc.maKH, lop_hoc.maLopHoc, lop_hoc.tenLopHoc, hinhanh_khoahoc.tenHinhAnhKH, hinhanh_khoahoc.maHinhAnh FROM giang_vien, hinh_anh, khoa_hoc, lop_hoc, hinhanh_khoahoc where giang_vien.maGV = ? and giang_vien.trang_thai = 1 and giang_vien.maGV = hinh_anh.maGV and giang_vien.maGV = lop_hoc.maGV and lop_hoc.maKH = khoa_hoc.maKH and hinhanh_khoahoc.maKH = khoa_hoc.maKH", [maGV]);
 
@@ -1581,7 +1579,7 @@ let layThongBaoLopHoc = async (req, res) => {
 let layThongBaoLopHocChiTiet = async (req, res) => {
     const maTB = req.params.maTB;
     try {
-        const [TBCT, a] = await pool.execute("SELECT maTB, tieude_thongbao, noidung_thongbao, ngaydang, tenGV, giang_vien.maGV, lop_hoc.maLopHoc FROM thongbao, lop_hoc, giang_vien where thongbao.maTB = ? and thongbao.maLopHoc = lop_hoc.maLopHoc and thongbao.maGV = giang_vien.maGV", [maTB]);
+        const [TBCT, a] = await pool.execute("SELECT thongbao.maTB, tieude_thongbao, noidung_thongbao, ngaydang, tenGV, giang_vien.maGV, lop_hoc.maLopHoc, tenFile FROM thongbao, lop_hoc, giang_vien, thongbao_file where thongbao.maTB = ? and thongbao.maLopHoc = lop_hoc.maLopHoc and thongbao.maGV = giang_vien.maGV and thongbao.maTB = thongbao_file.maTB;", [maTB]);
         return res.status(200).json({
             TBCT: TBCT
         })
