@@ -1579,7 +1579,7 @@ let layThongBaoLopHoc = async (req, res) => {
 let layThongBaoLopHocChiTiet = async (req, res) => {
     const maTB = req.params.maTB;
     try {
-        const [TBCT, a] = await pool.execute("SELECT thongbao.maTB, tieude_thongbao, noidung_thongbao, ngaydang, tenGV, giang_vien.maGV, lop_hoc.maLopHoc, tenFile FROM thongbao, lop_hoc, giang_vien, thongbao_file where thongbao.maTB = ? and thongbao.maLopHoc = lop_hoc.maLopHoc and thongbao.maGV = giang_vien.maGV and thongbao.maTB = thongbao_file.maTB;", [maTB]);
+        const [TBCT, a] = await pool.execute("SELECT thongbao.maTB, tieude_thongbao, noidung_thongbao, ngaydang, tenGV, giang_vien.maGV, lop_hoc.maLopHoc FROM thongbao, lop_hoc, giang_vien, thongbao_file where thongbao.maTB = ? and thongbao.maLopHoc = lop_hoc.maLopHoc and thongbao.maGV = giang_vien.maGV and thongbao.maTB = thongbao_file.maTB", [maTB]);
         return res.status(200).json({
             TBCT: TBCT
         })
@@ -1591,6 +1591,23 @@ let layThongBaoLopHocChiTiet = async (req, res) => {
         });
     }
 };
+
+let layFile = async (req, res) => {
+    const maTB = req.params.maTB;
+    try {
+        const [File, a] = await pool.execute("SELECT tenFile FROM thongbao, thongbao_file where thongbao.maTB = ? and thongbao.maTB = thongbao_file.maTB", [maTB]);
+        return res.status(200).json({
+            File: File
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
 
 let layNguoiDung = async (req, res) => {
     const maLopHoc = req.params.maLopHoc;
@@ -1636,5 +1653,5 @@ module.exports = {
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
     layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,
-    layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV
+    layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV, layFile
 }

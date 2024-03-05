@@ -2,6 +2,7 @@
 import logoImage4 from '../../images/tien-ich-ho-tro-icon.png';
 import logoImage5 from '../../images/tra-cuu-chung-chi.png';
 import logoImage6 from '../../images/tra-cuu-diem-thi.png';
+import logo from '../../images/lich-thi-CCTHQG-icon.png';
 import { Link } from "react-router-dom";
 const DichVu = () => {
 
@@ -53,6 +54,23 @@ const DichVu = () => {
                     </div>
                 </div>
             </div >
+
+            <div style={{ textAlign: 'center', backgroundColor: '#0082c8', color: '#fff', marginTop: "10px" }}>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-sm-12 col-md-10 col-md-offset-1" style={{ padding: "0 30px" }}>
+                            <div className="lich-thi lazy visible">
+                                <a style={{ color: "#fff" }}>
+                                    <h4 className="tieu-de">
+                                        <img src={logo} alt="" /> Lịch thi</h4>
+                                    <h2 className="thong-bao-thi">Chứng chỉ tin học Quốc gia</h2>
+                                    <p>Dành cho thí sinh tự do</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </>
     )

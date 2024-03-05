@@ -1187,9 +1187,10 @@ h2,
   background-color: white;
   border: 1px solid #ccc;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 60%;
 }
 
 .file-container:hover {

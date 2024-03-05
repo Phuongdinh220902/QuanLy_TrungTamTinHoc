@@ -70,6 +70,7 @@ const initAPIRoute = (app) => {
     router.get('/layThongBaoGV/:maLopHoc/:maGV', APIController.layThongBaoGV)
     router.get('/layThongBaoLopHoc/:maLopHoc', APIController.layThongBaoLopHoc)
     router.get('/layThongBaoLopHocChiTiet/:maTB', APIController.layThongBaoLopHocChiTiet)
+    router.get('/layFile/:maTB', APIController.layFile)
     router.get('/layNguoiDung/:maLopHoc', APIController.layNguoiDung)
     router.get('/layTrangCaNhanGV/:maGV', APIController.layTrangCaNhanGV)
 

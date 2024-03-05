@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import Image from '../../images/logominhhoa.png';
 
 const ThongBaoLopHocChiTiet = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -20,6 +21,7 @@ const ThongBaoLopHocChiTiet = () => {
     const [data, setData] = useState([]);
     const [thongbao, setThongBao] = useState([]);
     const [thongBao, setThongBaoCT] = useState(null);
+    const [File, setFile] = useState([]);
     const [tenGV, setTenGV] = useState("");
     const maGV = localStorage.getItem('maGV');
     const [tenHA, setTenHA] = useState("");
@@ -76,7 +78,26 @@ const ThongBaoLopHocChiTiet = () => {
             try {
                 const responseTBCT = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHocChiTiet/${maTB}`);
                 setThongBaoCT(responseTBCT.data.TBCT[0]);
-                console.log(responseTBCT.data.TBCT[0].tenFile)
+
+                const responseFile = await axios.get(`http://localhost:2209/api/v1/layFile/${maTB}`);
+                setFile(responseFile.data.File);
+
+
+            } catch (error) {
+                console.error('Error fetching thong bao:', error);
+            }
+        };
+
+        fetchData();
+    }, [maTB]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const responseFile = await axios.get(`http://localhost:2209/api/v1/layFile/${maTB}`);
+                setFile(responseFile.data.File);
+
+
             } catch (error) {
                 console.error('Error fetching thong bao:', error);
             }
@@ -170,22 +191,31 @@ const ThongBaoLopHocChiTiet = () => {
                                         {thongBao.tieude_thongbao}</div>
                                     <p>{thongBao.tenGV} {formatDate(thongBao.ngaydang)}</p>
                                 </div>
-                                <div dangerouslySetInnerHTML={{ __html: thongBao.noidung_thongbao }}></div>
-                                <div>
-                                    <Link to={`/preview/${thongBao.tenFile}`} target="_blank">
-                                        <div className="file-container">
-                                            {thongBao.tenFile}
-                                        </div>
-                                    </Link>
-                                </div>
+                                <div dangerouslySetInnerHTML={{ __html: thongBao.noidung_thongbao }} style={{ marginBottom: '20px' }}></div>
 
                             </div>
                         ) : (
                             <p>Loading...</p>
                         )}
                     </div>
-                </div>
+                    {File.length > 0 && (
+                        <div>
+                            <ul>
+                                {File.map((file, index) => (
+                                    <li key={index}>
+                                        <Link to={`/preview/${file.tenFile}`} target="_blank" style={{ color: 'black' }}>
+                                            <div className="file-container" style={{ marginTop: '10px' }}>
+                                                <img src={Image} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+                                                {file.tenFile}
+                                            </div>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
 
+                </div>
             </div>
         </div>
 

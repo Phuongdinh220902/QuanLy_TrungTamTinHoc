@@ -64,6 +64,28 @@ const initAPIRoute1 = (app) => {
         })
     });
 
+    // router.post("/AnhDiemDanh/:IDDoanVien", upload3.array("file"), async (req, res) => {
+    //     try {
+    //         const files = req.files;
+    //         const IDDoanVien = req.params.IDDoanVien;
+    //         console.log("ID doan vien", IDDoanVien)
+    //         await Promise.all(
+    //             files.map((file) => {
+    //                 const filename = file.filename;
+    //                 return pool.execute(
+    //                     "INSERT INTO anhdiemdanh (DDTenAnh, IDDoanVien) VALUES (?, ?)",
+    //                     [filename, IDDoanVien]
+    //                 );
+    //             })
+    //         );
+
+    //         res.status(200).json({ success: "Thêm ảnh thành công!" });
+    //     } catch (error) {
+    //         console.error(error);
+    //         res.status(500).json({ error: "Có lỗi xảy ra" });
+    //     }
+    // });
+
 
     router.post('/themthongbao1', upload.array('file'), async (req, res) => {
 
@@ -82,11 +104,21 @@ const initAPIRoute1 = (app) => {
             // Lấy khóa học vừa thêm
             const [newTB] = await pool.execute("SELECT maTB FROM thongbao WHERE ngaydang = ?", [ngaydang]);
 
-            // Thêm ảnh vào bảng hinh_anh
-            await pool.execute(
-                "INSERT INTO thongbao_file (tenFile, maGV, maTB) VALUES (?, ?, ?)",
-                [filename, maGV, newTB[0].maTB]
+            const files = req.files;
+            await Promise.all(
+                files.map((file) => {
+                    const filename = file.filename;
+                    return pool.execute(
+                        "INSERT INTO thongbao_file (tenFile, maGV, maTB) VALUES (?, ?, ?)",
+                        [filename, maGV, newTB[0].maTB]
+                    );
+                })
             );
+            // // Thêm ảnh vào bảng hinh_anh
+            // await pool.execute(
+            //     "INSERT INTO thongbao_file (tenFile, maGV, maTB) VALUES (?, ?, ?)",
+            //     [filename, maGV, newTB[0].maTB]
+            // );
             res.status(200).json({
                 'DT': {
                     'noidung_thongbao': noidung_thongbao,
