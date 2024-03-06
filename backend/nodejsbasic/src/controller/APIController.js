@@ -759,10 +759,10 @@ let layLichThi = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
-            const [sotrang, fields] = await pool.execute("SELECT maLichThi, ngaythi, trang_thai, ngaythi FROM lich_thi where lich_thi.trang_thai = 1");
+            const [sotrang, fields] = await pool.execute("SELECT maLichThi, ngaythi, trang_thai, hocphi  FROM lich_thi where lich_thi.trang_thai = 1");
 
             const [result2, fields1] = await Promise.all([
-                pool.execute("SELECT maLichThi, ngaythi, trang_thai FROM lich_thi where lich_thi.trang_thai = 1 LIMIT ? OFFSET ?", [
+                pool.execute("SELECT maLichThi, ngaythi, trang_thai, hocphi FROM lich_thi where lich_thi.trang_thai = 1 LIMIT ? OFFSET ?", [
                     pageSize,
                     offset,
 
@@ -792,14 +792,14 @@ let layLichThi = async (req, res) => {
         const offset = (page - 1) * pageSize;
 
         const [sotrang, fields] = await pool.execute(
-            "SELECT maLichThi, ngaythi, trang_thai FROM lich_thi where lich_thi.trang_thai = 1 AND (UPPER(lich_thi.ngaythi) LIKE UPPER(?))",
+            "SELECT maLichThi, ngaythi, trang_thai, hocphi FROM lich_thi where lich_thi.trang_thai = 1 AND (UPPER(lich_thi.ngaythi) LIKE UPPER(?)) ",
             ["%" + tukhoa + "%"]
         );
         console.log(sotrang)
 
         const [result2, fields1] = await Promise.all([
             pool.execute(
-                "SELECT maLichThi, ngaythi, trang_thai FROM lich_thi where lich_thi.trang_thai = 1 AND (UPPER(lich_thi.ngaythi) LIKE UPPER(?))",
+                "SELECT maLichThi, ngaythi, trang_thai, hocphi FROM lich_thi where lich_thi.trang_thai = 1 AND (UPPER(lich_thi.ngaythi) LIKE UPPER(?))",
                 ["%" + tukhoa + "%"]
             ),
         ]);
@@ -843,10 +843,10 @@ let deleteLichThi = async (req, res) => {
 }
 
 let updateLichThi = async (req, res) => {
-    let { maLichThi, ngaythi } = req.body;
+    let { maLichThi, ngaythi, hocphi } = req.body;
     console.log(req.body);
     try {
-        const [rows, fields] = await pool.execute("UPDATE lich_thi SET ngaythi = ? WHERE maLichThi=? ", [ngaythi, maLichThi])
+        const [rows, fields] = await pool.execute("UPDATE lich_thi SET ngaythi = ?, hocphi = ? WHERE maLichThi=? ", [ngaythi, hocphi, maLichThi])
         return res.status(200).json({
             "message": "Cập nhật thành công",
         })
@@ -976,8 +976,155 @@ let updateCaThi = async (req, res) => {
     }
 }
 
+let deleteCaThi = async (req, res) => {
+    console.log("ok");
+
+    let maCaThi = req.params.maCaThi;
+    console.log("Mã lớp học để xoá:", maCaThi);
+
+    try {
+        await pool.execute(
+            "update ca_thi set ca_thi.trang_thai = 0 where ca_thi.maCaThi = ?", [maCaThi]);
+
+        return res.status(200).json({
+            message: "Xóa thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+    }
+}
+
+let laydsThiSinh = async (req, res) => {
+    const maCaThi = req.params.maCaThi;
+    console.log(maCaThi);
+    try {
+        let tukhoa = req.params.tukhoa
+        // console.log(dsGV)
+        if (tukhoa == "null" || !tukhoa) {
+            const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+            const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+
+            const offset = (page - 1) * pageSize;
+
+            const [sotrang, fields] = await pool.execute("SELECT dsdkthi.maDSDK, dsdkthi.maThiSinh, dsdkthi.maCaThi, hoten, email, sdt, lich_thi.maLichThi, lich_thi.hocphi, hocphi_thisinh.maHocPhiTS, hocphi_thisinh.trang_thai, hocphi_thisinh.maDSDK FROM dsdkthi, lich_thi, thi_sinh, ca_thi, hocphi_thisinh where dsdkthi.maCaThi = ? and dsdkthi.trang_thai = 1 and dsdkthi.maThiSinh = thi_sinh.maThiSinh and dsdkthi.maCaThi = ca_thi.maCaThi and hocphi_thisinh.maDSDK = dsdkthi.maDSDK and lich_thi.maLichThi = ca_thi.maLichThi", [maCaThi]);
+            console.log(sotrang)
+            const [result2, fields1] = await Promise.all([
+                pool.execute("SELECT dsdkthi.maDSDK, dsdkthi.maThiSinh, dsdkthi.maCaThi, hoten, email, sdt, lich_thi.maLichThi, lich_thi.hocphi, hocphi_thisinh.maHocPhiTS, hocphi_thisinh.trang_thai, hocphi_thisinh.maDSDK FROM dsdkthi, lich_thi, thi_sinh, ca_thi, hocphi_thisinh where dsdkthi.maCaThi = ? and dsdkthi.trang_thai = 1 and dsdkthi.maThiSinh = thi_sinh.maThiSinh and dsdkthi.maCaThi = ca_thi.maCaThi and hocphi_thisinh.maDSDK = dsdkthi.maDSDK and lich_thi.maLichThi = ca_thi.maLichThi LIMIT ? OFFSET ?", [
+                    maCaThi,
+                    pageSize,
+                    offset,
+
+                ]),
+            ]);
+
+            if (result2[0] && result2[0].length > 0) {
+                return res.status(200).json({
+                    dataCD: result2[0],
+                    totalPages: Math.ceil(sotrang.length / pageSize),
+                    currentPage: page,
+                });
+            } else {
+                console.log("Không tìm thấy kết quả");
+                return res.status(200).json({
+                    dataCD: [],
+                    totalPages: 0,
+                    currentPage: 1,
+
+                });
+            }
+        }
+        // console.log(tukhoa)
+        const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+        const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+        const offset = (page - 1) * pageSize;
+
+        const [sotrang, fields] = await pool.execute(
+            "SELECT dsdkthi.maDSDK, dsdkthi.maThiSinh, dsdkthi.maCaThi, hoten, email, sdt, lich_thi.maLichThi, lich_thi.hocphi, hocphi_thisinh.maHocPhiTS, hocphi_thisinh.trang_thai, hocphi_thisinh.maDSDK FROM dsdkthi, lich_thi, thi_sinh, ca_thi, hocphi_thisinh where dsdkthi.maCaThi = ? and dsdkthi.trang_thai = 1 and dsdkthi.maThiSinh = thi_sinh.maThiSinh and dsdkthi.maCaThi = ca_thi.maCaThi and hocphi_thisinh.maDSDK = dsdkthi.maDSDK and lich_thi.maLichThi = ca_thi.maLichThi AND (UPPER(thi_sinh.hoten) LIKE UPPER(?) OR UPPER(thi_sinh.email) LIKE UPPER(?))",
+            [maCaThi, "%" + tukhoa + "%", "%" + tukhoa + "%"]
+        );
+        console.log(sotrang)
+
+        const [result2, fields1] = await Promise.all([
+            pool.execute(
+                "SELECT dsdkthi.maDSDK, dsdkthi.maThiSinh, dsdkthi.maCaThi, hoten, email, sdt, lich_thi.maLichThi, lich_thi.hocphi, hocphi_thisinh.maHocPhiTS, hocphi_thisinh.trang_thai, hocphi_thisinh.maDSDK FROM dsdkthi, lich_thi, thi_sinh, ca_thi, hocphi_thisinh where dsdkthi.maCaThi = ? and dsdkthi.trang_thai = 1 and dsdkthi.maThiSinh = thi_sinh.maThiSinh and dsdkthi.maCaThi = ca_thi.maCaThi and hocphi_thisinh.maDSDK = dsdkthi.maDSDK and lich_thi.maLichThi = ca_thi.maLichThi AND (UPPER(thi_sinh.hoten) LIKE UPPER(?) OR UPPER(thi_sinh.email) LIKE UPPER(?))",
+                [maCaThi, "%" + tukhoa + "%", "%" + tukhoa + "%"]
+            ),
+        ]);
+
+        if (result2[0] && result2[0].length > 0) {
+            return res.status(200).json({
+                dataCD: result2[0],
+                totalPages: Math.ceil(sotrang.length / pageSize),
+                currentPage: page,
+            });
+        } else {
+            console.log("Không tìm thấy kết quả");
+            return res.status(200).json({
+                dataCD: [],
+                totalPages: 0,
+                currentPage: 1,
+            });
+        }
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let deleteThiSinhDK = async (req, res) => {
+    console.log("ok");
+
+    let maDSDK = req.params.maDSDK;
+    console.log("Mã lớp học để xoá:", maDSDK);
+
+    try {
+        await pool.execute(
+            "update dsdkthi set dsdkthi.trang_thai = 0 where dsdkthi.maDSDK = ?", [maDSDK]);
+
+        return res.status(200).json({
+            message: "Xóa thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+    }
+}
+
+let SaveCheckboxStatesHPTS = async (req, res) => {
+    let { maDSDK, isChecked } = req.body;
+
+    console.log(req.body);
+    console.log("+=============");
+    console.log(isChecked);
+
+    try {
+        // Assuming checkboxStates is an array of objects with IDChiTietDoanPhi and isChecked
+        for (let { maHocPhiTS, isChecked } of isChecked) {
+            if (isChecked == false) {
+                isChecked = 0;
+            } else {
+                isChecked = 1;
+            }
+            console.log(isChecked);
+            await pool.execute(
+                "UPDATE hocphi_thisinh SET trang_thai = ? WHERE maDSDK = ? and maHocPhiTS = ?",
+                [isChecked, maDSDK, maHocPhiTS]
+            );
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Cập nhật thành công!",
+        });
+    } catch (error) {
+        console.error("Error updating checkbox states:", error);
+        return res.status(500).json({ message: "Cập nhật thành công!" });
+    }
+};
 
 // người dùng
+
 let layTrangChu = async (req, res) => {
 
     try {
@@ -1879,7 +2026,7 @@ module.exports = {
     layHinhAnhGioiThieu, deleteHAQC, layHinhAnhTrangChu, layGiangVien,
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
-
+    deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS,
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
     layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,

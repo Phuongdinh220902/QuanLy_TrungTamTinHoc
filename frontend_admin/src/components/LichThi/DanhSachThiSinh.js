@@ -7,63 +7,46 @@ import {
     faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
 import {
-    layLichThi, deleteLichThi
+    laydsThiSinh, deleteThiSinhDK
 } from "../../services/apiService";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
+// import ModalUpdateLopHoc from "./ModalUpdateLopHoc";
 import axios from "axios";
-import ModalUpdate from "./ChinhSuaLichThi";
-import ModalThemLT from "./ThemLichThi";
 
-import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
-
-const LichThi = (props) => {
-    const [DSLichThi, setListLichThi] = useState([]);
-    const { maLichThi } = useParams();
+const DSThiSinh = (props) => {
+    const [DSThiSinh, setListThiSinh] = useState([]);
+    const { maCaThi } = useParams();
     const [showModal, setShowModal] = useState(false);
+    const [selectedLH, setselectedLH] = useState(null);
+    const [showModalUpdateLopHoc, setshowModalUpdateLopHoc] = useState(false);
     const [selectID, setselectID] = useState(null);
-    const [selectedLT, setselectedLT] = useState(null);
-    const [showModalUpdate, setshowModalUpdate] = useState(false);
-    const [showModal1, setShowModal1] = useState(false);
 
     let [tukhoa, setTuKhoa] = useState("")
 
-    const handleOpenModalUpdate = (LT) => {
-        setselectedLT(LT);
-        setshowModalUpdate(true);
-    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
-    const [showModalCreateKH, setShowModalCreateKH] = useState(false);
+    useEffect(() => {
+        fetchDSThiSinh();
+    }, [currentPage, tukhoa]);
 
-    const handleShowModalCreateCT = () => {
-        setShowModalCreateKH(true);
-    };
-
-    const navigate = useNavigate();
-
-    const handleCloseModalLT = () => {
-        setShowModalCreateKH(false);
-    };
 
     const handleDelete = async () => {
         try {
-            await deleteLichThi(selectID);
-            console.log(maLichThi)
+            await deleteThiSinhDK(selectID);
+            console.log(maCaThi)
             setShowModal(false);
-            toast.success("Xoá lịch thi thành công");
+            toast.success("Xoá thí sinh thành công");
 
-            fetchDSLichThi();
-            console.log("Xoá lịch thi thành công!");
+            fetchDSThiSinh();
+            console.log("Xoá thí sinh thành công!");
         } catch (error) {
-            toast.error("Lỗi khi xoá lịch thi")
-            console.error("Lỗi khi xóa lịch thi:", error);
+            toast.error("Lỗi khi xoá thí sinh")
+            console.error("Lỗi khi xóa thí sinh:", error);
         }
     };
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
 
     const changePage = (newPage) => {
         setCurrentPage(newPage);
@@ -84,22 +67,18 @@ const LichThi = (props) => {
         }
     };
 
-    useEffect(() => {
-        fetchDSLichThi();
-    }, [currentPage, tukhoa]);
-
-
-    const fetchDSLichThi = async () => {
+    const fetchDSThiSinh = async () => {
         try {
-            let tukhoa_ = localStorage.getItem("tukhoa")
-            let res = await layLichThi(currentPage, tukhoa_);
+            let tukhoa_ = localStorage.getItem("tukhoa");
+            let res = await laydsThiSinh(maCaThi, currentPage, tukhoa_);
             console.log(res);
 
             if (res.status === 200) {
-                setListLichThi(res.data.dataCD);
-                setTotalPages(res.data.totalPages);
+                setListThiSinh(res.data.dataCD);
+                // const newCheckboxStates = res.data.dataCD.map((item) => item.trang_thai === 1);
+                // setCheckboxStates(newCheckboxStates);
+                // setNewState(newCheckboxStates); 
             } else {
-                // Xử lý trường hợp lỗi
                 console.error("Lỗi khi gọi API:", res.statusText);
             }
         } catch (error) {
@@ -108,27 +87,66 @@ const LichThi = (props) => {
     };
 
     const handleSearch = async () => {
-        if (tukhoa == "" || !tukhoa) {
+        if (tukhoa === "" || !tukhoa) {
             tukhoa = "null"
         }
         localStorage.setItem("tukhoa", tukhoa)
-        await fetchDSLichThi();
+        await fetchDSThiSinh();
     };
+
     const formatCurrency = (value) => {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     };
 
-    const [selectedmaLichThi, setSelectedmaLichThi] = useState(null);
+    const [checkboxStates, setCheckboxStates] = useState([]);
 
-    const handleAddDetails = (maLichThi) => {
-        setSelectedmaLichThi(maLichThi);
-        setShowModal1(true);
+    const [newState, setNewState] = useState([]);
+
+    useEffect(() => {
+        if (DSThiSinh.length > 0) {
+            const initialCheckboxStates = DSThiSinh.map((item) => item.trang_thai === 1);
+            setCheckboxStates(initialCheckboxStates);
+            setNewState(initialCheckboxStates); // Khởi tạo trạng thái mới ban đầu
+        }
+    }, [DSThiSinh]);
+
+
+
+
+    const handleCheckboxChange = async (maDSDK, isChecked, index) => {
+        const newCheckboxStates = [...checkboxStates];
+        newCheckboxStates[index] = !newCheckboxStates[index];
+        setCheckboxStates(newCheckboxStates);
+
+        const newNewState = [...newState];
+        newNewState[index] = !newNewState[index]; // Cập nhật trạng thái mới
+        setNewState(newNewState);
+
+        const dataToSave = DSThiSinh.map((item, index) => ({
+            maHocPhiTS: item.maHocPhiTS, // Replace with the actual property name
+            isChecked: newNewState[index],
+        }));
+
+        try {
+            const response = await axios.post('http://localhost:2209/api/v1/SaveCheckboxStatesHPTS', {
+                maDSDK: maDSDK,
+                isChecked: dataToSave,
+            });
+
+            if (response.status === 200) {
+                toast.success('Cập nhật trạng thái thành công')
+            } else {
+                toast.error('Cập nhật trạng thái thất bại')
+            }
+        } catch (error) {
+            console.error('Lỗi khi gửi yêu cầu API:', error);
+        }
     };
 
     return (
         <>
             <div className="container-fluid app__content">
-                <h2 className="text-center">Danh Sách Lịch Thi</h2>
+                <h2 className="text-center">Danh Sách Thí Sinh</h2>
 
                 <div className="search">
                     <div className="searchHV">
@@ -144,57 +162,57 @@ const LichThi = (props) => {
                             <button className="formatButton" onClick={handleSearch}>
                                 <FontAwesomeIcon icon={faMagnifyingGlass} /> Tìm
                             </button>
-                            <button className="formatButton addButton" onClick={handleShowModalCreateCT}>
-                                Thêm
-                            </button>
-
 
                         </div>
                     </div>
                 </div>
 
                 <div className="listDV">
-                    <div className="table-container1">
+                    <div className="table-container">
                         <table className="table table-striped">
                             <thead>
                                 <tr>
-                                    <th className="table-item ">STT</th>
-                                    <th className="table-item ">Ngày Thi</th>
-                                    <th className="table-item ">Lệ phí</th>
-                                    <th> </th>
+                                    <th className="table-item">STT</th>
+                                    <th className="table-item ">Tên thí sinh</th>
+                                    <th className="table-item ">Email</th>
+                                    <th className="table-item ">Học phí</th>
+                                    <th className="table-item ">Đã nộp</th>
+                                    <th className="table-item ">  </th>
                                 </tr>
                             </thead>
                             <tbody id="myTable">
-                                {DSLichThi &&
-                                    DSLichThi.length > 0 &&
-                                    DSLichThi.map((item, index) => {
+                                {DSThiSinh &&
+                                    DSThiSinh.length > 0 &&
+                                    DSThiSinh.map((item, index) => {
                                         return (
-                                            <tr key={`table-${index}`} className="tableRow">
+                                            <tr key={`table-doanvien-${index}`} className="tableRow">
                                                 <td className="table-item col-right">{index + 1}</td>
-                                                <td className="col-center">{item.ngaythi}</td>
+                                                <td className="">{item.hoten}</td>
+                                                <td className="">{item.email}</td>
                                                 <td className="col-right">{formatCurrency(item.hocphi)}đ</td>
+                                                <td className="col-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={checkboxStates[index]}
+                                                        onChange={() => handleCheckboxChange(item.maDSDK, checkboxStates[index], index)}
+                                                    />
+                                                </td>
+
 
                                                 <td className="table-item">
-                                                    <button className="btn btn-info mx-2">
-                                                        <Link to={`/cathi/${item.maLichThi}`} className="navlink linkStyle">
-                                                            Xem ca thi
-                                                        </Link>
-                                                    </button>
-
-                                                    <button className="btn btn-warning" onClick={() => handleOpenModalUpdate(item)}>
+                                                    {/* <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
                                                         Cập nhật
-                                                    </button>
-                                                    <button className="btn btn-danger mx-2" onClick={() => { setselectID(item.maLichThi); setShowModal(true) }}
+                                                    </button> */}
+                                                    <button className="btn btn-danger" onClick={() => { setselectID(item.maDSDK); setShowModal(true) }}
                                                     >Xoá</button>
 
                                                 </td>
-
                                             </tr>
                                         );
                                     })}
-                                {DSLichThi && DSLichThi.length === 0 && (
+                                {DSThiSinh && DSThiSinh.length === 0 && (
                                     <tr className="tablenone">
-                                        <td className="tablenone">Không có lịch thi nào!</td>
+                                        <td className="tablenone">Không có thí sinh nào!</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -223,19 +241,6 @@ const LichThi = (props) => {
                         </div>
                     </div>
                 </div>
-                <ModalUpdate
-                    show={showModalUpdate}
-                    handleClose={() => setshowModalUpdate(false)}
-                    selectedLT={selectedLT}
-                    onUpdate={fetchDSLichThi}
-                />
-
-                <ModalThemLT
-                    show={showModalCreateKH}
-                    handleCloseModalLT={handleCloseModalLT}
-                    onUpdate={fetchDSLichThi}
-                />
-
                 <ToastContainer
                     position="top-right"
                     autoClose={5000}
@@ -249,6 +254,14 @@ const LichThi = (props) => {
                     theme="light"
                 />
             </div>
+
+            {/* <ModalUpdateLopHoc
+                show={showModalUpdateLopHoc}
+                handleClose={() => setshowModalUpdateLopHoc(false)}
+                selectedLH={selectedLH}
+                onUpdate={fetchDSThiSinh}
+            /> */}
+
             <Modal
                 show={showModal}
                 onHide={() => setShowModal(false)}
@@ -258,7 +271,7 @@ const LichThi = (props) => {
                     <Modal.Title>Xác nhận xoá</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Bạn có chắc chắn muốn xoá lịch thi này không?
+                    Bạn có chắc chắn muốn xoá thí sinh khỏi lớp này không?
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>
@@ -273,4 +286,4 @@ const LichThi = (props) => {
     );
 };
 
-export default LichThi;
+export default DSThiSinh;

@@ -74,7 +74,19 @@ const deleteLichThi = (maLichThi) => {
     return axios.post(`api/v1/deleteLichThi/${maLichThi}`);
 };
 
+const deleteCaThi = (maCaThi) => {
+    return axios.post(`api/v1/deleteCaThi/${maCaThi}`);
+};
+
+const laydsThiSinh = (maCaThi, page, tukhoa) => {
+    return axios.get(`api/v1/laydsThiSinh/${maCaThi}/${page}/${tukhoa}`);
+};
+
+const deleteThiSinhDK = (maDSDK) => {
+    return axios.post(`api/v1/deleteThiSinhDK/${maDSDK}`);
+};
+
 export {
     laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH, laydsHocVien, deleteHVLopHoc,
-    layHinhAnhGioiThieu, deleteMoTa, layLichThi, laydsCaThi, deleteLichThi
+    layHinhAnhGioiThieu, deleteMoTa, layLichThi, laydsCaThi, deleteLichThi, deleteCaThi, laydsThiSinh, deleteThiSinhDK
 };

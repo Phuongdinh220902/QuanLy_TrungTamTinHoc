@@ -7,7 +7,7 @@ import {
     faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
 import {
-    laydsCaThi, deleteLH
+    laydsCaThi, deleteCaThi
 } from "../../services/apiService";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -49,16 +49,16 @@ const CaThi = (props) => {
 
     const handleDelete = async () => {
         try {
-            await deleteLH(selectID);
+            await deleteCaThi(selectID);
             console.log(maCaThi)
             setShowModal(false);
-            toast.success("Xoá lớp học thành công");
+            toast.success("Xoá ca thi thành công");
 
             fetchDSCaThi();
-            console.log("Xoá lớp học thành công!");
+            console.log("Xoá ca thi thành công!");
         } catch (error) {
-            toast.error("Lỗi khi xoá lớp học")
-            console.error("Lỗi khi xóa lớp học:", error);
+            toast.error("Lỗi khi xoá ca thi")
+            console.error("Lỗi khi xóa ca thi:", error);
         }
     };
 
@@ -250,7 +250,7 @@ const CaThi = (props) => {
 
                                                 <td className="table-item">
                                                     <button className="btn btn-info">
-                                                        <Link to={`/dshocvien/${item.maCaThi}`} className="navlink linkStyle">
+                                                        <Link to={`/dsthisinh/${item.maCaThi}`} className="navlink linkStyle">
                                                             Xem Danh Sách HV
                                                         </Link>
                                                     </button>
@@ -258,7 +258,7 @@ const CaThi = (props) => {
                                                     <button className="btn btn-warning mx-2" onClick={() => handleOpenModalUpdate(item)}>
                                                         Cập nhật
                                                     </button>
-                                                    <button className="btn btn-danger"
+                                                    <button className="btn btn-danger" onClick={() => { setselectID(item.maCaThi); setShowModal(true) }}
                                                     >Xoá</button>
 
                                                 </td>

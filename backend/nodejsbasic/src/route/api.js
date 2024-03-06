@@ -44,8 +44,14 @@ const initAPIRoute = (app) => {
     router.post("/updateLichThi", APIController.updateLichThi)
     router.post("/updateCaThi", APIController.updateCaThi)
     router.post('/themLT', APIController.themLT)
-    // USer
+    router.post("/deleteCaThi/:maCaThi", APIController.deleteCaThi)
+
     router.get('/laydsHocVien/:maLopHoc/:page/:tukhoa', APIController.laydsHocVien)
+    router.get('/laydsThiSinh/:maCaThi/:page/:tukhoa', APIController.laydsThiSinh)
+    router.post("/deleteThiSinhDK/:maDSDK", APIController.deleteThiSinhDK)
+    router.post("/SaveCheckboxStatesHPTS", APIController.SaveCheckboxStatesHPTS);
+
+    // USer
     router.get('/layTrangChu', APIController.layTrangChu)
     router.get('/layTrangChuKhoaHoc', APIController.layTrangChuKhoaHoc)
     router.get('/layTrangChuGiangVien', APIController.layTrangChuGiangVien)

@@ -139,6 +139,11 @@ const DSHocVien = (props) => {
         }
     };
 
+    const formatCurrency = (value) => {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+
     return (
         <>
             <div className="container-fluid app__content">
@@ -185,7 +190,7 @@ const DSHocVien = (props) => {
                                                 <td className="table-item col-right">{index + 1}</td>
                                                 <td className="">{item.tenHV}</td>
                                                 <td className="">{item.email}</td>
-                                                <td className="">{item.hocphisaukhigiam}</td>
+                                                <td className="">{formatCurrency(item.hocphisaukhigiam)}đ</td>
                                                 <td className="col-center">
                                                     <input
                                                         type="checkbox"

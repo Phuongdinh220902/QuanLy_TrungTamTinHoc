@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 const ModalUpdate = ({ show, handleClose, selectedLT, onUpdate }) => {
     const [maLichThi, setmaLichThi] = useState('');
     const [ngaythi, setNgayThi] = useState('');
+    const [hocphi, setHocPhi] = useState('');
+
 
     // Các biến khác nếu có
     console.log(selectedLT)
@@ -14,6 +16,7 @@ const ModalUpdate = ({ show, handleClose, selectedLT, onUpdate }) => {
         if (selectedLT) {
             setmaLichThi(selectedLT.maLichThi);
             setNgayThi(selectedLT.ngaythi);
+            setHocPhi(selectedLT.hocphi);
         }
     }, [selectedLT]);
 
@@ -21,12 +24,14 @@ const ModalUpdate = ({ show, handleClose, selectedLT, onUpdate }) => {
         try {
             const formData = new FormData();
             formData.append('ngaythi', ngaythi);
+            formData.append('hocphi', hocphi);
             console.log(selectedLT.maLichThi);
 
 
             let mdata = {
                 maLichThi: selectedLT.maLichThi,
                 ngaythi: ngaythi,
+                hocphi: hocphi,
             }
             await axios.post('http://localhost:2209/api/v1/updateLichThi', mdata, {
                 headers: {
@@ -57,6 +62,12 @@ const ModalUpdate = ({ show, handleClose, selectedLT, onUpdate }) => {
                             <label className="form-label">Ngày thi (Nhập : dd/mm/yyyy)</label>
                             <input type="text" className="form-control" value={ngaythi}
                                 onChange={(event) => setNgayThi(event.target.value)} />
+                        </div>
+
+                        <div className="col-12">
+                            <label className="form-label">Lệ phí</label>
+                            <input type="text" className="form-control" value={hocphi}
+                                onChange={(event) => setHocPhi(event.target.value)} />
                         </div>
 
                     </form>
