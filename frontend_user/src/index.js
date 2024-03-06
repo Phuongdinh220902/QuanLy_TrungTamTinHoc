@@ -32,6 +32,7 @@ import CamNhanHocVien from './components/CamNhan/CamNhan';
 import TrangLopHocHV from './components/TrangCaNhan/TrangLopHocHV';
 import ThongBaoLopHocChiTietHV from './components/TrangCaNhan/ThongBaoLopHocHV';
 import FilePreview from './components/GiangVien/FilePreview';
+import LichThi from './components/LichThi/LichThi';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -58,6 +59,7 @@ root.render(
           <Route path="camnhan" element={<CamNhanHocVien />} />
           <Route path="/lophoccuaban/:maLopHoc" element={<TrangLopHocHV />} />
           <Route path="/thongbao/:maTB" element={<ThongBaoLopHocChiTietHV />} />
+          <Route path="thongbaolichthi" element={<LichThi />} />
 
         </Route>
         <Route path="giangvien" element={<TCGiangVien />} />

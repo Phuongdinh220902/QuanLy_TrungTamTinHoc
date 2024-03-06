@@ -61,10 +61,13 @@ const DichVu = () => {
                         <div className="col-sm-12 col-md-10 col-md-offset-1" style={{ padding: "0 30px" }}>
                             <div className="lich-thi lazy visible">
                                 <a style={{ color: "#fff" }}>
-                                    <h4 className="tieu-de">
-                                        <img src={logo} alt="" /> Lịch thi</h4>
-                                    <h2 className="thong-bao-thi">Chứng chỉ tin học Quốc gia</h2>
-                                    <p>Dành cho thí sinh tự do</p>
+                                    <Link to={`thongbaolichthi`}>
+                                        <h4 className="tieu-de">
+                                            <img src={logo} alt="" /> Lịch thi</h4>
+                                        <h2 className="thong-bao-thi" style={{ color: 'white' }}>Chứng chỉ tin học Quốc gia</h2>
+                                        <p style={{ color: 'white' }}>Dành cho thí sinh tự do</p>
+                                    </Link>
+
                                 </a>
                             </div>
                         </div>

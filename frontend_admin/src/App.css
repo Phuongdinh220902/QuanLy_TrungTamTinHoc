@@ -188,6 +188,15 @@ code {
   margin-top: 72px;
 }
 
+.table-container1 {
+  overflow-x: auto;
+  color: var(--black);
+  font-size: 1.2em;
+  margin-top: 72px;
+  width: 1200px;
+  margin-left: 150px;
+}
+
 .table {
   width: 100%;
 }

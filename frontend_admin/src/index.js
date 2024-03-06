@@ -22,6 +22,8 @@ import ThemNoiDungKhoaHoc from './components/Khoahoc/ThemNoiDungKhoaHoc';
 import MoTa from './components/Khoahoc/MoTa';
 import ThongTinDiemThi from './components/ThongTinDiemThi/ThongTinDiemThi';
 import ChinhSuaMoTa from './components/Khoahoc/ChinhSuaMoTa';
+import LichThi from './components/LichThi/LichThi';
+import CaThi from './components/LichThi/CaThi';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -45,6 +47,8 @@ root.render(
           <Route path="mota/:maKH" element={<MoTa />} />
           <Route path="chinhsuamota/:maND" element={<ChinhSuaMoTa />} />
           <Route path="thongtindiemthi" element={<ThongTinDiemThi />} />
+          <Route path="lichthi" element={<LichThi />} />
+          <Route path="cathi/:maLichThi" element={<CaThi />} />
         </Route>
       </Routes>
 

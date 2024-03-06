@@ -38,6 +38,12 @@ const initAPIRoute = (app) => {
     router.post("/deleteMoTa/:maND", APIController.deleteMoTa)
     router.post('/updateHV1', APIController.updateHV1)
     router.post('/doiMatKhau', APIController.doiMatKhau)
+    router.get('/layLichThi/:page/:tukhoa', APIController.layLichThi)
+    router.get('/laydsCaThi/:maLichThi/:page/:tukhoa', APIController.laydsCaThi)
+    router.post("/deleteLichThi/:maLichThi", APIController.deleteLichThi)
+    router.post("/updateLichThi", APIController.updateLichThi)
+    router.post("/updateCaThi", APIController.updateCaThi)
+    router.post('/themLT', APIController.themLT)
     // USer
     router.get('/laydsHocVien/:maLopHoc/:page/:tukhoa', APIController.laydsHocVien)
     router.get('/layTrangChu', APIController.layTrangChu)
