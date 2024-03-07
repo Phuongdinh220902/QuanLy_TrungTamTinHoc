@@ -6,6 +6,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 const ProfilePage = () => {
     const [userProfile, setUserProfile] = useState(null);
     const maHV = localStorage.getItem('maHV');
@@ -36,8 +38,33 @@ const ProfilePage = () => {
     text-align: center !important;
 }
 
+
     
     `;
+
+    const [caThiData, setCaThiData] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    // Function to toggle the modal
+    const toggleModal = async () => {
+        setShowModal(!showModal);
+        if (!showModal) {
+            await fetchCaThiData(); // Fetch exam data when modal is shown
+        }
+    };
+    const [ngaythi, setNgayThi] = useState('');
+
+    // Function to fetch exam data from the API
+    const fetchCaThiData = async () => {
+        try {
+            const response = await axios.get(`http://localhost:2209/api/v1/layCaThiDK`);
+            setCaThiData(response.data.DSCT);
+            setNgayThi(response.data.DSCT[0].ngaythi)
+        } catch (error) {
+            console.error('Error fetching exam data:', error);
+        }
+    };
+
+
 
     return (
         <>
@@ -118,25 +145,34 @@ const ProfilePage = () => {
                                     <div className="list-group" style={{ maxWidth: '520px' }}>
 
                                         {registeredCourses.map((course, index) => (
-                                            <Link to={`/lophoccuaban/${course.maLopHoc}`}>
-                                                <a className="list-group-item list-group-item-action" key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                            <div key={index}>
+                                                {/* Your existing code */}
+                                                <button className="list-group-item list-group-item-action" style={{ display: 'flex', alignItems: 'center' }}>
                                                     {/* Hiển thị hình ảnh khóa học */}
-                                                    <div style={{ marginRight: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.75)', borderRadius: '10px' }}>
+                                                    <Link to={`/lophoccuaban/${course.maLopHoc}`} style={{ marginRight: '20px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.75)', borderRadius: '10px' }}>
                                                         <img src={`http://localhost:2209/images/${course.tenHinhAnhKH}`} alt={course.tenKH} style={{ width: '100px', height: 'auto', borderRadius: '10px' }} />
-                                                    </div>
+                                                    </Link>
 
                                                     {/* Hiển thị thông tin khóa học */}
                                                     <div style={{ flex: 1 }}>
-                                                        <h5 style={{ fontSize: '18px', fontWeight: 'bold' }}>{course.tenKH}</h5>
-                                                        <p className="mb-1" style={{ fontSize: '16px' }}>Lớp: {course.tenLopHoc}</p>
-                                                        {course.tenKH === 'Ứng dụng CNTT cơ bản' && (
-                                                            <Link to="/dangkythi">
-                                                                <button className="btn btn-primary">Đăng ký thi</button>
+                                                        <div style={{ marginBottom: '5px' }}>
+                                                            <Link to={`/lophoccuaban/${course.maLopHoc}`} style={{ fontSize: '18px', fontWeight: 'bold', color: 'black' }}>
+                                                                {course.tenKH}
                                                             </Link>
+                                                        </div>
+                                                        <div>
+                                                            <Link to={`/lophoccuaban/${course.maLopHoc}`} className="mb-1" style={{ fontSize: '16px', color: 'black' }}>
+                                                                Lớp: {course.tenLopHoc}
+                                                            </Link>
+                                                        </div>
+                                                        {course.tenKH === 'Ứng dụng CNTT cơ bản' && (
+                                                            <button className="btn btn-primary" onClick={() => toggleModal()}>
+                                                                Đăng ký thi
+                                                            </button>
                                                         )}
                                                     </div>
-                                                </a>
-                                            </Link>
+                                                </button>
+                                            </div>
                                         ))}
 
 
@@ -150,6 +186,33 @@ const ProfilePage = () => {
                     </div>
                 </div>
             </section>
+
+
+            <Modal show={showModal} onHide={toggleModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Danh sách ca thi</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {/* Display exam data here */}
+                    <p>Ngày thi:
+                        <span style={{ backgroundColor: 'yellow', padding: '5px', borderRadius: '5px', color: 'red' }}>{ngaythi}
+                        </span></p>
+                    {caThiData.map((caThi, index) => (
+                        <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '10px' }}>
+                            <p style={{ marginRight: '10px' }}>Thời gian: {caThi.thoigian}</p>
+                            <div style={{ flex: '1', display: 'flex', justifyContent: 'center' }}>
+                                <button className="btn btn-primary">Đăng ký</button>
+                            </div>
+                        </div>
+                    ))}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={toggleModal}>
+                        Đóng
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
         </>
     );
 };

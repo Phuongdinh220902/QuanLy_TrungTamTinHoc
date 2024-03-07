@@ -2062,6 +2062,20 @@ let layTrangCaNhanGV = async (req, res) => {
     }
 };
 
+let layCaThiDK = async (req, res) => {
+    try {
+        const [DSCT, a] = await pool.execute("SELECT ca_thi.thoigian, ca_thi.trang_thai, DATE_FORMAT(STR_TO_DATE(lich_thi.ngaythi, '%Y-%m-%d'), '%d-%m-%Y') AS ngaythi, batdau FROM ca_thi, lich_thi where lich_thi.batdau = 1 and slDaDK < slToiDa and lich_thi.maLichThi = ca_thi.maLichThi");
+        return res.status(200).json({
+            DSCT: DSCT
+        })
+
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
 
 
 
@@ -2072,6 +2086,7 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
     deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS, themThiSinhDKThi, updateTrangThaiLichThi,
+    layCaThiDK,
 
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import { Link } from "react-router-dom";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 const DangKyThi = () => {
     const [userProfile, setUserProfile] = useState(null);
@@ -161,6 +163,20 @@ const DangKyThi = () => {
     
     `;
 
+    const [showModal, setShowModal] = useState(false);
+
+    const handleDelete = async () => {
+        try {
+            setShowModal(false);
+            toast.success("Xoá lịch thi thành công");
+
+            console.log("Xoá lịch thi thành công!");
+        } catch (error) {
+            toast.error("Lỗi khi xoá lịch thi")
+            console.error("Lỗi khi xóa lịch thi:", error);
+        }
+    };
+
     return (
         <>
             <style>{styles}</style>
@@ -230,11 +246,22 @@ const DangKyThi = () => {
                                 <div className="row gutters">
                                     <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                         <div className="text-right">
-                                            <Link to='/trangcanhan'>
-                                                <button type="button" className="btn btn-secondary" >
+                                            {/* <Link to='/trangcanhan'>
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-secondary"
+                                                    onClick={() => setShowModal(true)}
+                                                >
                                                     Huỷ
                                                 </button>
-                                            </Link>
+                                            </Link> */}
+                                            <button
+                                                type="button"
+                                                className="btn btn-secondary"
+                                                onClick={() => setShowModal(true)}
+                                            >
+                                                Huỷ
+                                            </button>
 
                                             &nbsp;<button type="button" id="submit" name="submit" className="btn btn-primary" onClick={handleUpdateProfile}>Cập nhật</button>&nbsp;
                                             <Link to='/doimk'>
@@ -262,6 +289,24 @@ const DangKyThi = () => {
                     theme="light"
                 />
             </div>
+            <Modal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                className="custom-modal"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Xác nhận xoá</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Bạn có chắc chắn muốn xoá lịch thi này không?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Hủy
+                    </Button>
+                    <Button variant="danger" onClick={() => handleDelete()}>
+                        Xoá
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

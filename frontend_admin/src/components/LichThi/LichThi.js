@@ -115,7 +115,6 @@ const LichThi = (props) => {
         await fetchDSLichThi();
     };
 
-    // sfjsdf
     const formatCurrency = (value) => {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     };
