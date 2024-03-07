@@ -759,10 +759,10 @@ let layLichThi = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
-            const [sotrang, fields] = await pool.execute("SELECT maLichThi, ngaythi, trang_thai, hocphi  FROM lich_thi where lich_thi.trang_thai = 1");
+            const [sotrang, fields] = await pool.execute("SELECT maLichThi, DATE_FORMAT(STR_TO_DATE(lich_thi.ngaythi, '%Y-%m-%d'), '%d-%m-%Y') AS ngaythi , DATE_FORMAT(STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d'), '%d-%m-%Y') AS ngayhethan, trang_thai, hocphi, batdau FROM lich_thi WHERE lich_thi.trang_thai = 1 ORDER BY lich_thi.batdau DESC, STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d') DESC");
 
             const [result2, fields1] = await Promise.all([
-                pool.execute("SELECT maLichThi, ngaythi, trang_thai, hocphi FROM lich_thi where lich_thi.trang_thai = 1 LIMIT ? OFFSET ?", [
+                pool.execute("SELECT maLichThi, DATE_FORMAT(STR_TO_DATE(lich_thi.ngaythi, '%Y-%m-%d'), '%d-%m-%Y') AS ngaythi , DATE_FORMAT(STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d'), '%d-%m-%Y') AS ngayhethan, trang_thai, hocphi, batdau FROM lich_thi WHERE lich_thi.trang_thai = 1 ORDER BY lich_thi.batdau DESC, STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d') DESC LIMIT ? OFFSET ?", [
                     pageSize,
                     offset,
 
@@ -792,15 +792,15 @@ let layLichThi = async (req, res) => {
         const offset = (page - 1) * pageSize;
 
         const [sotrang, fields] = await pool.execute(
-            "SELECT maLichThi, ngaythi, trang_thai, hocphi FROM lich_thi where lich_thi.trang_thai = 1 AND (UPPER(lich_thi.ngaythi) LIKE UPPER(?)) ",
-            ["%" + tukhoa + "%"]
+            "SELECT maLichThi, DATE_FORMAT(STR_TO_DATE(lich_thi.ngaythi, '%Y-%m-%d'), '%d-%m-%Y') AS ngaythi , DATE_FORMAT(STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d'), '%d-%m-%Y') AS ngayhethan, trang_thai, hocphi, batdau FROM lich_thi WHERE lich_thi.trang_thai = 1 AND (UPPER(lich_thi.ngaythi) LIKE UPPER(?) OR UPPER(lich_thi.ngayhethan) LIKE UPPER(?)) ORDER BY lich_thi.batdau DESC, STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d') DESC",
+            ["%" + tukhoa + "%", "%" + tukhoa + "%"]
         );
         console.log(sotrang)
 
         const [result2, fields1] = await Promise.all([
             pool.execute(
-                "SELECT maLichThi, ngaythi, trang_thai, hocphi FROM lich_thi where lich_thi.trang_thai = 1 AND (UPPER(lich_thi.ngaythi) LIKE UPPER(?))",
-                ["%" + tukhoa + "%"]
+                "SELECT maLichThi, DATE_FORMAT(STR_TO_DATE(lich_thi.ngaythi, '%Y-%m-%d'), '%d-%m-%Y') AS ngaythi , DATE_FORMAT(STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d'), '%d-%m-%Y') AS ngayhethan, trang_thai, hocphi, batdau FROM lich_thi WHERE lich_thi.trang_thai = 1 AND (UPPER(lich_thi.ngaythi) LIKE UPPER(?) OR UPPER(lich_thi.ngayhethan) LIKE UPPER(?)) ORDER BY lich_thi.batdau DESC, STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d') DESC",
+                ["%" + tukhoa + "%", "%" + tukhoa + "%"]
             ),
         ]);
 
@@ -843,10 +843,10 @@ let deleteLichThi = async (req, res) => {
 }
 
 let updateLichThi = async (req, res) => {
-    let { maLichThi, ngaythi, hocphi } = req.body;
+    let { maLichThi, ngaythi, hocphi, ngayhethan } = req.body;
     console.log(req.body);
     try {
-        const [rows, fields] = await pool.execute("UPDATE lich_thi SET ngaythi = ?, hocphi = ? WHERE maLichThi=? ", [ngaythi, hocphi, maLichThi])
+        const [rows, fields] = await pool.execute("UPDATE lich_thi SET ngaythi = ?, hocphi = ?, ngayhethan = ? WHERE maLichThi = ? ", [ngaythi, hocphi, ngayhethan, maLichThi])
         return res.status(200).json({
             "message": "Cập nhật thành công",
         })
@@ -857,17 +857,35 @@ let updateLichThi = async (req, res) => {
     }
 }
 
+let updateTrangThaiLichThi = async (req, res) => {
+    let { batdau } = req.body;
+    let maLichThi = req.params.maLichThi;
+
+    try {
+        const [rows, fields] = await pool.execute("UPDATE lich_thi SET batdau = ? WHERE maLichThi = ?", [batdau, maLichThi]);
+        return res.status(200).json({
+            "message": "Cập nhật trạng thái thành công",
+        });
+    }
+    catch (error) {
+        console.log("Lỗi khi cập nhật trạng thái lịch thi: ", error);
+        return res.status(500).json({ error: "Lỗi khi cập nhật trạng thái lịch thi" });
+    }
+}
+
+
 let themLT = async (req, res) => {
-    let { ngaythi } = req.body;
+    let { ngaythi, hocphi } = req.body;
     console.log(req.body);
     try {
-        await pool.execute("insert into lich_thi(ngaythi) values (?)",
-            [ngaythi]
+        await pool.execute("insert into lich_thi(ngaythi, hocphi) values (?, ?)",
+            [ngaythi, hocphi]
         );
 
         res.status(200).json({
             'DT': {
                 'ngaythi': ngaythi,
+                'hocphi': hocphi
             },
             'EC': 0,
             'EM': 'Tạo thành công'
@@ -1120,6 +1138,33 @@ let SaveCheckboxStatesHPTS = async (req, res) => {
     } catch (error) {
         console.error("Error updating checkbox states:", error);
         return res.status(500).json({ message: "Cập nhật thành công!" });
+    }
+};
+
+let themThiSinhDKThi = async (req, res) => {
+    console.log("ok")
+    let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh } = req.body;
+    console.log(req.body);
+    try {
+        await pool.execute("insert into thi_sinh(hoten, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd) values (?, ?, ?, ?, ?, ?, ?, ?)",
+            [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd]
+        );
+
+        res.status(200).json({
+            'DT': {
+                'tenHV': tenHV,
+                'email': email,
+                'sdt': sdt,
+                'ngaysinh': ngaysinh,
+                'gioitinh': gioitinh,
+                'noisinh': noisinh,
+            },
+            'EC': 0,
+            'EM': 'Tạo thành công'
+        });
+    } catch (error) {
+        console.log("Lỗi khi thêm học viên: ", error);
+        return res.status(500).json({ error: "Lỗi khi thêm học viên" });
     }
 };
 
@@ -2026,7 +2071,8 @@ module.exports = {
     layHinhAnhGioiThieu, deleteHAQC, layHinhAnhTrangChu, layGiangVien,
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
-    deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS,
+    deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS, themThiSinhDKThi, updateTrangThaiLichThi,
+
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
     layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,

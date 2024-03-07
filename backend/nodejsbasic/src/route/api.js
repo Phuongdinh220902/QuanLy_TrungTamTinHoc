@@ -50,6 +50,7 @@ const initAPIRoute = (app) => {
     router.get('/laydsThiSinh/:maCaThi/:page/:tukhoa', APIController.laydsThiSinh)
     router.post("/deleteThiSinhDK/:maDSDK", APIController.deleteThiSinhDK)
     router.post("/SaveCheckboxStatesHPTS", APIController.SaveCheckboxStatesHPTS);
+    router.post("/updateTrangThaiLichThi/:maLichThi", APIController.updateTrangThaiLichThi);
 
     // USer
     router.get('/layTrangChu', APIController.layTrangChu)

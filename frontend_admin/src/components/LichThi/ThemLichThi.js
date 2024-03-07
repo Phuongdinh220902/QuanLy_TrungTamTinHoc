@@ -10,7 +10,7 @@ import axios from "axios";
 
 const ThemLT = ({ show, handleCloseModalLT, onUpdate }) => {
     const [ngaythi, setNgayThi] = useState('');
-
+    const [hocphi, setHocPhi] = useState('');
 
     const [modalOpen, setModalOpen] = useState(false);
     const [showModalCreateKH, setShowModalCreateKH] = useState(false);
@@ -18,6 +18,7 @@ const ThemLT = ({ show, handleCloseModalLT, onUpdate }) => {
     const handleClose = () => {
         setShowModalCreateKH(false);
         setNgayThi("");
+        setHocPhi("");
         handleCloseModalLT();
     }
 
@@ -28,13 +29,14 @@ const ThemLT = ({ show, handleCloseModalLT, onUpdate }) => {
         try {
             const formData = new FormData();
             formData.append('ngaythi', ngaythi);
+            formData.append('hocphi', hocphi);
             for (const value of formData.values()) {
                 console.log(value);
             }
 
             let mdata = {
                 ngaythi: ngaythi,
-
+                hocphi: hocphi,
             }
             console.log(mdata)
             await axios.post('http://localhost:2209/api/v1/themLT', mdata, {
@@ -69,6 +71,11 @@ const ThemLT = ({ show, handleCloseModalLT, onUpdate }) => {
                             <label className="form-label">Ngày thi</label>
                             <input type="text" className="form-control" value={ngaythi}
                                 onChange={(event) => setNgayThi(event.target.value)} />
+                        </div>
+                        <div className="col-12">
+                            <label className="form-label">Lệ phí</label>
+                            <input type="text" className="form-control" value={hocphi}
+                                onChange={(event) => setHocPhi(event.target.value)} />
                         </div>
 
                     </form>

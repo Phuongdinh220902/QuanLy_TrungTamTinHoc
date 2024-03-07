@@ -129,6 +129,11 @@ const ProfilePage = () => {
                                                     <div style={{ flex: 1 }}>
                                                         <h5 style={{ fontSize: '18px', fontWeight: 'bold' }}>{course.tenKH}</h5>
                                                         <p className="mb-1" style={{ fontSize: '16px' }}>Lớp: {course.tenLopHoc}</p>
+                                                        {course.tenKH === 'Ứng dụng CNTT cơ bản' && (
+                                                            <Link to="/dangkythi">
+                                                                <button className="btn btn-primary">Đăng ký thi</button>
+                                                            </Link>
+                                                        )}
                                                     </div>
                                                 </a>
                                             </Link>

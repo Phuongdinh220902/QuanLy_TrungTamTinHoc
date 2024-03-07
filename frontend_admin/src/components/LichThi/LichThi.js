@@ -125,6 +125,30 @@ const LichThi = (props) => {
         setShowModal1(true);
     };
 
+
+    const handleChangeStatus = async (maLichThi, currentStatus) => {
+        const newStatus = currentStatus === 0 ? 1 : 0; // Chuyển đổi giữa 0 và 1
+        try {
+            await axios.post(`http://localhost:2209/api/v1/updateTrangThaiLichThi/${maLichThi}`, { batdau: newStatus });
+            const updatedDSLichThi = DSLichThi.map(item => {
+                if (item.maLichThi === maLichThi) {
+                    return { ...item, batdau: newStatus };
+                }
+                return item;
+            });
+            toast.success('Cập nhật trạng thái thành công');
+            setListLichThi(updatedDSLichThi);
+
+            fetchDSLichThi();
+        } catch (error) {
+            console.error('Lỗi khi cập nhật trạng thái:', error);
+        }
+    };
+
+
+
+
+
     return (
         <>
             <div className="container-fluid app__content">
@@ -159,8 +183,10 @@ const LichThi = (props) => {
                             <thead>
                                 <tr>
                                     <th className="table-item ">STT</th>
-                                    <th className="table-item ">Ngày Thi</th>
+                                    <th className="table-item ">Ngày thi</th>
+                                    <th className="table-item ">Ngày hết hạn</th>
                                     <th className="table-item ">Lệ phí</th>
+                                    <th className="table-item ">Trạng thái</th>
                                     <th> </th>
                                 </tr>
                             </thead>
@@ -172,8 +198,21 @@ const LichThi = (props) => {
                                             <tr key={`table-${index}`} className="tableRow">
                                                 <td className="table-item col-right">{index + 1}</td>
                                                 <td className="col-center">{item.ngaythi}</td>
+                                                <td className="col-center">{item.ngayhethan}</td>
                                                 <td className="col-right">{formatCurrency(item.hocphi)}đ</td>
+                                                <td className="col-center">
+                                                    {/* Nếu trạng thái là "Đang mở" */}
+                                                    {item.batdau === 1 ? (
+                                                        <button className="btn btn-success" onClick={() => handleChangeStatus(item.maLichThi, item.batdau)}>
+                                                            Đang mở
+                                                        </button>
+                                                    ) : (
+                                                        <button className="btn btn-danger" onClick={() => handleChangeStatus(item.maLichThi, item.batdau)}>
+                                                            Đã đóng
+                                                        </button>
+                                                    )}
 
+                                                </td>
                                                 <td className="table-item">
                                                     <button className="btn btn-info mx-2">
                                                         <Link to={`/cathi/${item.maLichThi}`} className="navlink linkStyle">
