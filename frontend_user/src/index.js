@@ -61,7 +61,7 @@ root.render(
           <Route path="/lophoccuaban/:maLopHoc" element={<TrangLopHocHV />} />
           <Route path="/thongbao/:maTB" element={<ThongBaoLopHocChiTietHV />} />
           <Route path="thongbaolichthi" element={<LichThi />} />
-          <Route path="dangkythi" element={<DangKyThi />} />
+          <Route path="dangkythi/:maCaThi" element={<DangKyThi />} />
         </Route>
         <Route path="giangvien" element={<TCGiangVien />} />
         <Route path="/lophocgv/:maLopHoc" element={<TrangLopHocGV />} />

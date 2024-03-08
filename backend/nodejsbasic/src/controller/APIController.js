@@ -1143,25 +1143,33 @@ let SaveCheckboxStatesHPTS = async (req, res) => {
 
 let themThiSinhDKThi = async (req, res) => {
     console.log("ok")
-    let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh } = req.body;
-    console.log(req.body);
+    let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd, maCaThi } = req.body;
     try {
-        await pool.execute("insert into thi_sinh(hoten, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd) values (?, ?, ?, ?, ?, ?, ?, ?)",
-            [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd]
-        );
+        const [existingData] = await pool.execute("SELECT email FROM thi_sinh, lich_thi, ca_thi WHERE lich_thi.batdau = 1 and ca_thi.maLichThi = lich_thi.maLichThi and thi_sinh.maCaThi = ca_thi.maCaThi AND email = ? AND sdt = ? AND cccd = ?", [email, sdt, cccd]);
 
-        res.status(200).json({
-            'DT': {
-                'tenHV': tenHV,
-                'email': email,
-                'sdt': sdt,
-                'ngaysinh': ngaysinh,
-                'gioitinh': gioitinh,
-                'noisinh': noisinh,
-            },
-            'EC': 0,
-            'EM': 'Tạo thành công'
-        });
+        // Nếu không có dữ liệu trùng lặp, tiến hành thêm dữ liệu mới
+        if (existingData.length === 0) {
+            await pool.execute("INSERT INTO thi_sinh(hoten, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd, maCaThi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd, maCaThi]
+            );
+
+            return res.status(200).json({
+                'DT': {
+                    'tenHV': tenHV,
+                    'email': email,
+                    'sdt': sdt,
+                    'ngaysinh': ngaysinh,
+                    'gioitinh': gioitinh,
+                    'noisinh': noisinh,
+                },
+                'EC': 0,
+                'EM': 'Tạo thành công'
+            });
+        }
+        else {
+            return res.status(400).send("Bạn đã đăng ký thi");
+        }
+
     } catch (error) {
         console.log("Lỗi khi thêm học viên: ", error);
         return res.status(500).json({ error: "Lỗi khi thêm học viên" });
@@ -2064,7 +2072,7 @@ let layTrangCaNhanGV = async (req, res) => {
 
 let layCaThiDK = async (req, res) => {
     try {
-        const [DSCT, a] = await pool.execute("SELECT ca_thi.thoigian, ca_thi.trang_thai, DATE_FORMAT(STR_TO_DATE(lich_thi.ngaythi, '%Y-%m-%d'), '%d-%m-%Y') AS ngaythi, batdau FROM ca_thi, lich_thi where lich_thi.batdau = 1 and slDaDK < slToiDa and lich_thi.maLichThi = ca_thi.maLichThi");
+        const [DSCT, a] = await pool.execute("SELECT ca_thi.maCaThi, ca_thi.thoigian, ca_thi.trang_thai, DATE_FORMAT(STR_TO_DATE(lich_thi.ngaythi, '%Y-%m-%d'), '%d-%m-%Y') AS ngaythi, batdau,  DATE_FORMAT(STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d'), '%d-%m-%Y') AS ngayhethan FROM ca_thi, lich_thi where lich_thi.batdau = 1 and slDaDK < slToiDa and lich_thi.maLichThi = ca_thi.maLichThi");
         return res.status(200).json({
             DSCT: DSCT
         })
@@ -2077,6 +2085,44 @@ let layCaThiDK = async (req, res) => {
     }
 };
 
+let kiemtraDK = async (req, res) => {
+    let { maHV } = req.body;
+    console.log(maHV, 'do')
+
+    try {
+
+        const [hocVienResults, fields] = await pool.execute(
+            'SELECT email FROM hoc_vien WHERE maHV = ?',
+            [maHV]
+        );
+
+        const { email } = hocVienResults[0];
+        console.log(email)
+
+        const [thiSinhResults, _] = await pool.execute(
+            'SELECT email FROM thi_sinh, lich_thi, ca_thi WHERE lich_thi.batdau = 1 and ca_thi.maLichThi = lich_thi.maLichThi and thi_sinh.maCaThi = ca_thi.maCaThi AND thi_sinh.email = ?',
+            [email]
+        );
+
+        const [ThongTinCaThi, a] = await pool.execute(
+            'SELECT ca_thi.thoigian FROM thi_sinh, lich_thi, ca_thi WHERE lich_thi.batdau = 1 and ca_thi.maLichThi = lich_thi.maLichThi and thi_sinh.maCaThi = ca_thi.maCaThi AND thi_sinh.email = ? ',
+            [email]
+        );
+
+        if (thiSinhResults.length === 0) {
+            return res.status(200).json({
+                thiSinhResults: thiSinhResults
+            })
+        } else {
+            return res.status(200).json({
+                ThongTinCaThi: ThongTinCaThi
+            })
+        }
+    } catch (error) {
+        console.error('Lỗi khi truy vấn cơ sở dữ liệu: ', error);
+        return res.status(500).json({ error: 'Lỗi khi truy vấn cơ sở dữ liệu' });
+    }
+};
 
 
 module.exports = {
@@ -2086,7 +2132,7 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
     deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS, themThiSinhDKThi, updateTrangThaiLichThi,
-    layCaThiDK,
+    layCaThiDK, kiemtraDK,
 
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,

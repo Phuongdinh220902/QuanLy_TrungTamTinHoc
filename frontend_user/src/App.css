@@ -1159,13 +1159,9 @@ h2,
 /* CSS cho nội dung của modal */
 .modal-content {
   background-color: #fefefe;
-  /* Màu nền cho nội dung modal */
-  margin: 15% auto;
-  /* Căn giữa nội dung modal trên trang */
-  padding: 20px;
+  margin: 20% auto;
   border: 1px solid #888;
   width: 80%;
-  /* Chiều rộng của nội dung modal */
 }
 
 /* CSS cho nút đóng */

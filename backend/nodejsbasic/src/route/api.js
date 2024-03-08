@@ -88,8 +88,8 @@ const initAPIRoute = (app) => {
     router.get('/layFile/:maTB', APIController.layFile)
     router.get('/layNguoiDung/:maLopHoc', APIController.layNguoiDung)
     router.get('/layTrangCaNhanGV/:maGV', APIController.layTrangCaNhanGV)
-
-
+    router.post("/kiemtraDK", APIController.kiemtraDK)
+    router.post("/themThiSinhDKThi", APIController.themThiSinhDKThi);
 
     function generateToken(email, role) {
         const secretKey = "yourSecretKey"; // Replace with your actual secret key

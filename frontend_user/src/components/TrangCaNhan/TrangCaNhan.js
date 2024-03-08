@@ -8,10 +8,16 @@ import { Link } from "react-router-dom";
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+
 const ProfilePage = () => {
     const [userProfile, setUserProfile] = useState(null);
     const maHV = localStorage.getItem('maHV');
     const [registeredCourses, setRegisteredCourses] = useState([]);
+    const { maCaThi } = useParams();
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -52,15 +58,35 @@ const ProfilePage = () => {
         }
     };
     const [ngaythi, setNgayThi] = useState('');
-
+    const [ngayhethan, setNgayHetHan] = useState('');
     // Function to fetch exam data from the API
     const fetchCaThiData = async () => {
         try {
             const response = await axios.get(`http://localhost:2209/api/v1/layCaThiDK`);
             setCaThiData(response.data.DSCT);
             setNgayThi(response.data.DSCT[0].ngaythi)
+            setNgayHetHan(response.data.DSCT[0].ngayhethan)
         } catch (error) {
             console.error('Error fetching exam data:', error);
+        }
+    };
+
+    const handleDangKy = async (maCaThi) => {
+        try {
+            console.log(maHV)
+            const response = await axios.post('http://localhost:2209/api/v1/kiemtraDK', { maHV });
+
+            // Kiểm tra kết quả trả về từ API
+            if (response.data && response.data.thiSinhResults && response.data.thiSinhResults !== '0') {
+                navigate(`/dangkythi/${maCaThi}`);
+            } else {
+                const caThiThoigian = response.data.ThongTinCaThi[0].thoigian;
+                alert(`Bạn đã đăng ký ${caThiThoigian}`);
+            }
+        } catch (error) {
+            // Xử lý lỗi nếu có
+            console.error('Lỗi khi gọi API kiểm tra đăng ký:', error);
+            alert('Đã xảy ra lỗi khi kiểm tra đăng ký');
         }
     };
 
@@ -187,21 +213,25 @@ const ProfilePage = () => {
                 </div>
             </section>
 
-
             <Modal show={showModal} onHide={toggleModal}>
-                <Modal.Header closeButton>
+                <Modal.Header closeButton style={{ backgroundColor: '#0082c8', color: 'white' }}>
                     <Modal.Title>Danh sách ca thi</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{ fontSize: '16px' }}>
                     {/* Display exam data here */}
-                    <p>Ngày thi:
+                    <p style={{ marginBottom: '15px', fontSize: '18px', marginLeft: '10px' }}>Ngày thi:
                         <span style={{ backgroundColor: 'yellow', padding: '5px', borderRadius: '5px', color: 'red' }}>{ngaythi}
-                        </span></p>
+                        </span>
+                    </p>
+                    <p style={{ marginBottom: '15px', fontSize: '18px', marginLeft: '10px' }}>Ngày hết hạn:
+                        <span style={{ backgroundColor: 'yellow', padding: '5px', borderRadius: '5px', color: 'red' }}>{ngayhethan}
+                        </span>
+                    </p>
                     {caThiData.map((caThi, index) => (
-                        <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '10px' }}>
+                        <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '10px', borderTop: '1px solid #ccc' }}>
                             <p style={{ marginRight: '10px' }}>Thời gian: {caThi.thoigian}</p>
                             <div style={{ flex: '1', display: 'flex', justifyContent: 'center' }}>
-                                <button className="btn btn-primary">Đăng ký</button>
+                                <button className="btn btn-primary" onClick={() => handleDangKy(caThi.maCaThi)}>Đăng ký</button>
                             </div>
                         </div>
                     ))}
