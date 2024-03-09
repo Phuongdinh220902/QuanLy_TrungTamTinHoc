@@ -461,12 +461,13 @@ textarea {
 }
 
 .footer {
-  width: 100%;
   background-color: #0082c8;
+  width: 100%;
   padding: 12px;
   color: #fff;
   position: relative;
 }
+
 
 .footer #nhom3cs {
   white-space: nowrap;

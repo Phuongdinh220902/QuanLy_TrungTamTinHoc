@@ -173,6 +173,13 @@ const LichThi = (props) => {
                                 Thêm
                             </button>
 
+                            <button className="formatButton">
+                                <Link to={`/thongtinlichthitstudo`} style={{ textDecoration: 'none', color: 'white' }}>
+                                    Thông tin thí sinh tự do
+                                </Link>
+
+                            </button>
+
 
                         </div>
                     </div>

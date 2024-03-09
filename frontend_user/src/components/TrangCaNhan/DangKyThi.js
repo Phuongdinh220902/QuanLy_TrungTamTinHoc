@@ -32,9 +32,9 @@ const DangKyThi = () => {
         ngaysinh: '',
         gioitinh: '',
         noisinh: '',
-        dantoc: '', // Thêm trường dân tộc
+        dantoc: '',
         cccd: '',
-        maCaThi: maCaThi    // Thêm trường căn cước công dân
+        maCaThi: maCaThi
     });
 
 
@@ -48,10 +48,16 @@ const DangKyThi = () => {
     const handleThem = async () => {
         try {
             const isValidPhone = validatePhoneNumber(userProfile.sdt);
+            const isValidCCCD = validCCCD(formData.cccd);
 
             const words = userProfile.tenHV.trim().split(/\s+/);
             if (words.length < 2) {
                 toast.error('Tên phải có ít nhất 2 cụm từ.');
+                return;
+            }
+
+            if (!isValidCCCD) {
+                toast.error('Mã số căn cước không hợp lệ');
                 return;
             }
 
@@ -95,7 +101,7 @@ const DangKyThi = () => {
             }
 
             console.log(userProfile)
-            const response = await axios.post('http://localhost:2209/api/v1/themThiSinhDKThi', requestData);
+            const response = await axios.post('http://localhost:2209/api/v1/themHocVienDKThi', requestData);
             if (response.status === 200) {
                 // Phản hồi thành công, hiển thị thông báo thành công
                 toast.success("Thêm thông tin người dùng thành công");
@@ -142,6 +148,10 @@ const DangKyThi = () => {
 
     const validatePhoneNumber = (sdt) => {
         return String(sdt).match(/^(09|08|02|03|07|05)[0-9]{8}$/);
+    };
+
+    const validCCCD = (cccd) => {
+        return String(cccd).match(/^(0)[0-9]{11}$/);
     };
 
     const normalizetenHV = (tenHV) => {

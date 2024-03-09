@@ -187,17 +187,18 @@
 }
 
 .tieu-de-bai-viet-chi-tiet {
-	font-size: 24px;
+	font-size: 32px;
 	padding: 0px 0px 20px 0px;
 	color: #FD6504;
-	line-height: 24px;
-	text-align: center
+	line-height: 1.2;
+	text-align: center;
+	font-weight: bold;
 }
 
 .noi-dung-bai-viet-chi-tiet {
-	font-size: 14px;
+	font-size: 16px;
 	color: #151414;
-	line-height: 22px;
+	line-height: 1.65;
 	text-align: justify;
 }
 

@@ -4427,8 +4427,8 @@ input[type="button"].btn-block {
     width: 100%;
 }
 
-/* .fade {
-    opacity: 0;
+.fade {
+    /* opacity: 0; */
     -webkit-transition: opacity .15s linear;
     -o-transition: opacity .15s linear;
     transition: opacity .15s linear;
@@ -4436,7 +4436,7 @@ input[type="button"].btn-block {
 
 .fade.in {
     opacity: 1;
-} */
+}
 
 .collapse {
     display: none;
@@ -7338,9 +7338,9 @@ button.close {
     overflow: hidden;
     -webkit-overflow-scrolling: touch;
     outline: 0;
-}
+} */
 
-.modal.fade .modal-dialog {
+/* .modal.fade .modal-dialog {
     -webkit-transition: -webkit-transform .3s ease-out;
     -o-transition: -o-transform .3s ease-out;
     transition: transform .3s ease-out;
@@ -7348,9 +7348,9 @@ button.close {
     -ms-transform: translate(0, -25%);
     -o-transform: translate(0, -25%);
     transform: translate(0, -25%);
-}
+} */
 
-.modal.in .modal-dialog {
+/* .modal.in .modal-dialog {
     -webkit-transform: translate(0, 0);
     -ms-transform: translate(0, 0);
     -o-transform: translate(0, 0);
@@ -7366,9 +7366,9 @@ button.close {
     position: relative;
     width: auto;
     margin: 10px;
-}
+} */
 
-.modal-content {
+/* .modal-content {
     position: relative;
     background-color: #fff;
     -webkit-background-clip: padding-box;
@@ -7419,9 +7419,9 @@ button.close {
 .modal-body {
     position: relative;
     padding: 15px;
-}
+} */
 
-.modal-footer {
+/* .modal-footer {
     padding: 15px;
     text-align: right;
     border-top: 1px solid #e5e5e5;
@@ -7438,17 +7438,17 @@ button.close {
 
 .modal-footer .btn-block+.btn-block {
     margin-left: 0;
-}
+} */
 
-.modal-scrollbar-measure {
+/* .modal-scrollbar-measure {
     position: absolute;
     top: -9999px;
     width: 50px;
     height: 50px;
     overflow: scroll;
-}
+} */
 
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
     .modal-dialog {
         width: 600px;
         margin: 30px auto;
@@ -7462,9 +7462,9 @@ button.close {
     .modal-sm {
         width: 300px;
     }
-}
+} */
 
-@media (min-width: 992px) {
+/* @media (min-width: 992px) {
     .modal-lg {
         width: 900px;
     }
@@ -8041,11 +8041,11 @@ button.close {
 .pager:after,
 .panel-body:before,
 .panel-body:after,
-/* .modal-footer:before, */
-/* .modal-footer:after {
+.modal-footer:before,
+.modal-footer:after {
     display: table;
     content: " ";
-} */
+}
 
 .clearfix:after,
 .dl-horizontal dd:after,
@@ -8061,9 +8061,9 @@ button.close {
 .navbar-collapse:after,
 .pager:after,
 .panel-body:after,
-/* .modal-footer:after {
+.modal-footer:after {
     clear: both;
-} */
+}
 
 .center-block {
     display: block;

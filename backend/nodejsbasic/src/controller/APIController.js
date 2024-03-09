@@ -1141,7 +1141,7 @@ let SaveCheckboxStatesHPTS = async (req, res) => {
     }
 };
 
-let themThiSinhDKThi = async (req, res) => {
+let themHocVienDKThi = async (req, res) => {
     console.log("ok")
     let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd, maCaThi } = req.body;
     try {
@@ -1149,8 +1149,22 @@ let themThiSinhDKThi = async (req, res) => {
 
         // Nếu không có dữ liệu trùng lặp, tiến hành thêm dữ liệu mới
         if (existingData.length === 0) {
-            await pool.execute("INSERT INTO thi_sinh(hoten, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd, maCaThi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            const [DSTS] = await pool.execute("INSERT INTO thi_sinh(hoten, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd, maCaThi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd, maCaThi]
+            );
+
+            const maThiSinh = DSTS.insertId;
+            console.log(maThiSinh, 'mathisinh')
+
+            const [DSDK] = await pool.execute("INSERT INTO dsdkthi(maThiSinh, maCaThi, trang_thai) VALUES (?, ?, 1)",
+                [maThiSinh, maCaThi]
+            );
+
+            const maDSDK = DSDK.insertId;
+            console.log(maDSDK, 'maDSDK')
+
+            await pool.execute("INSERT INTO hocphi_thisinh(maDSDK, trang_thai) VALUES (?, 1)",
+                [maDSDK]
             );
 
             return res.status(200).json({
@@ -1173,6 +1187,50 @@ let themThiSinhDKThi = async (req, res) => {
     } catch (error) {
         console.log("Lỗi khi thêm học viên: ", error);
         return res.status(500).json({ error: "Lỗi khi thêm học viên" });
+    }
+};
+
+let layThongTinLTTSTD = async (req, res) => {
+    try {
+        const [ND, a] = await pool.execute("SELECT noidung FROM thongtinlichthitstudo");
+        return res.status(200).json({
+            ND: ND
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let updateTTLTTSTD = async (req, res) => {
+    let noidung = req.body.noidung;
+    console.log("Nội dung:", noidung);
+    try {
+        await pool.execute(
+            "update thongtinlichthitstudo set thongtinlichthitstudo.noidung = ? ", [noidung]);
+
+        return res.status(200).json({
+            message: "Update thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+    }
+}
+
+let laydsCaThiND = async (req, res) => {
+    try {
+        const [CT, fields] = await pool.execute("SELECT thoigian, ngayhethan, lich_thi.ngaythi, lich_thi.maLichThi, ca_thi.maCaThi FROM ca_thi, lich_thi where lich_thi.batdau = 1 and ca_thi.trang_thai = 1 and lich_thi.maLichThi = ca_thi.maLichThi");
+        return res.status(200).json({
+            CT: CT,
+        })
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
     }
 };
 
@@ -2131,11 +2189,11 @@ module.exports = {
     layHinhAnhGioiThieu, deleteHAQC, layHinhAnhTrangChu, layGiangVien,
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
-    deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS, themThiSinhDKThi, updateTrangThaiLichThi,
+    deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS, themHocVienDKThi, updateTrangThaiLichThi,
     layCaThiDK, kiemtraDK,
 
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
     layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,
-    layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV, layFile
+    layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV, layFile, layThongTinLTTSTD, updateTTLTTSTD, laydsCaThiND
 }
