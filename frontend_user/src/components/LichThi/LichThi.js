@@ -54,32 +54,33 @@ const LichThi = () => {
                     </div>
                     <div style={{ clear: 'both' }}></div>
                 </div>
-
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th className="col-center">STT</th>
-                            <th className="col-center">Ca thi</th>
-                            <th className="col-center"> </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {caThi && caThi.map((lop, index) => (
-                            <tr key={lop.macaThi}>
-                                <td className="col-center">{index + 1}</td>
-                                <td>{lop.thoigian}</td>
-                                <td>
-                                    <button className="button-dk"> Đăng ký</button>
-                                </td>
+                <div className="center-table" style={{ marginLeft: '200px' }}>
+                    <table className="table" style={{ width: '80%' }}>
+                        <thead>
+                            <tr>
+                                <th className="col-center">STT</th>
+                                <th className="col-center">Ca thi</th>
+                                <th className="col-center"> </th>
                             </tr>
-                        ))}
+                        </thead>
+                        <tbody>
+                            {caThi && caThi.map((lop, index) => (
+                                <tr key={lop.macaThi}>
+                                    <td className="col-center">{index + 1}</td>
+                                    <td>{lop.thoigian}</td>
+                                    <td>
+                                        <button className="button-dk"> Đăng ký</button>
+                                    </td>
+                                </tr>
+                            ))}
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
 
-        </div>
+        </div >
     );
 };
 

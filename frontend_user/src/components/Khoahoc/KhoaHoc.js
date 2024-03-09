@@ -8,44 +8,12 @@ import {
     faChevronLeft,
     faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
-
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios";
 import { Link } from "react-router-dom";
-// function GioiThieuMonHoc() {
-//     const [gioiThieu, setGioiThieu] = useState("");
-//     const { maKH } = useParams();
-//     useEffect(() => {
-//         const fetchData = async () => {
-//             try {
-//                 const response = await axios.get(`/api/v1/chitietkhoahoc/${maKH}`);
-//                 setGioiThieu(response.data.TCKH); // Lưu trữ dữ liệu từ API vào state
-//             } catch (error) {
-//                 console.error("Error fetching data:", error);
-//             }
-//         };
-//         fetchData();
-//     }, []); // Gọi API khi component được render (mảng dependencies rỗng)
-
-//     return (
-//         <div className="container nganh-khoang-cach" id="GioiThieuMonHoc">
-//             <div className="col-md-9 khoang-cach-5">
-//                 <div className="col-md-4 khoang-cach-5 mon-hoc-image" style={{ textAlign: "center" }}>
-//                     <img src="/data/images/mon-hoc/do-hoa/Chuyen-vien-Do-hoa-web-273x164.jpg" />
-//                 </div>
-//                 <div className="col-md-8 khoang-cach-5">
-//                     <h1 className="nganh-tieu-de">
-//                         <img src="/data/images/he-thong/new-ribbon.png" alt="Môn học mới" />
-//                         <div>{gioiThieu}</div> {/* Hiển thị dữ liệu từ state */}
-//                     </h1>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
-
+import { useNavigate } from 'react-router-dom';
 import { Carousel } from 'react-bootstrap';
 
 function MyCarousel() {
@@ -95,6 +63,12 @@ const KhoaHoc = ({ match }) => {
     const [tieude, setTieuDe] = useState("");
     const [noidung, setNoiDung] = useState("");
     const [contentData, setContentData] = useState([]);
+
+    const navigate = useNavigate();
+    const loggedIn = localStorage.getItem('user') !== null;
+    const [showModal, setShowModal] = useState(false);
+    const [maLopHoc, setMaLopHoc] = useState(null);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -136,6 +110,75 @@ const KhoaHoc = ({ match }) => {
     if (!khoaHoc) {
         return <div>Loading...</div>;
     }
+
+
+    const handleDangKy = async (maLopHoc) => {
+        if (loggedIn) {
+            setMaLopHoc(maLopHoc)
+            setShowModal(true);
+        } else {
+            alert('Bạn cần đăng nhập để thực hiện chức năng này.');
+            navigate('/dangnhap');
+        }
+    };
+
+    const handleThem = async () => {
+        const maHV = localStorage.getItem('maHV');
+        console.log(maLopHoc, 'malophoc')
+        console.log(maHV, 'mahocvien')
+        try {
+            const response = await axios.post("http://localhost:2209/api/v1/DangKyLopHoc", {
+                maLopHoc,
+                maHV
+            });
+
+            if (response.status === 200) {
+                toast.success('Đăng ký lớp học thành công')
+            }
+        } catch (error) {
+            // Nếu có lỗi khi gửi yêu cầu đến server
+            if (error.response) {
+                // Nếu server trả về mã trạng thái 400
+                if (error.response.status === 400) {
+                    // Lấy thông báo lỗi từ phản hồi
+                    const errorMessage = error.response.data;
+                    // Hiển thị thông báo lỗi
+                    toast.error(errorMessage);
+                } else {
+                    // Xử lý các trường hợp lỗi khác từ server
+                    console.error("Lỗi khi đăng ký lớp học:", error);
+                    toast.error("Lỗi khi đăng ký lớp học");
+                }
+            } else {
+                // Xử lý các lỗi khác không phải từ server
+                console.error("Lỗi khi đăng ký lớp học:", error);
+                toast.error("Lỗi khi đăng ký lớp học");
+            }
+        }
+
+        // Sau khi đăng ký xong, bạn có thể thực hiện các hành động khác ở đây, ví dụ: đóng modal
+        setShowModal(false);
+    };
+
+    // const handleDangKy = async (maLopHoc) => {
+    //     if (loggedIn) {
+
+    //         const response = await axios.post("http://localhost:2209/api/v1/DangKyLopHoc", {
+    //             maLopHoc,
+    //             maHV,
+    //         });
+
+    //         if (response.status === 200) {
+
+    //         }
+
+    //         console.log('Đã đăng nhập, tiến hành đăng ký...');
+    //     } else {
+    //         alert('Bạn cần đăng nhập để thực hiện chức năng này.');
+    //         navigate('/dangnhap');
+
+    //     }
+    // };
 
     return (
         <>
@@ -211,14 +254,44 @@ const KhoaHoc = ({ match }) => {
                                 <td>{lop.ngay_batdau}</td>
                                 <td>{lop.diadiem}</td>
                                 <td>
-                                    <button className="button-dk"> Đăng ký</button>
+                                    <button className="button-dk" onClick={() => handleDangKy(lop.maLopHoc)}> Đăng ký</button>
                                 </td>
                             </tr>
                         ))}
 
                     </tbody>
                 </table>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={4000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
             </div>
+            <Modal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                className="custom-modal"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Xác nhận đăng ký</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Khi đăng ký thành công, bạn cần thanh toán học phí bằng cách đóng trực tiếp ở trung tâm trong khoảng thời gian 3 ngày từ khi bạn đăng ký thành công</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Hủy
+                    </Button>
+                    <Button variant="primary" onClick={handleThem}>
+                        Đăng ký
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

@@ -2182,6 +2182,41 @@ let kiemtraDK = async (req, res) => {
     }
 };
 
+let DangKyLopHoc = async (req, res) => {
+    let { maLopHoc, maHV } = req.body;
+    console.log(req.body);
+    const [existingData] = await pool.execute("SELECT maHV, maLopHoc FROM dshv WHERE dshv.maHV = ? and dshv.maLopHoc = ? ", [maHV, maLopHoc]);
+    try {
+        // Nếu không có dữ liệu trùng lặp, tiến hành thêm dữ liệu mới
+        if (existingData.length === 0) {
+            const [DSHV] = await pool.execute("insert into dshv( maLopHoc, maHV, trang_thai) values (?, ?, 1)",
+                [maLopHoc, maHV]
+            );
+
+            const maDSHV = DSHV.insertId;
+            console.log(maDSHV, 'maDSHV')
+
+            const [DSHP] = await pool.execute("INSERT INTO hoc_phi(maDSHV, trang_thai) VALUES ( ?, 0)",
+                [maDSHV]
+            );
+
+            res.status(200).json({
+                'DT': {
+                    'maLopHoc': maLopHoc,
+                },
+                'EC': 0,
+                'EM': 'Tạo thành công'
+            });
+        }
+        else {
+            return res.status(400).send("Bạn đã đăng ký lớp học này");
+        }
+    } catch (error) {
+        console.log("Lỗi khi thêm học viên: ", error);
+        return res.status(500).json({ error: "Lỗi khi thêm học viên" });
+    }
+};
+
 
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
@@ -2195,5 +2230,6 @@ module.exports = {
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
     layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,
-    layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV, layFile, layThongTinLTTSTD, updateTTLTTSTD, laydsCaThiND
+    layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV, layFile, layThongTinLTTSTD, updateTTLTTSTD, laydsCaThiND,
+    DangKyLopHoc
 }
