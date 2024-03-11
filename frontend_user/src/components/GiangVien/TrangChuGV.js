@@ -99,7 +99,7 @@ const TCGiangVien = () => {
                         <Link to='/chinhsua' style={{ color: 'black' }}>
                             <MenuItem >
                                 <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
-                                Cài đặt
+                                Chỉnh sửa
                             </MenuItem>
                         </Link>
 

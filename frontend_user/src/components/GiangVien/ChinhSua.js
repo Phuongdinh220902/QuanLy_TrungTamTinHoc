@@ -82,7 +82,11 @@ const ChinhSua = () => {
                     setNgaysinh(userProfileData.ngaysinh);
                     setGioiThieu(userProfileData.gioithieu);
                     setMoTa(userProfileData.mota);
-                    setGioitinh(userProfileData.gioitinh == 1 ? 'Nam' : 'Nữ');
+                    if (userProfileData.gioitinh === 0) {
+                        setGioitinh("Nữ");
+                    } else if (userProfileData.gioitinh === 1) {
+                        setGioitinh("Nam");
+                    }
                     setKinhNghiem(userProfileData.kinhnghiem);
                 }
                 setUserProfile(response.data.TCN[0]);
@@ -149,10 +153,12 @@ const ChinhSua = () => {
         }
 
         // Kiểm tra giới tính
-        if (gioitinh !== '0' && gioitinh !== '1') {
+        // Kiểm tra giới tính
+        if (gioitinh !== "Nữ" && gioitinh !== "Nam") {
             toast.error('Giới tính không hợp lệ');
             return;
         }
+
         else {
             const convertedNgaysinh = convertDateFormat(ngaysinh);
             const normalizedtenGV = normalizetenGV(newTenGV);
@@ -410,11 +416,10 @@ const ChinhSua = () => {
                                             <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                                 <div className="form-group">
                                                     <label htmlFor="gender">Giới tính</label>
-                                                    <select className="form-control" id="gender" value={gioitinh}
-                                                        onChange={(event) => setGioitinh(event.target.value)}>
+                                                    <select className="form-control" id="gender" value={gioitinh} onChange={(event) => setGioitinh(event.target.value)}>
                                                         <option value="">Chọn giới tính</option>
-                                                        <option value="0">Nữ</option>
-                                                        <option value="1">Nam</option>
+                                                        <option value="Nữ">Nữ</option>
+                                                        <option value="Nam">Nam</option>
                                                     </select>
                                                 </div>
                                             </div>

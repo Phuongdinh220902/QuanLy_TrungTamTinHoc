@@ -2066,11 +2066,13 @@ let layThongBaoLopHoc = async (req, res) => {
 let layThongBaoLopHocChiTiet = async (req, res) => {
     const maTB = req.params.maTB;
     try {
-        const [TBCT, a] = await pool.execute("SELECT thongbao.maTB, tieude_thongbao, noidung_thongbao, ngaydang, tenGV, giang_vien.maGV, lop_hoc.maLopHoc FROM thongbao, lop_hoc, giang_vien, thongbao_file where thongbao.maTB = ? and thongbao.maLopHoc = lop_hoc.maLopHoc and thongbao.maGV = giang_vien.maGV and thongbao.maTB = thongbao_file.maTB", [maTB]);
+        const [TBCT, a] = await pool.execute("SELECT thongbao.maTB, tieude_thongbao, noidung_thongbao, ngaydang, tenGV, giang_vien.maGV, lop_hoc.maLopHoc FROM thongbao, lop_hoc, giang_vien where thongbao.maTB = ? and thongbao.maLopHoc = lop_hoc.maLopHoc and thongbao.maGV = giang_vien.maGV", [maTB]);
+        console.log(TBCT, 'tbct')
         return res.status(200).json({
             TBCT: TBCT
         })
     }
+
     catch (error) {
         console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
         return res.status(500).json({

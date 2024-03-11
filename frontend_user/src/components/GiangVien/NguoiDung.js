@@ -77,23 +77,29 @@ const NguoiDung = () => {
                 setThongBao(responseTB.data.TB);
 
                 const responseND = await axios.get(`http://localhost:2209/api/v1/layNguoiDung/${maLopHoc}`);
-                // setNguoiDung(responseND.data.MN);
-
                 const { MN } = responseND.data;
 
-                // Tách danh sách thành giáo viên và học viên
-                const gv = [];
-                const hv = [];
-                MN.forEach((nguoi) => {
-                    if (nguoi.maGV) {
-                        gv.push(nguoi);
-                    } if (nguoi.maHV) {
-                        hv.push(nguoi);
+                const gvSet = new Set();
+                const hvSet = new Set();
+
+                const gvFiltered = MN.filter(nguoi => {
+                    if (nguoi.maGV && !gvSet.has(nguoi.maGV)) {
+                        gvSet.add(nguoi.maGV);
+                        return true;
                     }
+                    return false;
                 });
 
-                setGiangVien(gv);
-                setHocVien(hv);
+                const hvFiltered = MN.filter(nguoi => {
+                    if (nguoi.maHV && !hvSet.has(nguoi.maHV)) {
+                        hvSet.add(nguoi.maHV);
+                        return true;
+                    }
+                    return false;
+                });
+
+                setGiangVien(gvFiltered);
+                setHocVien(hvFiltered);
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -173,7 +179,7 @@ const NguoiDung = () => {
                         <MenuItem >
                             <Link to={`/chinhsua`} style={{ color: 'black' }}>
                                 <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px', color: 'black' }} />
-                                Cài đặt
+                                Chỉnh sửa
                             </Link>
                         </MenuItem>
                         <Link to="/" onClick={handleLogout} style={{ color: 'black' }}>
@@ -203,8 +209,6 @@ const NguoiDung = () => {
                     {/* Content */}
 
                     <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-
-
                         <div className='centered-div-nd'>
                             <div style={{ marginBottom: '70px' }}>
                                 <h2 className='gv'>Giáo viên</h2>
@@ -216,7 +220,7 @@ const NguoiDung = () => {
                                 ))}
                             </div>
 
-                            <div >
+                            <div>
                                 <h2 className='gv'>Bạn học</h2>
                                 {hocVien.map((hv, index) => (
                                     <div className='user-info-container' key={index} style={{ marginLeft: '20px', marginBottom: '25px' }}>
@@ -225,8 +229,6 @@ const NguoiDung = () => {
                                     </div>
                                 ))}
                             </div>
-
-
                         </div>
                     </div>
                 </div>

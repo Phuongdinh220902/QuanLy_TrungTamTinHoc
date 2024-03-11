@@ -52,6 +52,7 @@ const ThongBaoLopHocChiTiet = () => {
 
     const { maLopHoc } = useParams();
     const { maTB } = useParams();
+    console.log(maTB, 'matb')
     const [lopHoc, setLopHoc] = useState([]);
 
     useEffect(() => {
@@ -59,11 +60,9 @@ const ThongBaoLopHocChiTiet = () => {
             try {
                 const response = await axios.get(`http://localhost:2209/api/v1/layLopHocGiaoVien/${maLopHoc}`);
                 setLopHoc(response.data.LopHoc);
-                console.log(maTB)
 
                 const responseTB = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHoc/${maLopHoc}`);
-                console.log(responseTB)
-                setThongBao(responseTB.data.TB);
+                // console.log(responseTB)
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -81,7 +80,6 @@ const ThongBaoLopHocChiTiet = () => {
 
                 const responseFile = await axios.get(`http://localhost:2209/api/v1/layFile/${maTB}`);
                 setFile(responseFile.data.File);
-
 
             } catch (error) {
                 console.error('Error fetching thong bao:', error);
@@ -155,10 +153,12 @@ const ThongBaoLopHocChiTiet = () => {
                 {/* Sidebar */}
                 <Sidebar collapsed={collapsed}>
                     <Menu>
-                        <MenuItem >
-                            <FontAwesomeIcon icon={faHouseChimney} style={{ marginRight: '10px' }} />
-                            Màn hình chính
-                        </MenuItem>
+                        <Link to={'/giangvien'} style={{ color: 'black' }}>
+                            <MenuItem >
+                                <FontAwesomeIcon icon={faHouseChimney} style={{ marginRight: '10px' }} />
+                                Màn hình chính
+                            </MenuItem>
+                        </Link>
                         <SubMenu defaultOpen label={<span><FontAwesomeIcon icon={faGraduationCap} style={{ marginRight: '10px' }} />Lớp học</span>}>
                             {data.map((item, index) => (
                                 <MenuItem key={index}>
@@ -170,8 +170,10 @@ const ThongBaoLopHocChiTiet = () => {
                         </SubMenu>
 
                         <MenuItem >
-                            <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px' }} />
-                            Cài đặt
+                            <Link to={`/chinhsua`} style={{ color: 'black' }}>
+                                <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px', color: 'black' }} />
+                                Chỉnh sửa
+                            </Link>
                         </MenuItem>
                         <Link to="/" onClick={handleLogout} style={{ color: 'black' }}>
                             <MenuItem >

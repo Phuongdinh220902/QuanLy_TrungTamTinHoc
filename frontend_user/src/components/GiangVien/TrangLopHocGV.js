@@ -154,7 +154,7 @@ const TrangLopHocGV = () => {
                         <MenuItem >
                             <Link to={`/chinhsua`} style={{ color: 'black' }}>
                                 <FontAwesomeIcon icon={faGears} style={{ marginRight: '10px', color: 'black' }} />
-                                Cài đặt
+                                Chỉnh sửa
                             </Link>
                         </MenuItem>
                         <Link to="/" onClick={handleLogout} style={{ color: 'black' }}>

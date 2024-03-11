@@ -32,7 +32,7 @@ const ThongBaoLopHocChiTietHV = () => {
             try {
 
                 const responseTB = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHoc/${maLopHoc}`);
-                console.log(responseTB)
+                // console.log(responseTB)
                 setThongBao(responseTB.data.TB);
 
             } catch (error) {
@@ -47,7 +47,8 @@ const ThongBaoLopHocChiTietHV = () => {
         const fetchData = async () => {
             try {
                 const responseTBCT = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHocChiTiet/${maTB}`);
-                setThongBaoCT(responseTBCT.data.TBCT[0]); // Lấy thông báo đầu tiên từ mảng kết quả
+                setThongBaoCT(responseTBCT.data.TBCT[0]);
+                console.log(responseTBCT.data.TBCT[0], 'tb')
             } catch (error) {
                 console.error('Error fetching thong bao:', error);
             }

@@ -93,10 +93,11 @@ const ChinhSuaHoSo = () => {
             }
 
             // Kiểm tra giới tính
-            if (userProfile.gioitinh !== '0' && userProfile.gioitinh !== '1') {
+            if (userProfile.gioitinh !== 0 && userProfile.gioitinh !== 1) {
                 toast.error('Giới tính không hợp lệ');
                 return;
             }
+
 
             const convertedNgaysinh = convertDateFormat(userProfile.ngaysinh);
             const normalizedtenHV = normalizetenHV(userProfile.tenHV);
