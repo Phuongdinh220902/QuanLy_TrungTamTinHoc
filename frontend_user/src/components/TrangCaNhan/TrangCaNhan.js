@@ -18,6 +18,7 @@ const ProfilePage = () => {
     const [registeredCourses, setRegisteredCourses] = useState([]);
     const { maCaThi } = useParams();
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {

@@ -34,6 +34,8 @@ import ThongBaoLopHocChiTietHV from './components/TrangCaNhan/ThongBaoLopHocHV';
 import FilePreview from './components/GiangVien/FilePreview';
 import LichThi from './components/LichThi/LichThi';
 import DangKyThi from './components/TrangCaNhan/DangKyThi';
+import ThongTinTSTuDoDangKyThi from './components/LichThi/ThongTinTSTuDo';
+import TraCuuChungChi from './components/TraCuuDiem/TraCuuChungChi';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -54,6 +56,7 @@ root.render(
           <Route path="thongtingiangvien/:maGV" element={<GiangVien />} />
           <Route path="tatcakhoahoc" element={<TatCaKhoaHoc />} />
           <Route path="tracuudiemthi" element={<TraCuuDiemThi />} />
+          <Route path="tracuuchungchi" element={<TraCuuChungChi />} />
           <Route path="trangcanhan" element={<TrangCaNhan />} />
           <Route path="chinhsuahoso" element={<ChinhSuaHoSo />} />
           <Route path="doimk" element={<DoiMK />} />
@@ -62,6 +65,9 @@ root.render(
           <Route path="/thongbao/:maTB" element={<ThongBaoLopHocChiTietHV />} />
           <Route path="thongbaolichthi" element={<LichThi />} />
           <Route path="dangkythi/:maCaThi" element={<DangKyThi />} />
+          <Route path="dangkythitudo/:maCaThi" element={<ThongTinTSTuDoDangKyThi />} />
+
+
         </Route>
         <Route path="giangvien" element={<TCGiangVien />} />
         <Route path="/lophocgv/:maLopHoc" element={<TrangLopHocGV />} />

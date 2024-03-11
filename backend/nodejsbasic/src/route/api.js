@@ -91,9 +91,12 @@ const initAPIRoute = (app) => {
     router.get('/layNguoiDung/:maLopHoc', APIController.layNguoiDung)
     router.get('/layTrangCaNhanGV/:maGV', APIController.layTrangCaNhanGV)
     router.post("/kiemtraDK", APIController.kiemtraDK)
-    router.post("/themHocVienDKThi", APIController.themHocVienDKThi);
+    router.post("/themHocVienDKThi", APIController.themHocVienDKThi)
     router.get('/laydsCaThiND', APIController.laydsCaThiND)
-    router.post("/DangKyLopHoc", APIController.DangKyLopHoc);
+    router.post("/DangKyLopHoc", APIController.DangKyLopHoc)
+    router.post('/TimDiem', APIController.TimDiem)
+    router.post('/TraCuuChungChi', APIController.TraCuuChungChi)
+
 
     function generateToken(email, role) {
         const secretKey = "yourSecretKey"; // Replace with your actual secret key

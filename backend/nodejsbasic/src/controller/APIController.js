@@ -1145,7 +1145,7 @@ let themHocVienDKThi = async (req, res) => {
     console.log("ok")
     let { tenHV, email, sdt, ngaysinh, gioitinh, noisinh, dantoc, cccd, maCaThi } = req.body;
     try {
-        const [existingData] = await pool.execute("SELECT email FROM thi_sinh, lich_thi, ca_thi WHERE lich_thi.batdau = 1 and ca_thi.maLichThi = lich_thi.maLichThi and thi_sinh.maCaThi = ca_thi.maCaThi AND email = ? AND sdt = ? AND cccd = ?", [email, sdt, cccd]);
+        const [existingData] = await pool.execute("SELECT email, cccd FROM thi_sinh, lich_thi, ca_thi WHERE lich_thi.batdau = 1 and ca_thi.maLichThi = lich_thi.maLichThi and thi_sinh.maCaThi = ca_thi.maCaThi AND email = ? AND cccd = ?", [email, cccd]);
 
         // Nếu không có dữ liệu trùng lặp, tiến hành thêm dữ liệu mới
         if (existingData.length === 0) {
@@ -1181,7 +1181,7 @@ let themHocVienDKThi = async (req, res) => {
             });
         }
         else {
-            return res.status(400).send("Bạn đã đăng ký thi");
+            return res.status(400).send("Đăng ký thi thất bại! Bạn chỉ có thể đăng ký 1 ca thi trong lần thi này");
         }
 
     } catch (error) {
@@ -2209,13 +2209,48 @@ let DangKyLopHoc = async (req, res) => {
             });
         }
         else {
-            return res.status(400).send("Bạn đã đăng ký lớp học này");
+            return res.status(400).send("Đăng ký không thành công! Bạn đã đăng ký lớp học này");
         }
     } catch (error) {
         console.log("Lỗi khi thêm học viên: ", error);
         return res.status(500).json({ error: "Lỗi khi thêm học viên" });
     }
 };
+
+let TimDiem = async (req, res) => {
+    let { cccd } = req.body;
+    try {
+
+        const [KQ, fields] = await pool.execute(
+            'SELECT diem_thi.tongdiem, diem_thi.diemLT, diem_thi.diemTH, ca_thi.thoigian, DATE_FORMAT(STR_TO_DATE(ngaythi, "%Y-%m-%d"), "%d-%m-%Y") AS ngaythi FROM lich_thi JOIN ca_thi ON lich_thi.maLichThi = ca_thi.maLichThi JOIN thi_sinh ON ca_thi.maCaThi = thi_sinh.maCaThi JOIN diem_thi ON thi_sinh.maThiSinh = diem_thi.maThiSinh WHERE thi_sinh.cccd = ? ORDER BY lich_thi.ngaythi DESC',
+            [cccd]
+        );
+        return res.status(200).json({
+            KQ: KQ
+        })
+    } catch (error) {
+        console.error('Lỗi khi truy vấn cơ sở dữ liệu: ', error);
+        return res.status(500).json({ error: 'Lỗi khi truy vấn cơ sở dữ liệu' });
+    }
+};
+
+let TraCuuChungChi = async (req, res) => {
+    let { giatri } = req.body;
+    try {
+
+        const [KQ, fields] = await pool.execute(
+            'SELECT diem_thi.diemLT, diem_thi.diemTH, DATE_FORMAT(STR_TO_DATE(ngaythi, "%Y-%m-%d"), "%d-%m-%Y") AS ngaythi, hoten, DATE_FORMAT(STR_TO_DATE(ngaysinh, "%Y-%m-%d"), "%d-%m-%Y") AS ngaysinh, DATE_FORMAT(STR_TO_DATE(ngaycap, "%Y-%m-%d"), "%d-%m-%Y") AS ngaycap FROM lich_thi JOIN ca_thi ON lich_thi.maLichThi = ca_thi.maLichThi JOIN thi_sinh ON ca_thi.maCaThi = thi_sinh.maCaThi JOIN diem_thi ON thi_sinh.maThiSinh = diem_thi.maThiSinh JOIN chung_chi ON chung_chi.maThiSinh = thi_sinh.maThiSinh WHERE chung_chi.so_vaoso = ? OR chung_chi.sohieu = ?',
+            [giatri, giatri]
+        );
+        return res.status(200).json({
+            KQ: KQ
+        })
+    } catch (error) {
+        console.error('Lỗi khi truy vấn cơ sở dữ liệu: ', error);
+        return res.status(500).json({ error: 'Lỗi khi truy vấn cơ sở dữ liệu' });
+    }
+};
+
 
 
 module.exports = {
@@ -2225,7 +2260,7 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
     deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS, themHocVienDKThi, updateTrangThaiLichThi,
-    layCaThiDK, kiemtraDK,
+    layCaThiDK, kiemtraDK, TimDiem, TraCuuChungChi,
 
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,

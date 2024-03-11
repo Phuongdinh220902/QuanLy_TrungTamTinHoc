@@ -2,11 +2,6 @@
 import axios from "axios"
 import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faMagnifyingGlass
-} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import TT from '../../images/THÔNG BÁO LỊCH THI UDCNTT.png';
 
@@ -33,6 +28,8 @@ const LichThi = () => {
 
         fetchData();
     }, []);
+
+
 
     return (
         <div className="container nganh-khoang-cach" style={{ "minHeight": "calc(100vh - 346px)", marginTop: '10px' }}>
@@ -65,11 +62,14 @@ const LichThi = () => {
                         </thead>
                         <tbody>
                             {caThi && caThi.map((lop, index) => (
-                                <tr key={lop.macaThi}>
+                                <tr key={lop.maCaThi}>
                                     <td className="col-center">{index + 1}</td>
                                     <td>{lop.thoigian}</td>
                                     <td>
-                                        <button className="button-dk"> Đăng ký</button>
+                                        <Link to={`/dangkythitudo/${lop.maCaThi}`}>
+                                            <button className="button-dk"> Đăng ký</button>
+                                        </Link>
+
                                     </td>
                                 </tr>
                             ))}

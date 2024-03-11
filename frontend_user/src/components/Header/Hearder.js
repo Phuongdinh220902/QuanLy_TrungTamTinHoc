@@ -183,7 +183,7 @@ const Header = () => {
                             {/* <NavLink to='/tintuc' className='nav-link text-white' style={{ marginLeft: '30px' }}>Tin tức</NavLink> */}
                             <NavLink to='/thanhtoan' className='nav-link text-white' style={{ marginLeft: '30px' }}>Hướng dẫn thanh toán</NavLink>
                             <NavLink to='/lienhe' className='nav-link text-white' style={{ marginLeft: '30px' }}>Liên hệ</NavLink>
-                            <NavLink to='/tracuuketqua' className='nav-link text-white' style={{ marginLeft: '30px' }}>Tra cứu kết quả thi</NavLink>
+                            <NavLink to='/tracuudiemthi' className='nav-link text-white' style={{ marginLeft: '30px' }}>Tra cứu kết quả thi</NavLink>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

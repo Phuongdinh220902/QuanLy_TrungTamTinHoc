@@ -36,17 +36,18 @@ const DichVu = () => {
                         </div>
                         <div className="col-sm-6 col-md-6 canh-le">
                             <div className="tien-ich-mo-ta">
-                                <a href="/tra-cuu-diem-thi" className="tra-cuu-cc" style={{ "cursor": "pointer" }}>
+                                <Link to='tracuuchungchi'>
                                     <img className="img-responsive hidden-xs"
                                         src={logoImage5} alt="" />
-                                </a>
+                                </Link>
                                 <h3>
                                     <img className="visible-xs"
                                         src={logoImage5}
-                                        alt="" /> <a href="/tra-cuu-diem-thi"
-                                            className="tra-cuu-cc"
-                                            style={{ "cursor": "pointer" }}
-                                        >Tra cứu chứng chỉ</a></h3>
+                                    />
+                                    <Link to='tracuuchungchi'>
+                                        Tra cứu chứng chỉ
+                                    </Link>
+                                </h3>
                                 <p>Hỗ trợ học viên tra cứu Chứng chỉ được<br />Trung Tâm cấp sau ngày thi 1,5 tháng.</p>
                             </div>
                             <div className="clearfix"></div>

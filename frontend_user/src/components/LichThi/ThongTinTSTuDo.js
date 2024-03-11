@@ -5,27 +5,12 @@ import { Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const DangKyThi = () => {
-    const [userProfile, setUserProfile] = useState(null);
-    const maHV = localStorage.getItem('maHV');
+const ThongTinTSTuDoDangKyThi = () => {
     const { maCaThi } = useParams();
     const [showModal, setShowModal] = useState(false);
-
-    useEffect(() => {
-        const fetchUserProfile = async () => {
-            try {
-                console.log(maHV)
-                // Gọi API để lấy thông tin cá nhân của người dùng với maHV từ params
-                const response = await axios.get(`http://localhost:2209/api/v1/layTrangCaNhanHV/${maHV}`);
-                setUserProfile(response.data.TCN[0]);
-                console.log(response.data.TCN[0])
-            } catch (error) {
-                console.error('Lỗi khi gọi API: ', error);
-            }
-        };
-        fetchUserProfile();
-    }, [maHV]);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         tenHV: '',
@@ -49,10 +34,10 @@ const DangKyThi = () => {
 
     const handleThem = async () => {
         try {
-            const isValidPhone = validatePhoneNumber(userProfile.sdt);
+            const isValidPhone = validatePhoneNumber(formData.sdt);
             const isValidCCCD = validCCCD(formData.cccd);
 
-            const words = userProfile.tenHV.trim().split(/\s+/);
+            const words = formData.tenHV.trim().split(/\s+/);
             if (words.length < 2) {
                 toast.error('Tên phải có ít nhất 2 cụm từ.');
                 setShowModal(false);
@@ -66,13 +51,13 @@ const DangKyThi = () => {
                 return;
             }
 
-            if (!/^[^\d!@#$%^&*()_+={}\[\]:;<>,?~\\/`"\|]*$/.test(userProfile.tenHV)) {
+            if (!/^[^\d!@#$%^&*()_+={}\[\]:;<>,?~\\/`"\|]*$/.test(formData.tenHV)) {
                 toast.error('Tên không được chứa các kí tự đặc biệt');
                 setShowModal(false);
                 return;
             }
 
-            const isValidEmail = validateEmail(userProfile.email);
+            const isValidEmail = validateEmail(formData.email);
             if (!isValidEmail) {
                 toast.error('Email không hợp lệ');
                 setShowModal(false);
@@ -85,47 +70,41 @@ const DangKyThi = () => {
             }
 
             // Kiểm tra giới tính
-            if (userProfile.gioitinh !== '0' && userProfile.gioitinh !== '1') {
+            if (formData.gioitinh !== '0' && formData.gioitinh !== '1') {
                 toast.error('Giới tính không hợp lệ');
                 setShowModal(false);
                 return;
             }
 
-            const convertedNgaysinh = convertDateFormat(userProfile.ngaysinh);
-            const normalizedtenHV = normalizetenHV(userProfile.tenHV);
+            const convertedNgaysinh = convertDateFormat(formData.ngaysinh);
+            const normalizedtenHV = normalizetenHV(formData.tenHV);
 
-            let requestData = { ...formData };
+            let requestData = {
+                ...formData,
+                tenHV: normalizedtenHV,
+                ngaysinh: convertedNgaysinh
 
-            // Kiểm tra nếu userProfile không rỗng, thêm các trường từ userProfile vào requestData
-            if (userProfile) {
-                requestData = {
-                    ...requestData,
-                    tenHV: normalizedtenHV,
-                    email: userProfile.email,
-                    sdt: userProfile.sdt,
-                    ngaysinh: convertedNgaysinh,
-                    noisinh: userProfile.noisinh,
-                    gioitinh: userProfile.gioitinh
-                };
-            }
+            };
 
-            console.log(userProfile)
+
+            console.log(formData)
             const response = await axios.post('http://localhost:2209/api/v1/themHocVienDKThi', requestData);
             if (response.status === 200) {
                 // Phản hồi thành công, hiển thị thông báo thành công
-                toast.success("Thêm thông tin người dùng thành công");
-                console.log("Thêm thông tin người dùng thành công!");
+                toast.success("Bạn đã đăng ký lớp học thành công");
                 setShowModal(false);
+                setTimeout(() => {
+                    navigate(`/thongbaolichthi`);
+                }, 3000);
+
             } else {
                 // Phản hồi có mã trạng thái 400, hiển thị thông báo lỗi từ phản hồi
                 toast.error(response.data);
             }
         } catch (error) {
-            // Nếu có lỗi khi gửi yêu cầu đến server
             if (error.response) {
                 // Nếu server trả về mã trạng thái 400
                 if (error.response.status === 400) {
-                    // Lấy thông báo lỗi từ phản hồi
                     const errorMessage = error.response.data;
                     // Hiển thị thông báo lỗi
                     toast.error(errorMessage);
@@ -231,18 +210,6 @@ const DangKyThi = () => {
     `;
 
 
-    const handleDelete = async () => {
-        try {
-            setShowModal(false);
-            toast.success("Xoá lịch thi thành công");
-
-            console.log("Xoá lịch thi thành công!");
-        } catch (error) {
-            toast.error("Lỗi khi xoá lịch thi")
-            console.error("Lỗi khi xóa lịch thi:", error);
-        }
-    };
-
     return (
         <>
             <style>{styles}</style>
@@ -257,38 +224,38 @@ const DangKyThi = () => {
                                     <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div className="form-group">
                                             <label htmlFor="fullName">Họ và Tên</label>
-                                            <input type="text" className="form-control" id="fullName" placeholder="Nhập name" value={userProfile ? userProfile.tenHV : ''} onChange={(e) => setUserProfile({ ...userProfile, tenHV: e.target.value })} />
+                                            <input type="text" className="form-control" id="fullName" placeholder="Nhập name" name="tenHV" value={formData.tenHV} onChange={handleChange} />
                                         </div>
                                     </div>
 
                                     <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div className="form-group">
                                             <label htmlFor="eMail">Email</label>
-                                            <input type="email" className="form-control" id="eMail" placeholder="Nhập email" value={userProfile ? userProfile.email : ''} onChange={(e) => setUserProfile({ ...userProfile, email: e.target.value })} />
+                                            <input type="email" className="form-control" id="eMail" placeholder="Nhập email" name="email" value={formData.email} onChange={handleChange} />
                                         </div>
                                     </div>
                                     <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div className="form-group">
                                             <label htmlFor="phone">Số điện thoại</label>
-                                            <input type="text" className="form-control" id="phone" placeholder="Nhập số điện thoại" value={userProfile ? userProfile.sdt : ''} onChange={(e) => setUserProfile({ ...userProfile, sdt: e.target.value })} />
+                                            <input type="text" className="form-control" id="phone" placeholder="Nhập số điện thoại" name="sdt" value={formData.sdt} onChange={handleChange} />
                                         </div>
                                     </div>
                                     <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div className="form-group">
                                             <label htmlFor="website">Ngày sinh</label>
-                                            <input type="text" className="form-control" id="website" placeholder="Nhập ngày sinh" value={userProfile ? userProfile.ngaysinh : ''} onChange={(e) => setUserProfile({ ...userProfile, ngaysinh: e.target.value })} />
+                                            <input type="text" className="form-control" id="website" name="ngaysinh" placeholder="Nhập ngày sinh" value={formData.ngaysinh} onChange={handleChange} />
                                         </div>
                                     </div>
                                     <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div className="form-group">
                                             <label htmlFor="Street">Nơi sinh</label>
-                                            <input type="text" className="form-control" id="Street" placeholder="Nhập nơi sinh" value={userProfile ? userProfile.noisinh : ''} onChange={(e) => setUserProfile({ ...userProfile, noisinh: e.target.value })} />
+                                            <input type="text" className="form-control" id="Street" name="noisinh" placeholder="Nhập nơi sinh" value={formData.noisinh} onChange={handleChange} />
                                         </div>
                                     </div>
                                     <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div className="form-group">
                                             <label htmlFor="gender">Giới tính</label>
-                                            <select className="form-control" id="gender" value={userProfile ? userProfile.gioitinh : ''} onChange={(e) => setUserProfile({ ...userProfile, gioitinh: e.target.value })}>
+                                            <select className="form-control" id="gender" name="gioitinh" value={formData.gioitinh} onChange={handleChange}>
                                                 <option value="">Chọn giới tính</option>
                                                 <option value="0">Nữ</option>
                                                 <option value="1">Nam</option>
@@ -313,7 +280,7 @@ const DangKyThi = () => {
                                 <div className="row gutters">
                                     <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                         <div className="text-right">
-                                            <Link to='/trangcanhan'>
+                                            <Link to='/thongbaolichthi'>
                                                 <button
                                                     type="button"
                                                     className="btn btn-secondary"
@@ -322,13 +289,6 @@ const DangKyThi = () => {
                                                     Huỷ
                                                 </button>
                                             </Link>
-                                            {/* <button
-                                                type="button"
-                                                className="btn btn-secondary"
-                                                onClick={() => setShowModal(true)}
-                                            >
-                                                Huỷ
-                                            </button> */}
 
                                             &nbsp;<button type="button" id="submit" name="submit" className="btn btn-primary"
                                                 onClick={() => setShowModal(true)} >Xác nhận đăng ký</button>
@@ -375,4 +335,4 @@ const DangKyThi = () => {
     );
 };
 
-export default DangKyThi;
+export default ThongTinTSTuDoDangKyThi;
