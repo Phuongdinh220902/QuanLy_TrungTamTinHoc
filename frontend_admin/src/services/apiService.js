@@ -86,7 +86,12 @@ const deleteThiSinhDK = (maDSDK) => {
     return axios.post(`api/v1/deleteThiSinhDK/${maDSDK}`);
 };
 
+const laydsCamNhan = (maLopHoc, page, tukhoa) => {
+    return axios.get(`api/v1/laydsCamNhan/${maLopHoc}/${page}/${tukhoa}`);
+};
+
 export {
     laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH, laydsHocVien, deleteHVLopHoc,
-    layHinhAnhGioiThieu, deleteMoTa, layLichThi, laydsCaThi, deleteLichThi, deleteCaThi, laydsThiSinh, deleteThiSinhDK
+    layHinhAnhGioiThieu, deleteMoTa, layLichThi, laydsCaThi, deleteLichThi, deleteCaThi, laydsThiSinh, deleteThiSinhDK,
+    laydsCamNhan
 };

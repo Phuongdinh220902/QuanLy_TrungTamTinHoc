@@ -11,7 +11,7 @@ import axios from "axios";
 const ThemLT = ({ show, handleCloseModalLT, onUpdate }) => {
     const [ngaythi, setNgayThi] = useState('');
     const [hocphi, setHocPhi] = useState('');
-
+    const [ngayhethan, setNgayhethan] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
     const [showModalCreateKH, setShowModalCreateKH] = useState(false);
 
@@ -19,6 +19,7 @@ const ThemLT = ({ show, handleCloseModalLT, onUpdate }) => {
         setShowModalCreateKH(false);
         setNgayThi("");
         setHocPhi("");
+        setNgayhethan("")
         handleCloseModalLT();
     }
 
@@ -30,6 +31,7 @@ const ThemLT = ({ show, handleCloseModalLT, onUpdate }) => {
             const formData = new FormData();
             formData.append('ngaythi', ngaythi);
             formData.append('hocphi', hocphi);
+            formData.append('ngayhethan', ngayhethan);
             for (const value of formData.values()) {
                 console.log(value);
             }
@@ -37,6 +39,7 @@ const ThemLT = ({ show, handleCloseModalLT, onUpdate }) => {
             let mdata = {
                 ngaythi: ngaythi,
                 hocphi: hocphi,
+                ngayhethan: ngayhethan,
             }
             console.log(mdata)
             await axios.post('http://localhost:2209/api/v1/themLT', mdata, {
@@ -69,8 +72,13 @@ const ThemLT = ({ show, handleCloseModalLT, onUpdate }) => {
                     <form className="row g-3">
                         <div className="col-12">
                             <label className="form-label">Ngày thi</label>
-                            <input type="text" className="form-control" value={ngaythi}
+                            <input type="date" className="form-control" value={ngaythi}
                                 onChange={(event) => setNgayThi(event.target.value)} />
+                        </div>
+                        <div className="col-12">
+                            <label className="form-label">Ngày hết hạn</label>
+                            <input type="date" className="form-control" value={ngayhethan}
+                                onChange={(event) => setNgayhethan(event.target.value)} />
                         </div>
                         <div className="col-12">
                             <label className="form-label">Lệ phí</label>

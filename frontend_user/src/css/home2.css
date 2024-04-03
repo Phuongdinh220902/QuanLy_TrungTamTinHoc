@@ -499,6 +499,7 @@ div:has(> .lazy-down) {
     top: 0;
     left: 0;
     max-height: 200px;
+    /* display: none; */
 }
 
 .tien-ich-mo-ta h3 {
@@ -666,6 +667,10 @@ div:has(> .lazy-down) {
 
     .khoa-hoc-container .tieu-de-muc img {
         width: 50px;
+    }
+
+    .tien-ich-mo-ta>a>img {
+        display: none;
     }
 
     .category-search .border-textbox {

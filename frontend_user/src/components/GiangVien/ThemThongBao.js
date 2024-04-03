@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import { Link } from 'react-router-dom';
 import {
     faFileImport
 } from "@fortawesome/free-solid-svg-icons";
@@ -120,6 +120,9 @@ function ThemThongBao() {
                 />
                 <div className="button-container">
                     <button className="btn btn-info" onClick={handleSendData}>Thêm</button>
+                    <Link to={`/giangvien`}>
+                        <button className="btn btn-info" >Huỷ</button>
+                    </Link>
 
                     <div className="">
                         <label className="form-label label-upload" htmlFor="labelUpload">

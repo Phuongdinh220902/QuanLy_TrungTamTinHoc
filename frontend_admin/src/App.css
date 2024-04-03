@@ -273,6 +273,10 @@ code {
   text-align: center !important;
 }
 
+.table-item {
+  word-break: break-word;
+}
+
 .pagination {
   width: 100%;
   /* position: fixed; */

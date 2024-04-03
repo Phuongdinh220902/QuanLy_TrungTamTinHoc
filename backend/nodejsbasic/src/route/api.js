@@ -45,6 +45,8 @@ const initAPIRoute = (app) => {
     router.post("/updateCaThi", APIController.updateCaThi)
     router.post('/themLT', APIController.themLT)
     router.post("/deleteCaThi/:maCaThi", APIController.deleteCaThi)
+    router.get('/laydsCamNhan/:maLopHoc/:page/:tukhoa', APIController.laydsCamNhan)
+
 
     router.get('/laydsHocVien/:maLopHoc/:page/:tukhoa', APIController.laydsHocVien)
     router.get('/laydsThiSinh/:maCaThi/:page/:tukhoa', APIController.laydsThiSinh)
@@ -53,6 +55,11 @@ const initAPIRoute = (app) => {
     router.post("/updateTrangThaiLichThi/:maLichThi", APIController.updateTrangThaiLichThi);
     router.get('/layThongTinLTTSTD', APIController.layThongTinLTTSTD)
     router.post("/updateTTLTTSTD", APIController.updateTTLTTSTD)
+
+    router.post("/SaveCheckboxStates", APIController.SaveCheckboxStates);
+    router.post("/SaveCheckboxStatesLopHoc", APIController.SaveCheckboxStatesLopHoc);
+    router.post("/SaveCheckboxStatesLopHocBatDau", APIController.SaveCheckboxStatesLopHocBatDau);
+    router.post("/SaveCheckboxStatesCamNhan", APIController.SaveCheckboxStatesCamNhan);
 
     // USer
     router.get('/layTrangChu', APIController.layTrangChu)
@@ -76,11 +83,11 @@ const initAPIRoute = (app) => {
     router.post("/updateTTDT", APIController.updateTTDT)
     router.get('/layTrangCaNhanHV/:maHV', APIController.layTrangCaNhanHV)
     router.get('/layThongBaoLopHocHV/:maLopHoc', APIController.layThongBaoLopHocHV)
-    router.post("/SaveCheckboxStates", APIController.SaveCheckboxStates);
-    router.post("/SaveCheckboxStatesLopHoc", APIController.SaveCheckboxStatesLopHoc);
-    router.post("/SaveCheckboxStatesLopHocBatDau", APIController.SaveCheckboxStatesLopHocBatDau);
+
     router.get('/layLopHocGiaoVien/:maLopHoc', APIController.layLopHocGiaoVien)
     router.get('/layLopHocGV/:maGV', APIController.layLopHocGV)
+
+
 
     router.get('/layKhoaHocDaDK/:maHV', APIController.layKhoaHocDaDK)
     router.get('/layThongTinTrangGiangVien/:maGV', APIController.layThongTinTrangGiangVien)

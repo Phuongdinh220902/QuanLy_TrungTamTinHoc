@@ -279,6 +279,12 @@ const LopHoc = (props) => {
                                                     <button className="btn btn-danger" onClick={() => { setselectID(item.maLopHoc); setShowModal(true) }}
                                                     >Xoá</button>
 
+                                                    <button className="btn btn-info mx-2">
+                                                        <Link to={`/camnhanlophoc/${item.maLopHoc}`} className="navlink linkStyle">
+                                                            Cảm nhận
+                                                        </Link>
+                                                    </button>
+
                                                 </td>
                                             </tr>
                                         );

@@ -26,6 +26,9 @@ import LichThi from './components/LichThi/LichThi';
 import CaThi from './components/LichThi/CaThi';
 import DSThiSinh from './components/LichThi/DanhSachThiSinh';
 import ThongTinLTTSTD from './components/LichThi/ThongTinThiTSTuDo';
+import DSCamNhan from './components/CamNhan/CamNhan';
+import CamNhanHienThi from './components/CamNhan/DanhSachCamNhanHienThi';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -53,7 +56,8 @@ root.render(
           <Route path="cathi/:maLichThi" element={<CaThi />} />
           <Route path="dsthisinh/:maCaThi" element={<DSThiSinh />} />
           <Route path="thongtinlichthitstudo" element={<ThongTinLTTSTD />} />
-
+          <Route path="camnhanlophoc/:maLopHoc" element={<DSCamNhan />} />
+          <Route path="camnhan" element={<CamNhanHienThi />} />
         </Route>
       </Routes>
 

@@ -875,17 +875,18 @@ let updateTrangThaiLichThi = async (req, res) => {
 
 
 let themLT = async (req, res) => {
-    let { ngaythi, hocphi } = req.body;
+    let { ngaythi, hocphi, ngayhethan } = req.body;
     console.log(req.body);
     try {
-        await pool.execute("insert into lich_thi(ngaythi, hocphi) values (?, ?)",
-            [ngaythi, hocphi]
+        await pool.execute("insert into lich_thi(ngaythi, hocphi, ngayhethan, batdau, trang_thai) values (?, ?, ?, 0, 1)",
+            [ngaythi, hocphi, ngayhethan]
         );
 
         res.status(200).json({
             'DT': {
                 'ngaythi': ngaythi,
-                'hocphi': hocphi
+                'hocphi': hocphi,
+                'ngayhethan': ngayhethan
             },
             'EC': 0,
             'EM': 'Tạo thành công'
@@ -1233,6 +1234,199 @@ let laydsCaThiND = async (req, res) => {
         });
     }
 };
+
+// cảm nhận
+let laydsCamNhan = async (req, res) => {
+    const maLopHoc = req.params.maLopHoc;
+    console.log(maLopHoc);
+    try {
+        let tukhoa = req.params.tukhoa
+        // console.log(dsGV)
+        if (tukhoa == "null" || !tukhoa) {
+            const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+            const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+
+            const offset = (page - 1) * pageSize;
+
+            const [sotrang, fields] = await pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV", [maLopHoc]);
+            console.log(sotrang)
+            const [result2, fields1] = await Promise.all([
+                pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV LIMIT ? OFFSET ?", [
+                    maLopHoc,
+                    pageSize,
+                    offset,
+
+                ]),
+            ]);
+
+            if (result2[0] && result2[0].length > 0) {
+                return res.status(200).json({
+                    dataCD: result2[0],
+                    totalPages: Math.ceil(sotrang.length / pageSize),
+                    currentPage: page,
+                });
+            } else {
+                console.log("Không tìm thấy kết quả");
+                return res.status(200).json({
+                    dataCD: [],
+                    totalPages: 0,
+                    currentPage: 1,
+
+                });
+            }
+        }
+        // console.log(tukhoa)
+        const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+        const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+        const offset = (page - 1) * pageSize;
+
+        const [sotrang, fields] = await pool.execute(
+            "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
+            [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+        );
+        console.log(sotrang)
+
+        const [result2, fields1] = await Promise.all([
+            pool.execute(
+                "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?))",
+                [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+            ),
+        ]);
+
+        if (result2[0] && result2[0].length > 0) {
+            return res.status(200).json({
+                dataCD: result2[0],
+                totalPages: Math.ceil(sotrang.length / pageSize),
+                currentPage: page,
+            });
+        } else {
+            console.log("Không tìm thấy kết quả");
+            return res.status(200).json({
+                dataCD: [],
+                totalPages: 0,
+                currentPage: 1,
+            });
+        }
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let SaveCheckboxStatesCamNhan = async (req, res) => {
+    let { isChecked } = req.body;
+
+    console.log(req.body);
+    console.log("+=============");
+    console.log(isChecked, 'hi');
+
+    try {
+        for (let { maCN, isChecked } of isChecked) {
+            if (isChecked == false) {
+                isChecked = 0;
+                maCN = maCN;
+            }
+            else {
+                isChecked = 1;
+                maCN = maCN;
+            }
+            console.log(maCN)
+
+            await pool.execute(
+                "UPDATE cam_nhan SET hien_thi = ? WHERE maCN = ?",
+                [isChecked, maCN]
+            );
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Cập nhật thành công!",
+        });
+    } catch (error) {
+        console.error("Error updating checkbox states:", error);
+        return res.status(500).json({ message: "Cập nhật thất bại!" });
+    }
+};
+
+//cảm nhận hiển thị
+// let laydsCamNhanHienThi = async (req, res) => {
+//     try {
+//         let tukhoa = req.params.tukhoa
+//         // console.log(dsGV)
+//         if (tukhoa == "null" || !tukhoa) {
+//             const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+//             const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+
+//             const offset = (page - 1) * pageSize;
+
+//             const [sotrang, fields] = await pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV");
+//             console.log(sotrang)
+//             const [result2, fields1] = await Promise.all([
+//                 pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV LIMIT ? OFFSET ?", [
+//                     pageSize,
+//                     offset,
+
+//                 ]),
+//             ]);
+
+//             if (result2[0] && result2[0].length > 0) {
+//                 return res.status(200).json({
+//                     dataCD: result2[0],
+//                     totalPages: Math.ceil(sotrang.length / pageSize),
+//                     currentPage: page,
+//                 });
+//             } else {
+//                 console.log("Không tìm thấy kết quả");
+//                 return res.status(200).json({
+//                     dataCD: [],
+//                     totalPages: 0,
+//                     currentPage: 1,
+
+//                 });
+//             }
+//         }
+//         // console.log(tukhoa)
+//         const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+//         const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+//         const offset = (page - 1) * pageSize;
+
+//         const [sotrang, fields] = await pool.execute(
+//             "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
+//             [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+//         );
+//         console.log(sotrang)
+
+//         const [result2, fields1] = await Promise.all([
+//             pool.execute(
+//                 "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?))",
+//                 [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+//             ),
+//         ]);
+
+//         if (result2[0] && result2[0].length > 0) {
+//             return res.status(200).json({
+//                 dataCD: result2[0],
+//                 totalPages: Math.ceil(sotrang.length / pageSize),
+//                 currentPage: page,
+//             });
+//         } else {
+//             console.log("Không tìm thấy kết quả");
+//             return res.status(200).json({
+//                 dataCD: [],
+//                 totalPages: 0,
+//                 currentPage: 1,
+//             });
+//         }
+//     } catch (error) {
+//         console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+//         return res.status(500).json({
+//             error: "Lỗi khi truy vấn cơ sở dữ liệu",
+//         });
+//     }
+// };
+
 
 // người dùng
 
@@ -2262,7 +2456,7 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
     deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS, themHocVienDKThi, updateTrangThaiLichThi,
-    layCaThiDK, kiemtraDK, TimDiem, TraCuuChungChi,
+    layCaThiDK, kiemtraDK, TimDiem, TraCuuChungChi, laydsCamNhan, SaveCheckboxStatesCamNhan,
 
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
