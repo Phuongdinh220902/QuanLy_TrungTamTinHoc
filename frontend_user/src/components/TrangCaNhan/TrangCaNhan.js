@@ -51,11 +51,11 @@ const ProfilePage = () => {
 
     const [caThiData, setCaThiData] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    // Function to toggle the modal
+
     const toggleModal = async () => {
         setShowModal(!showModal);
         if (!showModal) {
-            await fetchCaThiData(); // Fetch exam data when modal is shown
+            await fetchCaThiData();
         }
     };
     const [ngaythi, setNgayThi] = useState('');

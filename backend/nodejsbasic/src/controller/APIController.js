@@ -1248,10 +1248,10 @@ let laydsCamNhan = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
-            const [sotrang, fields] = await pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV", [maLopHoc]);
+            const [sotrang, fields] = await pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai, cam_nhan.da_hienthi,lop_hoc.trangthai_camnhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV", [maLopHoc]);
             console.log(sotrang)
             const [result2, fields1] = await Promise.all([
-                pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV LIMIT ? OFFSET ?", [
+                pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai, cam_nhan.da_hienthi,lop_hoc.trangthai_camnhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV LIMIT ? OFFSET ?", [
                     maLopHoc,
                     pageSize,
                     offset,
@@ -1281,14 +1281,14 @@ let laydsCamNhan = async (req, res) => {
         const offset = (page - 1) * pageSize;
 
         const [sotrang, fields] = await pool.execute(
-            "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
+            "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai, cam_nhan.da_hienthi,lop_hoc.trangthai_camnhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
             [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
         );
         console.log(sotrang)
 
         const [result2, fields1] = await Promise.all([
             pool.execute(
-                "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?))",
+                "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.maCN, cam_nhan.hien_thi, cam_nhan.trang_thai, cam_nhan.da_hienthi,lop_hoc.trangthai_camnhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?))",
                 [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
             ),
         ]);
@@ -1332,10 +1332,10 @@ let SaveCheckboxStatesCamNhan = async (req, res) => {
                 isChecked = 1;
                 maCN = maCN;
             }
-            console.log(maCN)
+            console.log(isChecked)
 
             await pool.execute(
-                "UPDATE cam_nhan SET hien_thi = ? WHERE maCN = ?",
+                "UPDATE cam_nhan SET hien_thi = ?, da_hienthi = 1 WHERE maCN = ?",
                 [isChecked, maCN]
             );
         }
@@ -1350,82 +1350,101 @@ let SaveCheckboxStatesCamNhan = async (req, res) => {
     }
 };
 
+let TrangThaiCamNhan = async (req, res) => {
+    let { trang_thai, maLopHoc } = req.body;
+
+    try {
+        await pool.execute(
+            "UPDATE lop_hoc SET trangthai_camnhan = ? WHERE maLopHoc = ?",
+            [trang_thai, maLopHoc]
+        );
+
+        return res.status(200).json({
+            message: "Cập nhật thành công!",
+        });
+    } catch (error) {
+        console.error("có lỗi xảy ra", error);
+        return res.status(500).json({ message: "Cập nhật thất bại!" });
+    }
+};
+
 //cảm nhận hiển thị
-// let laydsCamNhanHienThi = async (req, res) => {
-//     try {
-//         let tukhoa = req.params.tukhoa
-//         // console.log(dsGV)
-//         if (tukhoa == "null" || !tukhoa) {
-//             const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
-//             const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+let laydsCamNhanHienThi = async (req, res) => {
+    try {
+        let tukhoa = req.params.tukhoa
+        // console.log(dsGV)
+        if (tukhoa == "null" || !tukhoa) {
+            const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+            const pageSize = parseInt(req.query.pageSize) || 10; // Lấy số lượng mục trên mỗi trang, mặc định là 5
 
-//             const offset = (page - 1) * pageSize;
+            const offset = (page - 1) * pageSize;
 
-//             const [sotrang, fields] = await pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV");
-//             console.log(sotrang)
-//             const [result2, fields1] = await Promise.all([
-//                 pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV LIMIT ? OFFSET ?", [
-//                     pageSize,
-//                     offset,
+            const [sotrang, fields] = await pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, lop_hoc.tenLopHoc, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.hien_thi, cam_nhan.da_hienthi FROM dshv, lop_hoc, hoc_vien, cam_nhan where cam_nhan.da_hienthi = 1 and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV ORDER BY cam_nhan.hien_thi DESC");
+            console.log(sotrang)
+            const [result2, fields1] = await Promise.all([
+                pool.execute("SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, lop_hoc.tenLopHoc,tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.hien_thi, cam_nhan.da_hienthi FROM dshv, lop_hoc, hoc_vien, cam_nhan where cam_nhan.da_hienthi = 1 and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV ORDER BY cam_nhan.hien_thi DESC LIMIT ? OFFSET ?", [
+                    pageSize,
+                    offset,
+                ]),
+            ]);
 
-//                 ]),
-//             ]);
+            if (result2[0] && result2[0].length > 0) {
+                return res.status(200).json({
+                    dataCD: result2[0],
+                    totalPages: Math.ceil(sotrang.length / pageSize),
+                    currentPage: page,
+                });
+            } else {
+                console.log("Không tìm thấy kết quả");
+                return res.status(200).json({
+                    dataCD: [],
+                    totalPages: 0,
+                    currentPage: 1,
 
-//             if (result2[0] && result2[0].length > 0) {
-//                 return res.status(200).json({
-//                     dataCD: result2[0],
-//                     totalPages: Math.ceil(sotrang.length / pageSize),
-//                     currentPage: page,
-//                 });
-//             } else {
-//                 console.log("Không tìm thấy kết quả");
-//                 return res.status(200).json({
-//                     dataCD: [],
-//                     totalPages: 0,
-//                     currentPage: 1,
+                });
+            }
+        }
+        // console.log(tukhoa)
+        const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
+        const pageSize = parseInt(req.query.pageSize) || 10; // Lấy số lượng mục trên mỗi trang, mặc định là 5
+        const offset = (page - 1) * pageSize;
 
-//                 });
-//             }
-//         }
-//         // console.log(tukhoa)
-//         const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
-//         const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
-//         const offset = (page - 1) * pageSize;
+        const [sotrang, fields] = await pool.execute(
+            "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, lop_hoc.tenLopHoc,tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.hien_thi, cam_nhan.da_hienthi FROM dshv, lop_hoc, hoc_vien, cam_nhan where cam_nhan.da_hienthi = 1 and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV ORDER BY cam_nhan.hien_thi DESC AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?) OR UPPER(lop_hoc.tenLopHoc) LIKE UPPER(?))",
+            ["%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+        );
+        console.log(sotrang)
 
-//         const [sotrang, fields] = await pool.execute(
-//             "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?))",
-//             [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
-//         );
-//         console.log(sotrang)
+        const [result2, fields1] = await Promise.all([
+            pool.execute(
+                "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, lop_hoc.tenLopHoc,tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan, cam_nhan.hien_thi, cam_nhan.da_hienthi FROM dshv, lop_hoc, hoc_vien, cam_nhan where cam_nhan.da_hienthi = 1 and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV ORDER BY cam_nhan.hien_thi DESC AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?) OR UPPER(lop_hoc.tenLopHoc) LIKE UPPER(?))",
+                ["%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+            ),
+        ]);
 
-//         const [result2, fields1] = await Promise.all([
-//             pool.execute(
-//                 "SELECT dshv.maDSHV, dshv.maLopHoc, dshv.maHV, tenHV, email, sdt, cam_nhan.noidung, cam_nhan.nhan FROM dshv, lop_hoc, hoc_vien, cam_nhan where dshv.maLopHoc = ? and dshv.trang_thai = 1 and dshv.maLopHoc = lop_hoc.maLopHoc and dshv.maHV = hoc_vien.maHV and dshv.maDSHV = cam_nhan.maDSHV AND (UPPER(hoc_vien.tenHV) LIKE UPPER(?) OR UPPER(hoc_vien.email) LIKE UPPER(?) OR UPPER(hoc_vien.sdt) LIKE UPPER(?))",
-//                 [maLopHoc, "%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
-//             ),
-//         ]);
+        if (result2[0] && result2[0].length > 0) {
+            return res.status(200).json({
+                dataCD: result2[0],
+                totalPages: Math.ceil(sotrang.length / pageSize),
+                currentPage: page,
+            });
+        } else {
+            console.log("Không tìm thấy kết quả");
+            return res.status(200).json({
+                dataCD: [],
+                totalPages: 0,
+                currentPage: 1,
+            });
+        }
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
 
-//         if (result2[0] && result2[0].length > 0) {
-//             return res.status(200).json({
-//                 dataCD: result2[0],
-//                 totalPages: Math.ceil(sotrang.length / pageSize),
-//                 currentPage: page,
-//             });
-//         } else {
-//             console.log("Không tìm thấy kết quả");
-//             return res.status(200).json({
-//                 dataCD: [],
-//                 totalPages: 0,
-//                 currentPage: 1,
-//             });
-//         }
-//     } catch (error) {
-//         console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
-//         return res.status(500).json({
-//             error: "Lỗi khi truy vấn cơ sở dữ liệu",
-//         });
-//     }
-// };
+
 
 
 // người dùng
@@ -2447,6 +2466,74 @@ let TraCuuChungChi = async (req, res) => {
     }
 };
 
+let GuiCamNhan = async (req, res) => {
+    let { noidung, maLopHoc, maHV } = req.body;
+
+    try {
+        // Truy vấn để lấy maDSHV từ maLopHoc và maHV
+        const [rows, fields] = await pool.execute(
+            "SELECT maDSHV FROM dshv WHERE maLopHoc = ? AND maHV = ?",
+            [maLopHoc, maHV]
+        );
+
+        // Lấy maDSHV từ kết quả truy vấn
+        const maDSHV = rows[0].maDSHV;
+
+        // Thực hiện truy vấn INSERT để thêm dữ liệu vào bảng cam_nhan
+        const [insertResult, insertFields] = await pool.execute(
+            "INSERT INTO cam_nhan (noidung, maDSHV) VALUES (?, ?)",
+            [noidung, maDSHV]
+        );
+
+        return res.status(200).json({
+            message: "Gửi cảm nhận thành công"
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Có lỗi xảy ra trong quá trình đăng ký",
+        });
+    }
+}
+
+let KiemTraDanhGia = async (req, res) => {
+    const { maLopHoc, maHV } = req.query;
+    console.log(maLopHoc, maHV, 'malophoc')
+    try {
+        // Truy vấn cơ sở dữ liệu để lấy trạng thái cảm nhận của lớp học
+        const [result, fields1] = await pool.execute(
+            "SELECT trangthai_camnhan FROM lop_hoc WHERE maLopHoc = ?",
+            [maLopHoc]
+        );
+        const trangThaiCamNhan = result[0].trangthai_camnhan;
+
+        // Nếu trạng thái cảm nhận là 0, không cần kiểm tra và trả về kết quả
+        if (trangThaiCamNhan === 0) {
+            return res.status(200).json({
+                message: "Đánh giá lớp học vẫn chưa được mở",
+                trangThaiCamNhan: trangThaiCamNhan
+            });
+        }
+
+        // Truy vấn cơ sở dữ liệu để kiểm tra xem người dùng đã đánh giá lớp học này chưa
+        const [rows, fields2] = await pool.execute(
+            "SELECT COUNT(*) AS count FROM cam_nhan WHERE maDSHV = (SELECT maDSHV FROM dshv WHERE maLopHoc = ? AND maHV = ?)",
+            [maLopHoc, maHV]
+        );
+        const count = rows[0].count;
+
+        // Trả về kết quả kiểm tra cùng với trạng thái cảm nhận của lớp học
+        res.status(200).json({
+            alreadyReviewed: count > 0,
+            trangThaiCamNhan: trangThaiCamNhan
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Có lỗi xảy ra trong quá trình kiểm tra đánh giá",
+        });
+    }
+}
 
 
 module.exports = {
@@ -2456,11 +2543,12 @@ module.exports = {
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
     deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS, themHocVienDKThi, updateTrangThaiLichThi,
-    layCaThiDK, kiemtraDK, TimDiem, TraCuuChungChi, laydsCamNhan, SaveCheckboxStatesCamNhan,
+    layCaThiDK, kiemtraDK, TimDiem, TraCuuChungChi, laydsCamNhan, SaveCheckboxStatesCamNhan, laydsCamNhanHienThi,
+    TrangThaiCamNhan,
 
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
     layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,
     layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV, layFile, layThongTinLTTSTD, updateTTLTTSTD, laydsCaThiND,
-    DangKyLopHoc
+    DangKyLopHoc, GuiCamNhan, KiemTraDanhGia,
 }

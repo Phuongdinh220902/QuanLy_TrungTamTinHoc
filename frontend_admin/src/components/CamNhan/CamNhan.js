@@ -13,6 +13,8 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 // import ModalUpdateLopHoc from "./ModalUpdateLopHoc";
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 import axios from "axios";
 const DSCamNhan = (props) => {
     const [DSCamNhan, setListHocVien] = useState([]);
@@ -77,6 +79,14 @@ const DSCamNhan = (props) => {
                 const newCheckboxStates = res.data.dataCD.map((item) => item.hien_thi === 1);
                 setCheckboxStates(newCheckboxStates);
                 setNewState(newCheckboxStates);
+
+                const trangthaiCamNhan = res.data.dataCD[0]?.trangthai_camnhan;
+                if (trangthaiCamNhan === 1) {
+                    setStatus("Mở cảm nhận");
+                } else {
+                    setStatus("Đóng cảm nhận");
+                }
+                console.log(trangthaiCamNhan, 'alo')
 
             } else {
                 console.error("Lỗi khi gọi API:", res.statusText);
@@ -143,8 +153,31 @@ const DSCamNhan = (props) => {
     };
 
 
-    const formatCurrency = (value) => {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    const [status, setStatus] = useState("");
+
+    const handleStatusSelect = async (selectedStatus) => {
+        try {
+            let newValue;
+            if (selectedStatus === "Mở cảm nhận") {
+                newValue = 1;
+            } else if (selectedStatus === "Đóng cảm nhận") {
+                newValue = 0;
+            }
+
+            // Gửi yêu cầu HTTP đến API endpoint để cập nhật giá trị trangthai_camnhan
+            const response = await axios.post('http://localhost:2209/api/v1/TrangThaiCamNhan', { trang_thai: newValue, maLopHoc });
+
+            // Cập nhật lại trạng thái trong trường hợp cập nhật thành công
+            if (response.status === 200) {
+                setStatus(selectedStatus);
+                // Hiển thị toast thông báo
+                toast.success(response.data.message);
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+            // Hiển thị toast thông báo lỗi
+            toast.error('Có lỗi xảy ra khi cập nhật trạng thái.');
+        }
     };
 
     const styles = {
@@ -200,6 +233,10 @@ const DSCamNhan = (props) => {
                             </button>
 
                         </div>
+                        <DropdownButton title={status} variant="success" id="bg-nested-dropdown" onSelect={handleStatusSelect}>
+                            <Dropdown.Item eventKey="Mở cảm nhận">Mở cảm nhận</Dropdown.Item>
+                            <Dropdown.Item eventKey="Đóng cảm nhận">Đóng cảm nhận</Dropdown.Item>
+                        </DropdownButton>
                     </div>
                 </div>
 

@@ -90,8 +90,12 @@ const laydsCamNhan = (maLopHoc, page, tukhoa) => {
     return axios.get(`api/v1/laydsCamNhan/${maLopHoc}/${page}/${tukhoa}`);
 };
 
+const laydsCamNhanHienThi = (page, tukhoa) => {
+    return axios.get(`api/v1/laydsCamNhanHienThi/${page}/${tukhoa}`);
+};
+
 export {
     laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH, laydsHocVien, deleteHVLopHoc,
     layHinhAnhGioiThieu, deleteMoTa, layLichThi, laydsCaThi, deleteLichThi, deleteCaThi, laydsThiSinh, deleteThiSinhDK,
-    laydsCamNhan
+    laydsCamNhan, laydsCamNhanHienThi
 };

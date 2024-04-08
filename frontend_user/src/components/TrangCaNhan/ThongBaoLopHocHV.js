@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,13 +12,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-
+import Image from '../../images/logominhhoa.png';
 const ThongBaoLopHocChiTietHV = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [data, setData] = useState([]);
     const [thongbao, setThongBao] = useState([]);
     const [thongBao, setThongBaoCT] = useState(null);
-
+    const [File, setFile] = useState([]);
     const handleToggleSidebar = () => {
         setCollapsed(!collapsed);
     };
@@ -43,12 +42,17 @@ const ThongBaoLopHocChiTietHV = () => {
         fetchData();
     }, [maLopHoc]);
 
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const responseTBCT = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHocChiTiet/${maTB}`);
                 setThongBaoCT(responseTBCT.data.TBCT[0]);
                 console.log(responseTBCT.data.TBCT[0], 'tb')
+
+                const responseFile = await axios.get(`http://localhost:2209/api/v1/layFile/${maTB}`);
+                setFile(responseFile.data.File);
+
             } catch (error) {
                 console.error('Error fetching thong bao:', error);
             }
@@ -83,8 +87,8 @@ const ThongBaoLopHocChiTietHV = () => {
             <div className='centered-divtb' >
                 <div>
                     {thongBao ? (
-                        <div>
-                            <div style={{ borderBottom: '2px solid rgb(25, 103, 210)', paddingBottom: '10px' }}>
+                        <div style={{ marginBottom: '30px' }}>
+                            <div style={{ borderBottom: '2px solid rgb(25, 103, 210)', paddingBottom: '10px', marginBottom: '25px' }}>
                                 <div style={{ color: 'rgb(25, 103, 210)', fontSize: '35px' }}>
                                     {thongBao.tieude_thongbao}</div>
                                 <p>{thongBao.tenGV} {formatDate(thongBao.ngaydang)}</p>
@@ -95,6 +99,23 @@ const ThongBaoLopHocChiTietHV = () => {
                         <p>Loading...</p>
                     )}
                 </div>
+
+                {File.length > 0 && (
+                    <div>
+                        <ul>
+                            {File.map((file, index) => (
+                                <li key={index}>
+                                    <Link to={`/preview/${file.tenFile}`} target="_blank" style={{ color: 'black' }}>
+                                        <div className="file-container" style={{ marginTop: '10px' }}>
+                                            <img src={Image} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+                                            {file.tenFile}
+                                        </div>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
 
 
