@@ -378,7 +378,6 @@ const User = (props) => {
                                     <th className="table-item ">Nơi sinh</th>
                                     <th className="table-item ">Email</th>
                                     <th className="table-item ">Số điện thoại</th>
-                                    <th className="table-item ">Học phí</th>
                                     <th> </th>
                                 </tr>
                             </thead>
@@ -403,9 +402,6 @@ const User = (props) => {
                                                 <td className="">{item.noisinh}</td>
                                                 <td className="">{item.email}</td>
                                                 <td className="">{item.sdt}</td>
-                                                <td className="col-right">{formatCurrency(item.hocphi ? item.hocphi : 0)}</td>
-
-
                                                 <td className="table-item">
                                                     <button className="btn btn-warning mx-2"
                                                         onClick={() => handleOpenModalUpdate(item)}>

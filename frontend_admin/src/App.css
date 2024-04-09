@@ -342,9 +342,6 @@ code {
   pointer-events: none;
 }
 
-
-
-
 .formatButton {
   position: relative;
   margin: 12px 5px 0;
@@ -356,6 +353,18 @@ code {
   cursor: pointer;
   font-size: 1em;
   padding: 12px;
+}
+
+.formatButton1 {
+  position: relative;
+  /* margin: 12px 5px 0; */
+  color: var(--white);
+  background: var(--blue);
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1em;
 }
 
 .addButton {

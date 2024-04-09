@@ -190,7 +190,9 @@ const DSHocVien = (props) => {
                                                 <td className="table-item col-right">{index + 1}</td>
                                                 <td className="">{item.tenHV}</td>
                                                 <td className="">{item.email}</td>
-                                                <td className="">{formatCurrency(item.hocphisaukhigiam)}đ</td>
+                                                <td className="">
+                                                    {item.hocphisaukhigiam ? formatCurrency(item.hocphisaukhigiam) : formatCurrency(item.hocphi)}đ
+                                                </td>
                                                 <td className="col-center">
                                                     <input
                                                         type="checkbox"

@@ -178,7 +178,7 @@ const CamNhanHienThi = (props) => {
     return (
         <>
             <div className="container-fluid app__content">
-                <h2 className="text-center">Danh Sách Cảm Nhận</h2>
+                <h2 className="text-center">Danh Sách Cảm Nhận Hiển Thị</h2>
 
                 <div className="search">
                     <div className="searchHV">

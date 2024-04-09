@@ -106,7 +106,7 @@ const ProfilePage = () => {
                                         style={{ borderTopLeftRadius: "0.5rem", borderBottomLeftRadius: "0.5rem" }}>
                                         <div className="user-avatar">
                                             {userProfile && userProfile.gioitinh === 1 ? (
-                                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin" />
+                                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin" className="img-fluid my-5" style={{ width: "80px" }} />
 
                                             ) : (
                                                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="Avatar" className="img-fluid my-5" style={{ width: "80px" }} />

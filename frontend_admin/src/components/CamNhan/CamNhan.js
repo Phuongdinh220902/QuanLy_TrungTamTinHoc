@@ -82,9 +82,9 @@ const DSCamNhan = (props) => {
 
                 const trangthaiCamNhan = res.data.dataCD[0]?.trangthai_camnhan;
                 if (trangthaiCamNhan === 1) {
-                    setStatus("Mở cảm nhận");
+                    setStatus("Mở");
                 } else {
-                    setStatus("Đóng cảm nhận");
+                    setStatus("Đóng");
                 }
                 console.log(trangthaiCamNhan, 'alo')
 
@@ -151,34 +151,67 @@ const DSCamNhan = (props) => {
             toast.error('Có lỗi xảy ra khi cập nhật trạng thái');
         }
     };
+    const [selectedStatus, setSelectedStatus] = useState("");
 
+    const handleStatusSelect = (selectedStatus) => {
+        setSelectedStatus(selectedStatus);
+        setShowModal1(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal1(false);
+    };
 
     const [status, setStatus] = useState("");
+    const [showModal1, setShowModal1] = useState(false);
 
-    const handleStatusSelect = async (selectedStatus) => {
+    const handleConfirmChange = async () => {
         try {
             let newValue;
-            if (selectedStatus === "Mở cảm nhận") {
+            if (selectedStatus === "Mở") {
                 newValue = 1;
-            } else if (selectedStatus === "Đóng cảm nhận") {
+            } else if (selectedStatus === "Đóng") {
                 newValue = 0;
             }
 
-            // Gửi yêu cầu HTTP đến API endpoint để cập nhật giá trị trangthai_camnhan
             const response = await axios.post('http://localhost:2209/api/v1/TrangThaiCamNhan', { trang_thai: newValue, maLopHoc });
 
-            // Cập nhật lại trạng thái trong trường hợp cập nhật thành công
             if (response.status === 200) {
                 setStatus(selectedStatus);
-                // Hiển thị toast thông báo
                 toast.success(response.data.message);
+                setShowModal1(false);
             }
         } catch (error) {
             console.error('Error updating status:', error);
-            // Hiển thị toast thông báo lỗi
             toast.error('Có lỗi xảy ra khi cập nhật trạng thái.');
+            setShowModal1(false);
         }
     };
+
+    // const handleStatusSelect = async (selectedStatus) => {
+    //     try {
+    //         let newValue;
+    //         if (selectedStatus === "Mở cảm nhận") {
+    //             newValue = 1;
+    //         } else if (selectedStatus === "Đóng cảm nhận") {
+    //             newValue = 0;
+    //         }
+
+    //         // Gửi yêu cầu HTTP đến API endpoint để cập nhật giá trị trangthai_camnhan
+    //         const response = await axios.post('http://localhost:2209/api/v1/TrangThaiCamNhan', { trang_thai: newValue, maLopHoc });
+
+    //         // Cập nhật lại trạng thái trong trường hợp cập nhật thành công
+    //         if (response.status === 200) {
+    //             setStatus(selectedStatus);
+    //             // Hiển thị toast thông báo
+    //             toast.success(response.data.message);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error updating status:', error);
+    //         // Hiển thị toast thông báo lỗi
+    //         toast.error('Có lỗi xảy ra khi cập nhật trạng thái.');
+    //     }
+    // };
 
     const styles = {
         table: {
@@ -233,10 +266,18 @@ const DSCamNhan = (props) => {
                             </button>
 
                         </div>
-                        <DropdownButton title={status} variant="success" id="bg-nested-dropdown" onSelect={handleStatusSelect}>
-                            <Dropdown.Item eventKey="Mở cảm nhận">Mở cảm nhận</Dropdown.Item>
-                            <Dropdown.Item eventKey="Đóng cảm nhận">Đóng cảm nhận</Dropdown.Item>
-                        </DropdownButton>
+                        <div style={{ display: 'flex' }}>
+                            <DropdownButton title={`Trạng thái: ${status}`} variant="success" id="bg-nested-dropdown" style={{ marginTop: '20px' }}
+                                onSelect={handleStatusSelect} >
+                                <Dropdown.Item eventKey="Mở">Mở</Dropdown.Item>
+                                <Dropdown.Item eventKey="Đóng">Đóng</Dropdown.Item>
+                            </DropdownButton>
+
+                            <button className="formatButton1 mx-2">
+                                Phân loại cảm nhận
+                            </button>
+                        </div>
+
                     </div>
                 </div>
 
@@ -346,11 +387,28 @@ const DSCamNhan = (props) => {
                     Bạn có chắc chắn muốn xoá cảm nhận này không?
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                    <Button variant="secondary" onClick={() => setShowModal1(false)}>
                         Hủy
                     </Button>
                     <Button variant="danger" onClick={() => handleDelete()}>
                         Xoá
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showModal1} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Xác nhận thay đổi trạng thái</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Bạn có chắc chắn muốn thay đổi trạng thái thành "{selectedStatus}" không?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Hủy bỏ
+                    </Button>
+                    <Button variant="primary" onClick={handleConfirmChange}>
+                        Xác nhận
                     </Button>
                 </Modal.Footer>
             </Modal>

@@ -86,6 +86,7 @@ function ThemMoTaChiTiet() {
                     data={editorData}
                 />
                 <div className="button-container">
+                    <button className="btn btn-secondary mx-2" onClick={handleToastClose} >Huỷ</button>
                     <button className="btn btn-info" onClick={handleSendData}>Submit</button>
                 </div>
                 <ToastContainer

@@ -29,17 +29,7 @@ const DangKyDangNhap = () => {
                 email,
                 password,
             });
-            // if (response.status === 200) {
 
-            //     navigate('/');
-            //     const userData = response.data; 
-            //     localStorage.setItem('user', JSON.stringify(userData));
-            //     localStorage.setItem('maHV', userData.maHV);
-            //     console.log(userData)
-            // }
-            // if (response.status === 401) {
-            //     toast.error('Thông tin đăng nhập không đúng')
-            // }
             if (response.status === 200) {
                 const decodedToken = jwtDecode(response.data.token);
                 const userData = response.data;
@@ -104,6 +94,36 @@ const DangKyDangNhap = () => {
         return noisinh;
     };
 
+    const validatePassword = (password) => {
+        // Kiểm tra độ dài
+        if (password.length < 6) {
+            return 'Mật khẩu phải chứa ít nhất 6 ký tự';
+        }
+
+        // Kiểm tra ký tự in hoa
+        if (!/[A-Z]/.test(password)) {
+            return 'Mật khẩu phải chứa ít nhất một ký tự in hoa';
+        }
+
+        // Kiểm tra ký tự thường
+        if (!/[a-z]/.test(password)) {
+            return 'Mật khẩu phải chứa ít nhất một ký tự thường';
+        }
+
+        // Kiểm tra số
+        if (!/\d/.test(password)) {
+            return 'Mật khẩu phải chứa ít nhất một số';
+        }
+
+        // Kiểm tra khoảng trắng
+        if (/\s/.test(password)) {
+            return 'Mật khẩu không được chứa khoảng trắng';
+        }
+
+        return null;
+    }
+
+
 
     const handleSave = async () => {
         const isValidEmail = validateEmail(email);
@@ -116,6 +136,13 @@ const DangKyDangNhap = () => {
         const ageDifferenceInYears = ageDifferenceInMilliseconds / (365.25 * 24 * 60 * 60 * 1000);
 
         const normalizedTenHV = normalizeTenHV(tenHV);
+
+        // Kiểm tra mật khẩu
+        const passwordError = validatePassword(password);
+        if (passwordError) {
+            toast.error(passwordError);
+            return;
+        }
 
         if (!tenHV.trim() || !email || !sdt || !ngaysinh || !noisinh || !gioitinh) {
             toast.error('Vui lòng điền đầy đủ thông tin');
@@ -146,6 +173,7 @@ const DangKyDangNhap = () => {
             toast.error('Học viên phải có tuổi từ 16 trở lên');
             return;
         }
+        console.log(password)
 
         try {
             const formData = new FormData();
@@ -162,6 +190,7 @@ const DangKyDangNhap = () => {
             for (const value of formData.values()) {
                 console.log(value);
             }
+
 
 
             let mdata = {
