@@ -1444,7 +1444,40 @@ let laydsCamNhanHienThi = async (req, res) => {
     }
 };
 
+let checkChiTietExists = async (req, res) => {
+    try {
+        const { maKH } = req.params;
+        const [rows, fields] = await pool.execute(
+            "SELECT maChiTiet, chitiet, COUNT(*) AS count FROM chitiet_khoahoc WHERE maKH = ?",
+            [maKH]
+        );
+        const count = rows[0].count;
+        const maChiTiet = rows[0].maChiTiet || null;
+        const chitiet = rows[0].chitiet || "";
+        console.log(rows[0])
+        res.json({ exists: count > 0, maChiTiet: maChiTiet, chitiet: chitiet });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
+
+let updateChiTietKhoaHoc = async (req, res) => {
+    const maChiTiet = req.params.maChiTiet;
+
+    try {
+        const { chitiet } = req.body;
+        await pool.execute(
+            "UPDATE chitiet_khoahoc SET chitiet = ? WHERE maChiTiet = ?",
+            [chitiet, maChiTiet]
+        );
+        res.json({ message: 'Detail updated successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 
 // người dùng
@@ -1706,7 +1739,7 @@ let layLopHoc = async (req, res) => {
     const maKH = req.params.maKH;
     console.log(maKH);
     try {
-        const [LH, fields] = await pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau , lich_hoc.diadiem FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH", [maKH]);
+        const [LH, fields] = await pool.execute("SELECT maLopHoc, lop_hoc.maLH, lop_hoc.maKH, lop_hoc.maGV, lich_hoc.thoigian, tenGV, tenLopHoc, DATE_FORMAT(STR_TO_DATE(lich_hoc.ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau , lich_hoc.diadiem, bat_dau FROM lop_hoc, giang_vien, lich_hoc where lop_hoc.maKH = ? and lop_hoc.bat_dau = 1 and lop_hoc.trang_thai = 1 and lop_hoc.maGV = giang_vien.maGV and lop_hoc.maLH = lich_hoc.maLH", [maKH]);
         return res.status(200).json({
             LH: LH,
         })
@@ -2544,7 +2577,7 @@ module.exports = {
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
     deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS, themHocVienDKThi, updateTrangThaiLichThi,
     layCaThiDK, kiemtraDK, TimDiem, TraCuuChungChi, laydsCamNhan, SaveCheckboxStatesCamNhan, laydsCamNhanHienThi,
-    TrangThaiCamNhan,
+    TrangThaiCamNhan, checkChiTietExists, updateChiTietKhoaHoc,
 
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,

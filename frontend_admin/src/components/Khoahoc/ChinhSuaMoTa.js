@@ -4,7 +4,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 function uploadAdapter(loader) {
     return loader.file.then(file => {
         return new Promise((resolve, reject) => {
@@ -24,8 +24,10 @@ function uploadAdapter(loader) {
 }
 
 function ChinhSuaMoTa() {
-    const { maKH } = useParams();
     const { maND } = useParams();
+    const location = useLocation(); // Sử dụng useLocation để trích xuất maKH từ query params
+    const searchParams = new URLSearchParams(location.search);
+    const maKH = searchParams.get('maKH');
     const [editorData, setEditorData] = useState("");
     const editorInstance = useRef(null);
     const [tieude, setTieuDe] = useState("");
@@ -51,6 +53,12 @@ function ChinhSuaMoTa() {
             console.error("Lỗi khi lấy dữ liệu: ", error);
         }
     };
+    console.log(maND, 'maND')
+    console.log(maKH)
+
+    const handleToastClose1 = () => {
+        navigate(`/mota/${maKH}`);
+    };
 
     const handleUpdate = async () => {
         try {
@@ -73,9 +81,9 @@ function ChinhSuaMoTa() {
             // Xử lý lỗi
         }
     };
-    const handleToastClose = () => {
-        navigate('/khoahoc');
-    };
+    // const handleToastClose = () => {
+    //     navigate('/khoahoc');
+    // };
 
     return (
         <>
@@ -102,8 +110,11 @@ function ChinhSuaMoTa() {
                     data={editorData}
                 />
                 <div className="button-container">
+                    <button className="btn btn-secondary mx-2" onClick={handleToastClose1} >Huỷ</button>
                     <button className="btn btn-info" onClick={handleUpdate}>Submit</button>
                 </div>
+
+
                 <ToastContainer
                     position="top-right"
                     autoClose={4000}
@@ -115,7 +126,7 @@ function ChinhSuaMoTa() {
                     draggable
                     pauseOnHover
                     theme="light"
-                    onClose={handleToastClose}
+                    onClose={handleToastClose1}
                 />
             </div>
         </>

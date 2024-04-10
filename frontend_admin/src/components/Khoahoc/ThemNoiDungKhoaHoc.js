@@ -48,7 +48,7 @@ function ThemMoTaChiTiet() {
             );
             toast.success('Thêm thành công');
             setTimeout(() => {
-                navigate('/khoahoc');
+                navigate(`/mota/${maKH}`);
             }, 4000);
         } catch (error) {
             console.error("Error sending data:", error);
@@ -57,7 +57,7 @@ function ThemMoTaChiTiet() {
     };
 
     const handleToastClose = () => {
-        navigate('/khoahoc');
+        navigate(`/mota/${maKH}`);
     };
 
     return (
@@ -65,7 +65,7 @@ function ThemMoTaChiTiet() {
 
             <div className="">
                 <div className="searchHV-input">
-                    <h3>Tiêu Đề</h3>
+                    <h3>Tiêu Đề Mô Tả</h3>
                     <input
                         placeholder="Nhập tiêu đề"
                         type="text"

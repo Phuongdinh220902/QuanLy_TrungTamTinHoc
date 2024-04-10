@@ -200,7 +200,7 @@ const KhoaHoc = ({ match }) => {
                         </h1>
                         <div className="nganh-noi-dung">
 
-                            <div dangerouslySetInnerHTML={{ __html: gioiThieu }}></div> {/* Hiển thị nội dung từ state */}
+                            <div dangerouslySetInnerHTML={{ __html: gioiThieu }} ></div> {/* Hiển thị nội dung từ state */}
                         </div>
                     </div>
 
@@ -213,7 +213,7 @@ const KhoaHoc = ({ match }) => {
                                         <h4 className="panel-title" style={{ float: 'left', paddingTop: '3px', width: '95%', color: '#FD6504' }}>
                                             {item.tieude}
                                         </h4>
-                                        <span className="glyphicon nganh-chon glyphicon-menu-up" aria-hidden="true" style={{ float: 'right' }}></span>
+                                        {/* <span className="glyphicon nganh-chon glyphicon-menu-up" aria-hidden="true" style={{ float: 'right' }}></span> */}
                                     </a>
                                     <div style={{ clear: 'both' }}></div>
                                 </div>
@@ -231,36 +231,88 @@ const KhoaHoc = ({ match }) => {
 
             <div className="khoa-hoc-container1">
 
-                <h2 className="lop-hoc-title">Danh sách lớp học</h2>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Tên lớp học</th>
-                            <th>Thời gian</th>
-                            <th>Giáo viên</th>
-                            <th>Ngày bắt đầu</th>
-                            <th>Địa điểm</th>
-                            <th> </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {lopHoc && lopHoc.map((lop, index) => (
-                            <tr key={lop.maLopHoc}>
-                                <td>{index + 1}</td>
-                                <td>{lop.tenLopHoc}</td>
-                                <td>{lop.thoigian}</td>
-                                <td>{lop.tenGV}</td>
-                                <td>{lop.ngay_batdau}</td>
-                                <td>{lop.diadiem}</td>
-                                <td>
-                                    <button className="button-dk" onClick={() => handleDangKy(lop.maLopHoc)}> Đăng ký</button>
-                                </td>
+                <h2 className="lop-hoc-title">Lịch Khai Giảng</h2>
+                {/* <table className="table">
+                    {lopHoc && lopHoc.length > 0 && (
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên lớp học</th>
+                                <th>Thời gian</th>
+                                <th>Giáo viên</th>
+                                <th>Ngày bắt đầu</th>
+                                <th>Địa điểm</th>
+                                <th> </th>
                             </tr>
-                        ))}
+                        </thead>
+
+                    )}
+                    <tbody>
+                        {lopHoc && lopHoc.length > 0 ? (
+                            <tbody>
+                                {lopHoc.map((lop, index) => (
+                                    <tr key={lop.maLopHoc}>
+                                        <td>{index + 1}</td>
+                                        <td>{lop.tenLopHoc}</td>
+                                        <td>{lop.thoigian}</td>
+                                        <td>{lop.tenGV}</td>
+                                        <td>{lop.ngay_batdau}</td>
+                                        <td>{lop.diadiem}</td>
+                                        <td>
+                                            <button className="button-dk" onClick={() => handleDangKy(lop.maLopHoc)}> Đăng ký</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        ) : (
+                            <tbody>
+                                <tr>
+                                    <td style={{ border: 'none', color: 'red' }}>Chưa có lịch mở lớp học</td>
+                                </tr>
+                            </tbody>
+                        )}
+
 
                     </tbody>
+                </table> */}
+
+                <table className="table">
+                    {lopHoc && lopHoc.length > 0 && (
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên lớp học</th>
+                                <th>Thời gian</th>
+                                <th>Giáo viên</th>
+                                <th>Ngày bắt đầu</th>
+                                <th>Địa điểm</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                    )}
+                    <tbody>
+                        {lopHoc && lopHoc.length > 0 ? (
+                            lopHoc.map((lop, index) => (
+                                <tr key={lop.maLopHoc}>
+                                    <td>{index + 1}</td>
+                                    <td>{lop.tenLopHoc}</td>
+                                    <td>{lop.thoigian}</td>
+                                    <td>{lop.tenGV}</td>
+                                    <td>{lop.ngay_batdau}</td>
+                                    <td>{lop.diadiem}</td>
+                                    <td>
+                                        <button className="button-dk" onClick={() => handleDangKy(lop.maLopHoc)}> Đăng ký</button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td style={{ border: 'none', color: '#FD6504' }}>Chưa có lịch mở lớp học</td>
+                            </tr>
+                        )}
+                    </tbody>
                 </table>
+
                 <ToastContainer
                     position="top-right"
                     autoClose={4000}

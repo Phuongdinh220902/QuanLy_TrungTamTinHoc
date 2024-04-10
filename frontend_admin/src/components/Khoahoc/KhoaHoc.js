@@ -225,19 +225,19 @@ const KhoaHoc = (props) => {
 
 
                                                 <td className="table-item">
-                                                    <button className="btn btn-info mx-2">
+                                                    <button className="btn btn-info">
                                                         <Link to={`/lophoc/${item.maKH}`} className="navlink linkStyle">
                                                             Xem lớp học
                                                         </Link>
                                                     </button>
-                                                    <Link to={`/mota/${item.maKH}`}>
+                                                    {/* <Link to={`/mota/${item.maKH}`}>
                                                         <button className="btn btn-info ">
                                                             Xem mô tả
                                                         </button>
-                                                    </Link>
+                                                    </Link> */}
                                                     <Link to={`/themchitiet/${item.maKH}`}>
                                                         <button className="btn btn-info mx-2">
-                                                            Thêm mô tả
+                                                            Thêm chi tiết
                                                         </button>
                                                     </Link>
                                                     <button className="btn btn-warning" onClick={() => handleOpenModalUpdate(item)}>

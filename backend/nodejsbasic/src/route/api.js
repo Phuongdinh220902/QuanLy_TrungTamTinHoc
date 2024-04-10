@@ -62,6 +62,9 @@ const initAPIRoute = (app) => {
     router.post("/SaveCheckboxStatesLopHocBatDau", APIController.SaveCheckboxStatesLopHocBatDau);
     router.post("/SaveCheckboxStatesCamNhan", APIController.SaveCheckboxStatesCamNhan);
 
+    router.get('/checkChiTietExists/:maKH', APIController.checkChiTietExists)
+    router.post("/updateChiTietKhoaHoc/:maChiTiet", APIController.updateChiTietKhoaHoc);
+
     // USer
     router.get('/layTrangChu', APIController.layTrangChu)
     router.get('/layTrangChuKhoaHoc', APIController.layTrangChuKhoaHoc)
@@ -498,7 +501,7 @@ const initAPIRoute = (app) => {
         }
     });
 
-    router.post("/themmotakhoahoc", async (req, res) => {
+    router.post("/themchitietkhoahoc", async (req, res) => {
         try {
             // const { maKH } = req.params; 
             let { maKH } = req.body;

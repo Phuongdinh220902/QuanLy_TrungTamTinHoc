@@ -19,6 +19,7 @@ const MoTa = (props) => {
     useEffect(() => {
         fetchData();
     }, [maKH]);
+    console.log(maKH, 'maKH')
 
     const fetchData = async () => {
         try {
@@ -50,9 +51,16 @@ const MoTa = (props) => {
         <>
             <div className="container-fluid app__content">
                 <h2 className="text-center">Mô Tả Khoá Học</h2>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }}>
+                    <button className="btn btn-info mx-2" >
+                        <Link to={`/themnoidungkhoahoc/${maKH}`} style={{ textDecoration: 'none', color: 'white' }}>
+                            Thêm mô tả khoá học
+                        </Link>
+                    </button>
+                </div>
 
                 <div className="listDV">
-                    <div className="table-container">
+                    <div className="table-container" style={{ marginTop: '30px' }}>
                         <table className="table table-striped">
                             <thead>
                                 <tr>
@@ -68,7 +76,7 @@ const MoTa = (props) => {
                                         <td className="">{item.tieude}</td>
 
                                         <td className="table-item">
-                                            <Link to={`/chinhsuamota/${item.maND}`}>
+                                            <Link to={`/chinhsuamota/${item.maND}?maKH=${maKH}`}>
                                                 <button className="btn btn-warning mx-2">
                                                     Cập nhật
                                                 </button>
