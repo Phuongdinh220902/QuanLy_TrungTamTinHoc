@@ -61,7 +61,7 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
             }
             let res = await axios.post('http://localhost:2209/api/v1/updateKH', formData);
 
-            toast.success('Update người dùng thành công');
+            toast.success('Cập nhật khoá học thành công');
             onUpdate();
             handleClose();
         }

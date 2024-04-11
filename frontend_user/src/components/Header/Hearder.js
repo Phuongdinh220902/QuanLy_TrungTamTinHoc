@@ -18,7 +18,8 @@ const Header = () => {
     const [user, setUser] = useState(null);
     const [dsAnh, setDsAnh] = useState([]);
     const [index, setIndex] = useState(0);
-
+    const maHV = localStorage.getItem('maHV');
+    const [userProfile, setUserProfile] = useState(null);
     const handleSelect = (selectedIndex) => {
         setIndex(selectedIndex);
     };
@@ -52,6 +53,20 @@ const Header = () => {
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                // Gọi API để lấy thông tin cá nhân của người dùng với maHV từ params
+                const responseProfile = await axios.get(`http://localhost:2209/api/v1/layTrangCaNhanHV/${maHV}`);
+                setUserProfile(responseProfile.data.TCN[0]);
+
+            } catch (error) {
+                console.error('Lỗi khi gọi API: ', error);
+            }
+        };
+        fetchUserProfile();
+    }, [maHV]);
 
     const navigate = useNavigate();
     const [show, setShow] = useState(false);
@@ -130,7 +145,8 @@ const Header = () => {
                         {user && (
                             <div className="user-info-container">
                                 <div className="user-info">
-                                    <img src={user.gioitinh === 1 ? namImg : nuImg} alt={user.gioitinh === 1 ? 'Nam' : 'Nữ'} />
+                                    {/* <img src={user.gioitinh === 1 ? namImg : nuImg} alt={user.gioitinh === 1 ? 'Nam' : 'Nữ'} /> */}
+                                    <img src={`http://localhost:2209/images/${userProfile && userProfile.tenHinhAnhHV}`} style={{ width: '40px' }} />
                                     <Link to='/trangcanhan' className="user-name" style={{ fontSize: '18px', fontWeight: 'bold', color: 'black' }}>
                                         {user.tenHV}
 

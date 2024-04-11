@@ -111,6 +111,7 @@ const initAPIRoute = (app) => {
     router.post('/GuiCamNhan', APIController.GuiCamNhan)
     router.get('/KiemTraDanhGia', APIController.KiemTraDanhGia)
 
+
     function generateToken(email, role) {
         const secretKey = "yourSecretKey"; // Replace with your actual secret key
         const token = jwt.sign({ email, role }, secretKey, { expiresIn: "1h" });
@@ -617,6 +618,51 @@ const initAPIRoute = (app) => {
             return res.status(200).json({
                 message: "Cập nhật thành công!",
                 tenGV: tenGV
+            });
+        } catch (error) {
+            console.log("Không cập nhật được!", error);
+            return res.status(500).json({ error: "Không hiển thị được!" });
+        }
+    });
+
+    router.post("/updateHocVien", upload.single("file"), async (req, res) => {
+        let { maHV, tenHV, email, sdt, ngaysinh, gioitinh, noisinh } = req.body;
+
+        console.log(req.body);
+        const { file } = req; // Lấy thông tin về file từ request
+        let filename = file ? file.filename : undefined;
+
+        try {
+            if (file && file.filename) {
+                filename = file.filename;
+            }
+
+            // Cập nhật thông tin đoàn viên
+            await pool.execute("UPDATE hoc_vien SET tenHV = ?, email =?, sdt = ?, ngaysinh=STR_TO_DATE(?, '%Y-%m-%d'), gioitinh = ?, noisinh = ?  WHERE maHV = ? ", [tenHV, email, sdt, ngaysinh, gioitinh, noisinh, maHV])
+
+
+            if (file && file.filename) {
+                filename = file.filename;
+
+                // Cập nhật tên ảnh trong bảng 'anh'
+                await pool.execute("UPDATE hinhanh_hocvien SET tenHinhAnhHV = ? WHERE maHV = ?", [
+                    filename,
+                    maHV,
+                ]);
+                console.log(filename)
+            }
+
+            if (filename != undefined) {
+                return res.status(200).json({
+                    message: "Cập nhật thành công!",
+                    tenHinhAnhHV: filename,
+                    tenHV: tenHV,
+                });
+            }
+
+            return res.status(200).json({
+                message: "Cập nhật thành công!",
+                tenHV: tenHV
             });
         } catch (error) {
             console.log("Không cập nhật được!", error);

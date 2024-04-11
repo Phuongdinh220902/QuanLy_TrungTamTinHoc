@@ -16,6 +16,7 @@ const ProfilePage = () => {
     const [userProfile, setUserProfile] = useState(null);
     const maHV = localStorage.getItem('maHV');
     const [registeredCourses, setRegisteredCourses] = useState([]);
+    // const [tenHinhAnhHV, setTenHinhAnhHV] = useState("");
     const { maCaThi } = useParams();
     const navigate = useNavigate();
 
@@ -24,6 +25,10 @@ const ProfilePage = () => {
             try {
                 // Gọi API để lấy thông tin cá nhân của người dùng với maHV từ params
                 const responseProfile = await axios.get(`http://localhost:2209/api/v1/layTrangCaNhanHV/${maHV}`);
+                // const userProfile = responseProfile.data.TCN[0];
+                // if (userProfile) {
+                //     setTenHinhAnhHV(userProfile.tenHV);
+                // }
                 setUserProfile(responseProfile.data.TCN[0]);
 
                 // Gọi API để lấy danh sách các khóa học đã đăng ký của người dùng
@@ -105,12 +110,14 @@ const ProfilePage = () => {
                                     <div className="col-md-4 gradient-custom text-center1 text-white"
                                         style={{ borderTopLeftRadius: "0.5rem", borderBottomLeftRadius: "0.5rem" }}>
                                         <div className="user-avatar">
-                                            {userProfile && userProfile.gioitinh === 1 ? (
+                                            {/* {userProfile && userProfile.gioitinh === 1 ? (
                                                 <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin" className="img-fluid my-5" style={{ width: "80px" }} />
 
                                             ) : (
                                                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="Avatar" className="img-fluid my-5" style={{ width: "80px" }} />
-                                            )}
+                                            )} */}
+                                            <img src={`http://localhost:2209/images/${userProfile && userProfile.tenHinhAnhHV}`} className="img-fluid my-5" style={{ width: "90px", borderRadius: '50%', height: '90px' }} />
+
                                         </div>
 
                                         <h4>{userProfile && userProfile.tenHV}</h4>
@@ -216,26 +223,33 @@ const ProfilePage = () => {
 
             <Modal show={showModal} onHide={toggleModal}>
                 <Modal.Header closeButton style={{ backgroundColor: '#0082c8', color: 'white' }}>
-                    <Modal.Title>Danh sách ca thi</Modal.Title>
+                    <Modal.Title>Lịch Thi</Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{ fontSize: '16px' }}>
-                    {/* Display exam data here */}
-                    <p style={{ marginBottom: '15px', fontSize: '18px', marginLeft: '10px' }}>Ngày thi:
-                        <span style={{ backgroundColor: 'yellow', padding: '5px', borderRadius: '5px', color: 'red' }}>{ngaythi}
-                        </span>
-                    </p>
-                    <p style={{ marginBottom: '15px', fontSize: '18px', marginLeft: '10px' }}>Ngày hết hạn:
-                        <span style={{ backgroundColor: 'yellow', padding: '5px', borderRadius: '5px', color: 'red' }}>{ngayhethan}
-                        </span>
-                    </p>
-                    {caThiData.map((caThi, index) => (
-                        <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '10px', borderTop: '1px solid #ccc' }}>
-                            <p style={{ marginRight: '10px' }}>Thời gian: {caThi.thoigian}</p>
-                            <div style={{ flex: '1', display: 'flex', justifyContent: 'center' }}>
-                                <button className="btn btn-primary" onClick={() => handleDangKy(caThi.maCaThi)}>Đăng ký</button>
-                            </div>
-                        </div>
-                    ))}
+                    {/* Check if caThiData is empty */}
+                    {caThiData.length === 0 ? (
+                        <p style={{ textAlign: 'center', fontSize: '18px' }}>Hiện tại chưa có lịch thi</p>
+                    ) : (
+                        <>
+                            {/* Display exam data here */}
+                            <p style={{ marginBottom: '15px', fontSize: '18px', marginLeft: '10px' }}>Ngày thi:
+                                <span style={{ backgroundColor: 'yellow', padding: '5px', borderRadius: '5px', color: 'red' }}>{ngaythi}
+                                </span>
+                            </p>
+                            <p style={{ marginBottom: '15px', fontSize: '18px', marginLeft: '10px' }}>Ngày hết hạn:
+                                <span style={{ backgroundColor: 'yellow', padding: '5px', borderRadius: '5px', color: 'red' }}>{ngayhethan}
+                                </span>
+                            </p>
+                            {caThiData.map((caThi, index) => (
+                                <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '10px', borderTop: '1px solid #ccc' }}>
+                                    <p style={{ marginRight: '10px' }}>Thời gian: {caThi.thoigian}</p>
+                                    <div style={{ flex: '1', display: 'flex', justifyContent: 'center' }}>
+                                        <button className="btn btn-primary" onClick={() => handleDangKy(caThi.maCaThi)}>Đăng ký</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </>
+                    )}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={toggleModal}>
@@ -243,6 +257,7 @@ const ProfilePage = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
 
         </>
     );

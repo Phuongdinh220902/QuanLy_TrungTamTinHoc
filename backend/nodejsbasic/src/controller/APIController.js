@@ -1168,6 +1168,9 @@ let themHocVienDKThi = async (req, res) => {
                 [maDSDK]
             );
 
+            await pool.execute("UPDATE ca_thi SET slDaDK = sldk + 1 WHERE maCaThi = ?", [maCaThi]);
+
+
             return res.status(200).json({
                 'DT': {
                     'tenHV': tenHV,
@@ -1591,6 +1594,23 @@ let dangkyTKNguoiDung = async (req, res) => {
         );
         console.log("ok thanh cong")
 
+        // Lấy ra maHV vừa thêm vào bảng hoc_vien
+        const maHV = rows.insertId;
+
+        // Xác định tên hình ảnh dựa vào giới tính
+        let tenHinhAnhHV = '';
+        if (gioitinh === 1) {
+            tenHinhAnhHV = 'namavatar.png';
+        } else {
+            tenHinhAnhHV = 'nu.webp';
+        }
+
+        // Thêm vào bảng hinhanh_hocvien
+        await pool.execute(
+            "INSERT INTO hinhanh_hocvien (maHV, tenHinhAnhHV) VALUES (?, ?)",
+            [maHV, tenHinhAnhHV]
+        );
+
         return res.status(200).json({
             message: "Đăng ký thành công"
         });
@@ -2006,10 +2026,26 @@ let deleteMoTa = async (req, res) => {
     }
 }
 
+// let layTrangCaNhanHV = async (req, res) => {
+//     const maHV = req.params.maHV;
+//     try {
+//         const [TCN, a] = await pool.execute("SELECT maHV, tenHV, email, sdt, DATE_FORMAT(STR_TO_DATE(ngaysinh, '%Y-%m-%d'), '%d-%m-%Y') AS ngaysinh, noisinh, gioitinh FROM hoc_vien where hoc_vien.maHV = ? and hoc_vien.trang_thai = 1", [maHV]);
+//         return res.status(200).json({
+//             TCN: TCN
+//         })
+//     }
+//     catch (error) {
+//         console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+//         return res.status(500).json({
+//             error: "Lỗi khi truy vấn cơ sở dữ liệu",
+//         });
+//     }
+// };
+
 let layTrangCaNhanHV = async (req, res) => {
     const maHV = req.params.maHV;
     try {
-        const [TCN, a] = await pool.execute("SELECT maHV, tenHV, email, sdt, DATE_FORMAT(STR_TO_DATE(ngaysinh, '%Y-%m-%d'), '%d-%m-%Y') AS ngaysinh, noisinh, gioitinh FROM hoc_vien where hoc_vien.maHV = ? and hoc_vien.trang_thai = 1", [maHV]);
+        const [TCN, a] = await pool.execute("SELECT hoc_vien.maHV, tenHV, email, sdt, DATE_FORMAT(STR_TO_DATE(ngaysinh, '%Y-%m-%d'), '%d-%m-%Y') AS ngaysinh, noisinh, gioitinh, hinhanh_hocvien.tenHinhAnhHV FROM hoc_vien, hinhanh_hocvien where hoc_vien.maHV = ? and hoc_vien.trang_thai = 1 and hoc_vien.maHV = hinhanh_hocvien.maHV", [maHV]);
         return res.status(200).json({
             TCN: TCN
         })
@@ -2021,6 +2057,21 @@ let layTrangCaNhanHV = async (req, res) => {
         });
     }
 };
+// let layHinhAnhHV = async (req, res) => {
+//     const maHV = req.params.maHV;
+//     try {
+//         const [HA, a] = await pool.execute("SELECT hinhanh_hocvien.tenHinhAnhHV FROM hoc_vien, hinhanh_hocvien where hoc_vien.maHV = ? and hoc_vien.trang_thai = 1 and hoc_vien.maHV = hinhanh_hocvien.maHV", [maHV]);
+//         return res.status(200).json({
+//             HA: HA
+//         })
+//     }
+//     catch (error) {
+//         console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+//         return res.status(500).json({
+//             error: "Lỗi khi truy vấn cơ sở dữ liệu",
+//         });
+//     }
+// };
 
 let layKhoaHocDaDK = async (req, res) => {
     const maHV = req.params.maHV;
@@ -2378,7 +2429,7 @@ let layTrangCaNhanGV = async (req, res) => {
 
 let layCaThiDK = async (req, res) => {
     try {
-        const [DSCT, a] = await pool.execute("SELECT ca_thi.maCaThi, ca_thi.thoigian, ca_thi.trang_thai, DATE_FORMAT(STR_TO_DATE(lich_thi.ngaythi, '%Y-%m-%d'), '%d-%m-%Y') AS ngaythi, batdau,  DATE_FORMAT(STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d'), '%d-%m-%Y') AS ngayhethan FROM ca_thi, lich_thi where lich_thi.batdau = 1 and slDaDK < slToiDa and lich_thi.maLichThi = ca_thi.maLichThi");
+        const [DSCT, a] = await pool.execute("SELECT ca_thi.maCaThi, ca_thi.thoigian, ca_thi.trang_thai, DATE_FORMAT(STR_TO_DATE(lich_thi.ngaythi, '%Y-%m-%d'), '%d-%m-%Y') AS ngaythi, batdau, DATE_FORMAT(STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d'), '%d-%m-%Y') AS ngayhethan FROM ca_thi, lich_thi WHERE lich_thi.batdau = 1 AND slDaDK < slToiDa AND lich_thi.maLichThi = ca_thi.maLichThi AND STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d') >= DATE(NOW())");
         return res.status(200).json({
             DSCT: DSCT
         })
