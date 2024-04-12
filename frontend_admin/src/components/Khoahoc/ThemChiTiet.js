@@ -82,7 +82,7 @@ function ThemChiTiet() {
                 toast.success('Thêm thành công');
             }
             setTimeout(() => {
-                navigate('/khoahoc');
+                navigate(`/mota/${maKH}`);
             }, 4000);
 
         } catch (error) {
@@ -93,6 +93,10 @@ function ThemChiTiet() {
 
     const handleToastClose = () => {
         navigate('/khoahoc');
+    };
+
+    const handleToastCloseToast = () => {
+        navigate(`/mota/${maKH}`);
     };
 
 
@@ -138,7 +142,7 @@ function ThemChiTiet() {
                     draggable
                     pauseOnHover
                     theme="light"
-                    onClose={handleToastClose}
+                    onClose={handleToastCloseToast}
                 />
             </div>
         </>

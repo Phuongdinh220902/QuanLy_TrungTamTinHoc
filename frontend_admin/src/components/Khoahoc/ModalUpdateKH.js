@@ -16,7 +16,6 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
     const [mota, setmota] = useState('');
     const [hocphi, sethocphi] = useState('');
     const [hocphisaukhigiam, sethocphisaukhigiam] = useState('');
-    const [monhoc, setmonhoc] = useState('');
     const [so_gio, setso_gio] = useState('');
     const [image, setImage] = useState('');
     const [previewImage, setPreviewImage] = useState('');
@@ -29,7 +28,6 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
             setmota(selectedKH.mota);
             sethocphi(selectedKH.hocphi);
             sethocphisaukhigiam(selectedKH.hocphisaukhigiam);
-            setmonhoc(selectedKH.monhoc);
             setso_gio(selectedKH.so_gio);
             setImage(selectedKH.tenHinhAnhKH);
         }
@@ -50,7 +48,6 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
             formData.append('mota', mota);
             formData.append('hocphi', hocphi);
             formData.append('hocphisaukhigiam', hocphisaukhigiam);
-            formData.append('monhoc', monhoc);
             formData.append('so_gio', so_gio);
             if (image instanceof Blob) {
                 formData.append("file", image, image.name);
@@ -100,11 +97,7 @@ const ModalUpdateKH = ({ show, handleClose, selectedKH, onUpdate }) => {
                             <input type="text" className="form-control" value={hocphisaukhigiam}
                                 onChange={(event) => sethocphisaukhigiam(event.target.value)} />
                         </div>
-                        <div className="col-12">
-                            <label className="form-label">Môn học</label>
-                            <input type="text" className="form-control" value={monhoc}
-                                onChange={(event) => setmonhoc(event.target.value)} />
-                        </div>
+
                         <div className="col-12">
                             <label className="form-label">Số giờ</label>
                             <input type="text" className="form-control" value={so_gio}

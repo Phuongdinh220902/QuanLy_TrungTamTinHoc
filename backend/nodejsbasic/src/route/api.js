@@ -111,6 +111,7 @@ const initAPIRoute = (app) => {
     router.post('/GuiCamNhan', APIController.GuiCamNhan)
     router.get('/KiemTraDanhGia', APIController.KiemTraDanhGia)
 
+    router.get('/laydskh1/:tukhoa', APIController.laydskh1)
 
     function generateToken(email, role) {
         const secretKey = "yourSecretKey"; // Replace with your actual secret key
@@ -289,7 +290,7 @@ const initAPIRoute = (app) => {
 
     router.post('/themKH', upload.single('file'), async (req, res) => {
 
-        let { tenKH, hocphi, mota, monhoc, so_gio } = req.body;
+        let { tenKH, hocphi, mota, so_gio } = req.body;
         console.log(req.body);
         try {
             const [existingRows, existingFields] = await pool.execute("SELECT * FROM khoa_hoc WHERE tenKH = ?", [tenKH]);
@@ -302,8 +303,8 @@ const initAPIRoute = (app) => {
                 });
             }
             // Thêm 
-            await pool.execute("insert into khoa_hoc(tenKH, hocphi, mota, monhoc, so_gio) values (?, ?, ?, ?, ?)",
-                [tenKH, hocphi, mota, monhoc, so_gio]
+            await pool.execute("insert into khoa_hoc(tenKH, hocphi, mota, so_gio) values (?, ?, ?, ?)",
+                [tenKH, hocphi, mota, so_gio]
             );
 
             // Lấy khóa học vừa thêm
@@ -323,7 +324,6 @@ const initAPIRoute = (app) => {
                     'tenKH': tenKH,
                     'hocphi': hocphi,
                     'mota': mota,
-                    'monhoc': monhoc,
                     'so_gio': so_gio,
                 },
                 'EC': 0,
@@ -337,7 +337,7 @@ const initAPIRoute = (app) => {
     });
 
     router.post("/updateKH", upload.single("file"), async (req, res) => {
-        let { maKH, tenKH, hocphi, mota, monhoc, so_gio, hocphisaukhigiam } = req.body;
+        let { maKH, tenKH, hocphi, mota, so_gio, hocphisaukhigiam } = req.body;
 
         console.log(req.body);
         const { file } = req; // Lấy thông tin về file từ request
@@ -351,7 +351,7 @@ const initAPIRoute = (app) => {
             }
 
             // Cập nhật thông tin đoàn viên
-            await pool.execute("UPDATE khoa_hoc SET tenKH = ?, hocphi =?, hocphisaukhigiam = ?, mota = ?, monhoc = ?, so_gio = ? WHERE maKH=?", [tenKH, hocphi, hocphisaukhigiam, mota, monhoc, so_gio, maKH])
+            await pool.execute("UPDATE khoa_hoc SET tenKH = ?, hocphi =?, hocphisaukhigiam = ?, mota = ?, so_gio = ? WHERE maKH=?", [tenKH, hocphi, hocphisaukhigiam, mota, so_gio, maKH])
 
 
             if (file && file.filename) {

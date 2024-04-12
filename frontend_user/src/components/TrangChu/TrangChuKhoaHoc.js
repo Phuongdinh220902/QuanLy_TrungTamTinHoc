@@ -19,8 +19,24 @@ const KhoaHoc = () => {
             try {
                 const response = await axios.get('http://localhost:2209/api/v1/layTrangChuKhoaHoc');
                 const data = response.data.TCKH;
-                setCourses(data);
-                console.log(data)
+                // setCourses(data);
+                // Lấy danh sách giáo viên từ response
+                // const data = response.data.TCGV;
+                // Nếu danh sách có ít hơn hoặc bằng 8 phần tử, không cần lọc ngẫu nhiên
+                if (data.length <= 12) {
+                    setCourses(data);
+                } else {
+                    // Nếu danh sách có hơn 8 phần tử, lấy ngẫu nhiên 8 phần tử
+                    const randomIndexes = [];
+                    while (randomIndexes.length < 12) {
+                        const randomIndex = Math.floor(Math.random() * data.length);
+                        if (!randomIndexes.includes(randomIndex)) {
+                            randomIndexes.push(randomIndex);
+                        }
+                    }
+                    const randomKhoaHoc = randomIndexes.map(index => data[index]);
+                    setCourses(randomKhoaHoc);
+                }
             } catch (error) {
                 console.error('Lỗi khi lấy dữ liệu từ API: ', error);
             }

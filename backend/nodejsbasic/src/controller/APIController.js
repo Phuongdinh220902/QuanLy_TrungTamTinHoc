@@ -297,10 +297,10 @@ let laydskh = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
-            const [sotrang, fields] = await pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi, hocphisaukhigiam, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH");
+            const [sotrang, fields] = await pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi, hocphisaukhigiam, so_gio, mota, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH");
 
             const [result2, fields1] = await Promise.all([
-                pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH LIMIT ? OFFSET ?", [
+                pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, so_gio, mota, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH LIMIT ? OFFSET ?", [
                     pageSize,
                     offset,
 
@@ -330,15 +330,15 @@ let laydskh = async (req, res) => {
         const offset = (page - 1) * pageSize;
 
         const [sotrang, fields] = await pool.execute(
-            "SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.monhoc) LIKE UPPER(?) OR UPPER(khoa_hoc.so_gio) LIKE UPPER(?))",
-            ["%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+            "SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, so_gio, mota, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.so_gio) LIKE UPPER(?))",
+            ["%" + tukhoa + "%", "%" + tukhoa + "%"]
         );
         console.log(sotrang)
 
         const [result2, fields1] = await Promise.all([
             pool.execute(
-                "SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, so_gio, mota, monhoc, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.monhoc) LIKE UPPER(?) OR UPPER(khoa_hoc.so_gio) LIKE UPPER(?))",
-                ["%" + tukhoa + "%", "%" + tukhoa + "%", "%" + tukhoa + "%"]
+                "SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, so_gio, mota, tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.so_gio) LIKE UPPER(?))",
+                ["%" + tukhoa + "%", "%" + tukhoa + "%"]
             ),
         ]);
 
@@ -383,39 +383,39 @@ let deleteKH = async (req, res) => {
     }
 }
 
-let createKhoaHoc = async (req, res) => {
-    console.log(req.body);
-    try {
-        const { tenKH, hocphi, mota, maGV, monhoc } = req.body;
+// let createKhoaHoc = async (req, res) => {
+//     console.log(req.body);
+//     try {
+//         const { tenKH, hocphi, mota, maGV, monhoc } = req.body;
 
-        if (!tenKH || !hocphi || !maGV || !monhoc) {
-            return res.status(400).json({
-                message: 'Missing required parameters'
-            });
-        }
+//         if (!tenKH || !hocphi || !maGV || !monhoc) {
+//             return res.status(400).json({
+//                 message: 'Missing required parameters'
+//             });
+//         }
 
-        // Kiểm tra xem giảng viên với mã giảng viên (maGV) có tồn tại không
-        const [giangVienRows, giangVienFields] = await pool.execute("SELECT * FROM giang_vien WHERE maGV = ?", [maGV]);
-        if (giangVienRows.length === 0) {
-            return res.status(400).json({
-                message: 'Giảng viên không tồn tại'
-            });
-        }
+//         // Kiểm tra xem giảng viên với mã giảng viên (maGV) có tồn tại không
+//         const [giangVienRows, giangVienFields] = await pool.execute("SELECT * FROM giang_vien WHERE maGV = ?", [maGV]);
+//         if (giangVienRows.length === 0) {
+//             return res.status(400).json({
+//                 message: 'Giảng viên không tồn tại'
+//             });
+//         }
 
-        // Thêm khoá học vào cơ sở dữ liệu
-        const query = 'INSERT INTO khoa_hoc(tenKH, hocphi, mota, maGV, monhoc) VALUES (?, ?, ?, ?, ?)';
-        await pool.execute(query, [tenKH, hocphi, mota, maGV, monhoc]);
+//         // Thêm khoá học vào cơ sở dữ liệu
+//         const query = 'INSERT INTO khoa_hoc(tenKH, hocphi, mota, maGV, monhoc) VALUES (?, ?, ?, ?, ?)';
+//         await pool.execute(query, [tenKH, hocphi, mota, maGV, monhoc]);
 
-        return res.status(200).json({
-            message: 'OK'
-        });
-    } catch (error) {
-        console.error('Error while adding course:', error);
-        return res.status(500).json({
-            message: 'Internal server error'
-        });
-    }
-};
+//         return res.status(200).json({
+//             message: 'OK'
+//         });
+//     } catch (error) {
+//         console.error('Error while adding course:', error);
+//         return res.status(500).json({
+//             message: 'Internal server error'
+//         });
+//     }
+// };
 
 // let updateKH = async (req, res) => {
 //     let { maKH, tenKH, hocphi, mota, monhoc, so_gio } = req.body;
@@ -625,31 +625,6 @@ let updateLH = async (req, res) => {
     }
 }
 
-let themLH = async (req, res) => {
-    console.log("ok")
-    let { maGV, maLH, maKH, tenLopHoc, trang_thai } = req.body;
-    console.log(req.body);
-    try {
-        await pool.execute("insert into khoa_hoc(tenKH, hocphi, mota, monhoc, so_gio) values (?, ?, ?, ?, ?)",
-            [tenKH, hocphi, mota, monhoc, so_gio]
-        );
-
-        res.status(200).json({
-            'DT': {
-                'tenKH': tenKH,
-                'hocphi': hocphi,
-                'mota': mota,
-                'monhoc': monhoc,
-                'so_gio': so_gio,
-            },
-            'EC': 0,
-            'EM': 'Tạo thành công'
-        });
-    } catch (error) {
-        console.log("Lỗi khi thêm khoá học: ", error);
-        return res.status(500).json({ error: "Lỗi khi thêm khoá học" });
-    }
-};
 
 
 let laydsHocVien = async (req, res) => {
@@ -2619,10 +2594,61 @@ let KiemTraDanhGia = async (req, res) => {
     }
 }
 
+let laydskh1 = async (req, res) => {
+    try {
+        let tukhoa = req.params.tukhoa
+
+        if (tukhoa == "null" || !tukhoa) {
+
+            const [result2, fields1] = await Promise.all([
+                pool.execute("SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, mota, so_gio,tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH"),
+            ]);
+
+            if (result2[0] && result2[0].length > 0) {
+                return res.status(200).json({
+                    dataCD: result2[0],
+                });
+            } else {
+                console.log("Không tìm thấy kết quả");
+                return res.status(200).json({
+                    dataCD: [],
+                });
+            }
+        }
+        console.log(tukhoa)
+
+        const [result2, fields1] = await Promise.all([
+            pool.execute(
+                "SELECT khoa_hoc.maKH, tenKH, hocphi,hocphisaukhigiam, mota, so_gio,tenHinhAnhKH, maHinhAnh FROM khoa_hoc, hinhanh_khoahoc where khoa_hoc.trang_thai = 1 and khoa_hoc.maKH = hinhanh_khoahoc.maKH AND (UPPER(khoa_hoc.tenKH) LIKE UPPER(?) OR UPPER(khoa_hoc.hocphi) LIKE UPPER(?))",
+                ["%" + tukhoa + "%", "%" + tukhoa + "%"]
+            ),
+        ]);
+
+        if (result2[0] && result2[0].length > 0) {
+            return res.status(200).json({
+                dataCD: result2[0],
+            });
+        } else {
+            console.log("Không tìm thấy kết quả");
+            return res.status(200).json({
+                dataCD: [],
+            });
+        }
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+
+
+
 
 module.exports = {
-    laydshv, laydsgv, loginhv, loginadmin, createKhoaHoc, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
-    laydskh, deleteKH, laydsLopHoc, updateLH, themLH, deleteLH, DSGiangVien, laydsHocVien, deleteHVLopHoc, themLopHoc,
+    laydshv, laydsgv, loginhv, loginadmin, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
+    laydskh, deleteKH, laydsLopHoc, updateLH, deleteLH, DSGiangVien, laydsHocVien, deleteHVLopHoc, themLopHoc,
     layHinhAnhGioiThieu, deleteHAQC, layHinhAnhTrangChu, layGiangVien,
     layTrangChu, layTrangChuKhoaHoc, layTrangChuGiangVien,
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
@@ -2634,5 +2660,5 @@ module.exports = {
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
     layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,
     layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV, layFile, layThongTinLTTSTD, updateTTLTTSTD, laydsCaThiND,
-    DangKyLopHoc, GuiCamNhan, KiemTraDanhGia,
+    DangKyLopHoc, GuiCamNhan, KiemTraDanhGia, laydskh1
 }

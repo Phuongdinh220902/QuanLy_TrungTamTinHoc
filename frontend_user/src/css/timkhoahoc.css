@@ -121,11 +121,11 @@ button.multiselect-clear-filter {
 
 .search-input-container {
     margin-top: 40px;
-    position: relative;
+    display: flex;
 }
 
 .search-input-container::after {
-    /* background-image: url(/template/frontend/images/search-icon.png); */
+    /* background-image: url(../images/search-icon.png); */
     background-repeat: no-repeat;
     background-size: contain;
     content: "";
@@ -135,6 +135,23 @@ button.multiselect-clear-filter {
     top: 50%;
     transform: translateY(-50%);
     width: 24px;
+}
+
+.search-button-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.search-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
 }
 
 .search-input-container .catalog-search-input {

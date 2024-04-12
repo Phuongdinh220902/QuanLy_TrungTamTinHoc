@@ -12,7 +12,6 @@ const ThemKH = ({ show, handleCloseModalKH, onUpdate }) => {
     const [tenKH, setTen] = useState('');
     const [hocphi, sethocphi] = useState('');
     const [mota, setmota] = useState('');
-    const [monhoc, setmonhoc] = useState('');
     const [so_gio, setso_gio] = useState('');
     const [image, setImage] = useState('');
     const [previewImage, setPreviewImage] = useState('');
@@ -32,7 +31,6 @@ const ThemKH = ({ show, handleCloseModalKH, onUpdate }) => {
         setTen("");
         sethocphi("");
         setmota("");
-        setmonhoc("");
         setso_gio("");
         setImage("");
         setPreviewImage("");
@@ -68,7 +66,6 @@ const ThemKH = ({ show, handleCloseModalKH, onUpdate }) => {
             formData.append('tenKH', normalizedTenKH);
             formData.append('hocphi', hocphi);
             formData.append('mota', normalizedMoTa);
-            formData.append('monhoc', monhoc);
             formData.append('so_gio', so_gio);
             formData.append('file', image, image.name);
             for (const value of formData.values()) {
@@ -120,11 +117,6 @@ const ThemKH = ({ show, handleCloseModalKH, onUpdate }) => {
                             <label className="form-label">Mô tả</label>
                             <input type="text" className="form-control" value={mota}
                                 onChange={(event) => setmota(event.target.value)} />
-                        </div>
-                        <div className="col-12">
-                            <label className="form-label">Môn học</label>
-                            <input type="text" className="form-control" value={monhoc}
-                                onChange={(event) => setmonhoc(event.target.value)} />
                         </div>
                         <div className="col-12">
                             <label className="form-label">Số giờ</label>

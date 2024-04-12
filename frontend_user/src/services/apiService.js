@@ -29,8 +29,8 @@ const deleteHV = (maHV) => {
     return axios.post(`api/v1/deleteHV/${maHV}`);
 };
 
-const laydskh = (page, tukhoa) => {
-    return axios.get(`api/v1/laydskh/${page}/${tukhoa}`);
+const laydskh1 = (tukhoa) => {
+    return axios.get(`api/v1/laydskh1/${tukhoa}`);
 };
 
 const deleteKH = (maKH) => {
@@ -66,4 +66,4 @@ const dangnhapnguoidung = async (formdata) => {
 };
 
 
-export { laydshv, laydsgv, loginadmin, deleteHV, laydskh, deleteKH, laydsLopHoc, deleteLH, laydsHocVien, dangnhapnguoidung };
+export { laydshv, laydsgv, loginadmin, deleteHV, laydskh1, deleteKH, laydsLopHoc, deleteLH, laydsHocVien, dangnhapnguoidung };

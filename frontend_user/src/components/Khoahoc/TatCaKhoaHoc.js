@@ -1,27 +1,62 @@
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "../../css/timkhoahoc.css"
 import { Link } from "react-router-dom";
+import {
+    laydskh1
+} from "../../services/apiService";
+import tim from '../../images/search-icon.png'
 const TatCaKhoaHoc = () => {
     const [khoaHoc, setKhoaHoc] = useState([]);
+    let [tukhoa, setTuKhoa] = useState("")
+
+    // useEffect(() => {
+    //     const fetchKhoaHoc = async () => {
+    //         try {
+    //             const response = await axios.get('http://localhost:2209/api/v1/layTrangChuKhoaHoc');
+    //             const data = response.data.TCKH;
+    //             setKhoaHoc(data);
+    //         } catch (error) {
+    //             console.error('Lỗi khi lấy dữ liệu từ API: ', error);
+    //         }
+    //     };
+
+    //     fetchKhoaHoc();
+    // }, []);
 
     useEffect(() => {
-        const fetchKhoaHoc = async () => {
-            try {
-                const response = await axios.get('http://localhost:2209/api/v1/layTrangChuKhoaHoc');
-                const data = response.data.TCKH;
-                setKhoaHoc(data);
-            } catch (error) {
-                console.error('Lỗi khi lấy dữ liệu từ API: ', error);
-            }
-        };
-
         fetchKhoaHoc();
-    }, []);
+    }, [tukhoa]);
+
+
+    const fetchKhoaHoc = async () => {
+        try {
+            let tukhoa_ = localStorage.getItem("tukhoa")
+            let res = await laydskh1(tukhoa_);
+            console.log(res);
+
+            if (res.status === 200) {
+                setKhoaHoc(res.data.dataCD);
+            } else {
+                // Xử lý trường hợp lỗi
+                console.error("Lỗi khi gọi API:", res.statusText);
+            }
+        } catch (error) {
+            console.error("Lỗi khi gọi API:", error.message);
+        }
+    };
+
+
     const formatCurrency = (value) => {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const handleSearch = async () => {
+        if (tukhoa == "" || !tukhoa) {
+            tukhoa = "null"
+        }
+        localStorage.setItem("tukhoa", tukhoa)
+        await fetchKhoaHoc();
     };
 
     return (
@@ -38,7 +73,16 @@ const TatCaKhoaHoc = () => {
                                 </div>
                                 <div className="col-md-5">
                                     <div className="search-input-container">
-                                        <input className="catalog-search-input" type="search" placeholder="Tìm khóa học" value="" />
+                                        <input className="catalog-search-input"
+                                            type="search" placeholder="Tìm khóa học"
+                                            value={tukhoa}
+                                            onChange={(e) => setTuKhoa(e.target.value)} />
+                                        <span className="search-button-container" onClick={handleSearch}>
+                                            <img className="search-icon" src={tim} alt="Search" />
+                                        </span>
+                                        {/* <button className="formatButton" onClick={handleSearch}>
+                                            Tìm
+                                        </button> */}
                                         <div className="search_result_list"></div>
                                     </div>
                                 </div>
