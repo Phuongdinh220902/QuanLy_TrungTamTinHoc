@@ -111,7 +111,7 @@ const initAPIRoute = (app) => {
     router.post('/GuiCamNhan', APIController.GuiCamNhan)
     router.get('/KiemTraDanhGia', APIController.KiemTraDanhGia)
 
-    router.get('/laydskh1/:tukhoa', APIController.laydskh1)
+    router.get('/laydskh1/:tukhoa1', APIController.laydskh1)
 
     function generateToken(email, role) {
         const secretKey = "yourSecretKey"; // Replace with your actual secret key

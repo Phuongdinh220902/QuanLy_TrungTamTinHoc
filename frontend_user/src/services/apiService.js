@@ -29,8 +29,8 @@ const deleteHV = (maHV) => {
     return axios.post(`api/v1/deleteHV/${maHV}`);
 };
 
-const laydskh1 = (tukhoa) => {
-    return axios.get(`api/v1/laydskh1/${tukhoa}`);
+const laydskh1 = (tukhoa1) => {
+    return axios.get(`api/v1/laydskh1/${tukhoa1}`);
 };
 
 const deleteKH = (maKH) => {

@@ -67,7 +67,7 @@ let laydshv = async (req, res) => {
                     currentPage: page,
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả hv");
                 return res.status(200).json({
                     dataCD: [],
                     totalPages: 0,
@@ -101,7 +101,7 @@ let laydshv = async (req, res) => {
                 currentPage: page,
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả hv");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -145,7 +145,7 @@ let laydsgv = async (req, res) => {
                     currentPage: page,
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả gv");
                 return res.status(200).json({
                     dataCD: [],
                     totalPages: 0,
@@ -179,7 +179,7 @@ let laydsgv = async (req, res) => {
                 currentPage: page,
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log(" gv");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -314,7 +314,7 @@ let laydskh = async (req, res) => {
                     currentPage: page,
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả kh");
                 return res.status(200).json({
                     dataCD: [],
                     totalPages: 0,
@@ -349,7 +349,7 @@ let laydskh = async (req, res) => {
                 currentPage: page,
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả kh");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -541,7 +541,7 @@ let laydsLopHoc = async (req, res) => {
                     dsGV: dsGV
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả LopHoc");
                 return res.status(200).json({
                     dataCD: [],
                     totalPages: 0,
@@ -576,7 +576,7 @@ let laydsLopHoc = async (req, res) => {
                 dsGV: dsGV
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả LH");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -657,7 +657,7 @@ let laydsHocVien = async (req, res) => {
                     currentPage: page,
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả HV");
                 return res.status(200).json({
                     dataCD: [],
                     totalPages: 0,
@@ -691,7 +691,7 @@ let laydsHocVien = async (req, res) => {
                 currentPage: page,
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả HV");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -751,7 +751,7 @@ let layLichThi = async (req, res) => {
                     currentPage: page,
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả Lthi");
                 return res.status(200).json({
                     dataCD: [],
                     totalPages: 0,
@@ -786,7 +786,7 @@ let layLichThi = async (req, res) => {
                 currentPage: page,
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả Lthi");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -904,7 +904,7 @@ let laydsCaThi = async (req, res) => {
 
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả Cathi");
                 return res.status(200).json({
                     dataCD: [],
                     totalPages: 0,
@@ -939,7 +939,7 @@ let laydsCaThi = async (req, res) => {
 
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả cathi");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -1018,7 +1018,7 @@ let laydsThiSinh = async (req, res) => {
                     currentPage: page,
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả thisinh");
                 return res.status(200).json({
                     dataCD: [],
                     totalPages: 0,
@@ -1052,7 +1052,7 @@ let laydsThiSinh = async (req, res) => {
                 currentPage: page,
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả thisinh");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -1244,7 +1244,7 @@ let laydsCamNhan = async (req, res) => {
                     currentPage: page,
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả camnhan");
                 return res.status(200).json({
                     dataCD: [],
                     totalPages: 0,
@@ -1278,7 +1278,7 @@ let laydsCamNhan = async (req, res) => {
                 currentPage: page,
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả camnhan");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -1373,7 +1373,7 @@ let laydsCamNhanHienThi = async (req, res) => {
                     currentPage: page,
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả camnhanhienthi");
                 return res.status(200).json({
                     dataCD: [],
                     totalPages: 0,
@@ -1407,7 +1407,7 @@ let laydsCamNhanHienThi = async (req, res) => {
                 currentPage: page,
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả camnhanhienthi");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -1808,7 +1808,7 @@ let layHinhAnhGioiThieu = async (req, res) => {
                 currentPage: page,
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả hinhanhgioithieu");
             return res.status(200).json({
                 dataCD: [],
                 totalPages: 0,
@@ -2596,7 +2596,7 @@ let KiemTraDanhGia = async (req, res) => {
 
 let laydskh1 = async (req, res) => {
     try {
-        let tukhoa = req.params.tukhoa
+        let tukhoa = req.params.tukhoa1
 
         if (tukhoa == "null" || !tukhoa) {
 
@@ -2606,12 +2606,12 @@ let laydskh1 = async (req, res) => {
 
             if (result2[0] && result2[0].length > 0) {
                 return res.status(200).json({
-                    dataCD: result2[0],
+                    dataKH: result2[0],
                 });
             } else {
-                console.log("Không tìm thấy kết quả");
+                console.log("Không tìm thấy kết quả kh1");
                 return res.status(200).json({
-                    dataCD: [],
+                    dataKH: [],
                 });
             }
         }
@@ -2626,12 +2626,12 @@ let laydskh1 = async (req, res) => {
 
         if (result2[0] && result2[0].length > 0) {
             return res.status(200).json({
-                dataCD: result2[0],
+                dataKH: result2[0],
             });
         } else {
-            console.log("Không tìm thấy kết quả");
+            console.log("Không tìm thấy kết quả kh1");
             return res.status(200).json({
-                dataCD: [],
+                dataKH: [],
             });
         }
     } catch (error) {

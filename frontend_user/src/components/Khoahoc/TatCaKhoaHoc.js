@@ -8,7 +8,7 @@ import {
 import tim from '../../images/search-icon.png'
 const TatCaKhoaHoc = () => {
     const [khoaHoc, setKhoaHoc] = useState([]);
-    let [tukhoa, setTuKhoa] = useState("")
+    let [tukhoa1, settukhoa1] = useState("")
 
     // useEffect(() => {
     //     const fetchKhoaHoc = async () => {
@@ -26,17 +26,17 @@ const TatCaKhoaHoc = () => {
 
     useEffect(() => {
         fetchKhoaHoc();
-    }, [tukhoa]);
+    }, [tukhoa1]);
 
 
     const fetchKhoaHoc = async () => {
         try {
-            let tukhoa_ = localStorage.getItem("tukhoa")
-            let res = await laydskh1(tukhoa_);
+            let tukhoa1_ = localStorage.getItem("tukhoa1")
+            let res = await laydskh1(tukhoa1_);
             console.log(res);
 
             if (res.status === 200) {
-                setKhoaHoc(res.data.dataCD);
+                setKhoaHoc(res.data.dataKH);
             } else {
                 // Xử lý trường hợp lỗi
                 console.error("Lỗi khi gọi API:", res.statusText);
@@ -52,12 +52,14 @@ const TatCaKhoaHoc = () => {
     };
 
     const handleSearch = async () => {
-        if (tukhoa == "" || !tukhoa) {
-            tukhoa = "null"
+        if (tukhoa1 == "" || !tukhoa1) {
+            tukhoa1 = "null"
         }
-        localStorage.setItem("tukhoa", tukhoa)
+        localStorage.setItem("tukhoa1", tukhoa1)
         await fetchKhoaHoc();
     };
+
+
 
     return (
         <div className="wrapper" style={{ "backgroundColor": "#f6f6f6" }}>
@@ -75,8 +77,8 @@ const TatCaKhoaHoc = () => {
                                     <div className="search-input-container">
                                         <input className="catalog-search-input"
                                             type="search" placeholder="Tìm khóa học"
-                                            value={tukhoa}
-                                            onChange={(e) => setTuKhoa(e.target.value)} />
+                                            value={tukhoa1}
+                                            onChange={(e) => settukhoa1(e.target.value)} />
                                         <span className="search-button-container" onClick={handleSearch}>
                                             <img className="search-icon" src={tim} alt="Search" />
                                         </span>

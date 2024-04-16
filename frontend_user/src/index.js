@@ -36,7 +36,7 @@ import LichThi from './components/LichThi/LichThi';
 import DangKyThi from './components/TrangCaNhan/DangKyThi';
 import ThongTinTSTuDoDangKyThi from './components/LichThi/ThongTinTSTuDo';
 import TraCuuChungChi from './components/TraCuuDiem/TraCuuChungChi';
-
+import ThanhToan from './components/ThanhToan/ThanhToan';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -66,7 +66,7 @@ root.render(
           <Route path="thongbaolichthi" element={<LichThi />} />
           <Route path="dangkythi/:maCaThi" element={<DangKyThi />} />
           <Route path="dangkythitudo/:maCaThi" element={<ThongTinTSTuDoDangKyThi />} />
-
+          <Route path="thanhtoan" element={<ThanhToan />} />
 
         </Route>
         <Route path="giangvien" element={<TCGiangVien />} />

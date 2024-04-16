@@ -152,6 +152,8 @@ button.multiselect-clear-filter {
     width: 24px;
     height: 24px;
     cursor: pointer;
+    margin-top: 40px;
+    margin-right: 30px;
 }
 
 .search-input-container .catalog-search-input {
