@@ -9,7 +9,8 @@ import {
     faGraduationCap,
     faRightFromBracket,
     faBars,
-    faGears
+    faGears,
+    faCalendarDays
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
@@ -182,6 +183,14 @@ const NguoiDung = () => {
                                 Chỉnh sửa
                             </Link>
                         </MenuItem>
+
+                        <Link to="/lichday" style={{ color: 'black' }}>
+                            <MenuItem >
+                                <FontAwesomeIcon icon={faCalendarDays} style={{ marginRight: '10px' }} />
+                                Lịch Dạy
+                            </MenuItem>
+                        </Link>
+
                         <Link to="/" onClick={handleLogout} style={{ color: 'black' }}>
                             <MenuItem >
                                 <FontAwesomeIcon icon={faRightFromBracket} style={{ marginRight: '10px' }} />
@@ -195,13 +204,20 @@ const NguoiDung = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <div style={{ padding: '15px', marginBottom: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '5px', display: 'flex', justifyContent: 'space-between' }}>
                         <ul style={{ display: 'flex', listStyleType: 'none', margin: 0, padding: 0, marginLeft: '25px', fontSize: '16px' }}>
-                            <li style={{ marginRight: '20px', marginLeft: '17px' }}>
-                                <Link to={`/lophocgv/${maLopHoc}`} style={{ color: 'black' }}>
+                            <li style={{ marginRight: '20px' }}>
+                                <Link to={`/lophocgv/${maLopHoc}`} className="highlighted-link1" style={{ color: 'black' }}>
                                     Bảng tin
                                 </Link>
                             </li>
-                            <li >
-                                <Link to={`/moinguoi/${maLopHoc}`} className="highlighted-link" > Mọi người</Link>
+                            <li>
+                                <Link to={`/moinguoi/${maLopHoc}`} className="highlighted-link" >
+                                    Mọi người
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to={`/nhapdiem/${maLopHoc}`} className="highlighted-link1" style={{ color: 'black' }}>
+                                    Nhập điểm
+                                </Link>
                             </li>
                         </ul>
                     </div>

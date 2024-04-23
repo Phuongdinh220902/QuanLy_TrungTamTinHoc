@@ -21,11 +21,10 @@ import Image2 from '../../images/img_code.jpg';
 import moment from 'moment';
 
 
-const TrangLopHocGV = () => {
+const NhapDiem = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [classes, setClasses] = useState([]);
     const [data, setData] = useState([]);
-    const [thongbao, setThongBao] = useState([]);
     const [tenGV, setTenGV] = useState("");
     // const { maGV } = useParams();
     const maGV = localStorage.getItem('maGV');
@@ -33,6 +32,7 @@ const TrangLopHocGV = () => {
     const [randomImage, setRandomImage] = useState('');
     const images = [Image, Image1, Image2];
     const [selectedClass, setSelectedClass] = useState(null);
+    const [nhapdiem, setNhapDiem] = useState([]);
     const getRandomImage = () => {
         const randomIndex = Math.floor(Math.random() * images.length);
         return images[randomIndex];
@@ -73,11 +73,8 @@ const TrangLopHocGV = () => {
                 console.log(response, 'lh')
                 setRandomImage(getRandomImage());
 
-
-                const responseTB = await axios.get(`http://localhost:2209/api/v1/layThongBaoLopHoc/${maLopHoc}`);
-                console.log(responseTB)
-                const sortedThongBao = responseTB.data.TB.sort((a, b) => moment(b.ngaydang) - moment(a.ngaydang));
-                setThongBao(sortedThongBao);
+                const responseHV = await axios.get(`http://localhost:2209/api/v1/NhapDiem/${maLopHoc}`);
+                setNhapDiem(responseHV.data.Diem);
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -93,19 +90,13 @@ const TrangLopHocGV = () => {
         // setUser(null);
         navigate('/');
     };
-
-    const formatDate = (dateTimeString) => {
-        // Tạo đối tượng Date từ chuỗi datetime
-        const dateTime = new Date(dateTimeString);
-
-        // Trích xuất ngày, tháng và năm từ đối tượng Date
-        const day = dateTime.getDate();
-        const month = dateTime.getMonth() + 1; // Lưu ý: Tháng trong JavaScript bắt đầu từ 0, nên cần cộng thêm 1
-        const year = dateTime.getFullYear();
-
-        // Định dạng lại ngày theo yêu cầu "dd-mm-yyyy"
-        return `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
+    const handleInputChange = (e, index) => {
+        const { value } = e.target;
+        const updatedDiem = [...nhapdiem]; // Tạo một bản sao của mảng nhapdiem
+        updatedDiem[index].diem = value; // Cập nhật giá trị điểm trong mảng sao chép
+        setNhapDiem(updatedDiem); // Cập nhật mảng nhapdiem với giá trị mới
     };
+
 
 
     return (
@@ -180,7 +171,7 @@ const TrangLopHocGV = () => {
                     <div style={{ padding: '15px', marginBottom: '20px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '5px', display: 'flex', justifyContent: 'space-between' }}>
                         <ul style={{ display: 'flex', listStyleType: 'none', margin: 0, padding: 0, marginLeft: '25px', fontSize: '16px' }}>
                             <li style={{ marginRight: '20px' }}>
-                                <Link to={`/lophocgv/${maLopHoc}`} className="highlighted-link">
+                                <Link to={`/lophocgv/${maLopHoc}`} className="highlighted-link1" style={{ color: 'black' }}>
                                     Bảng tin
                                 </Link>
                             </li>
@@ -190,54 +181,37 @@ const TrangLopHocGV = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link to={`/nhapdiem/${maLopHoc}`} className="highlighted-link1" style={{ color: 'black' }}>
+                                <Link to={`/nhapdiem/${maLopHoc}`} className="highlighted-link" >
                                     Nhập điểm
                                 </Link>
                             </li>
                         </ul>
                     </div>
 
+                    <div style={{ padding: '15px', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: '5px' }}>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã số học viên</th>
+                                    <th>Tên học viên</th>
+                                    <th>Điểm</th> {/* Cột cuối cùng */}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {nhapdiem.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.mshv}</td>
+                                        <td>{item.tenHV}</td>
 
-
-                    {/* Content */}
-                    <div>
-
-                        <div style={{ marginBottom: '50px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: '0' }}>
-                            <div style={{ position: 'relative', width: '80%', height: '250px', backgroundImage: `url(${randomImage})`, backgroundSize: 'cover', backgroundPosition: 'center', zIndex: '0', boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.5)', borderRadius: '10px' }}></div>
-                            <h1 style={{ textAlign: 'center', position: 'absolute', zIndex: '1', color: '#fff', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>Lớp học {lopHoc.length > 0 && lopHoc[0].tenLopHoc}</h1>
-                        </div>
-
-
-                        <div className="centered-div user-info-container ">
-                            <Link to={`/themthongbao/${maLopHoc}`}>
-                                <img src={`http://localhost:2209/images/${tenHA}`} alt="Avatar" style={{ width: '50px', height: '50px', marginRight: '10px' }} />
-                                Đăng nội dung nào đó cho lớp học của bạn
-                            </Link>
-                        </div>
-
-                        <div>
-                            {thongbao ? (
-                                thongbao.map((tb, index) => (
-                                    <div className="centered-div1" key={index}>
-                                        <Link to={`/chitietthongbao/${tb.maTB}`}>
-                                            <div>
-                                                <FontAwesomeIcon icon={faBell} className="icon" />
-                                                <div>
-                                                    <p style={{ marginLeft: '60px', fontSize: '0.875rem', fontWeight: '500', color: '#3c4043', fontFamily: "Google Sans, Roboto, Arial, sans-serif", letterSpacing: '.01785714em', lineHeight: '1.25rem' }}>{tb.tenGV} đã đăng một thông báo mới: {tb.tieude_thongbao}</p>
-                                                    <p style={{ marginLeft: '60px', fontSize: '13px', opacity: 0.7, color: 'black' }}>{formatDate(tb.ngaydang)}</p>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    </div>
-
-                                ))
-                            ) : (
-                                <p>Không có thông báo nào.</p>
-                            )}
-                        </div>
-
-
+                                        <td><input type="text" value={item.diem} onChange={(e) => handleInputChange(e, index)} /></td> {/* Ô input */}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
+
 
                 </div>
 
@@ -247,4 +221,4 @@ const TrangLopHocGV = () => {
     );
 };
 
-export default TrangLopHocGV;
+export default NhapDiem;

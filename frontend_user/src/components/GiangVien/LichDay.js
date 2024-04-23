@@ -16,7 +16,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
 
-const TCGiangVien = () => {
+const LichDay = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [classes, setClasses] = useState([]);
     const [data, setData] = useState([]);
@@ -24,6 +24,7 @@ const TCGiangVien = () => {
     // const { maGV } = useParams();
     const maGV = localStorage.getItem('maGV');
     const [tenHA, setTenHA] = useState("");
+    const [lichday, setLichDay] = useState([]);
 
 
 
@@ -37,6 +38,10 @@ const TCGiangVien = () => {
                 const response = await axios.get(`http://localhost:2209/api/v1/layLopHocGV/${maGV}}`);
                 setData(response.data.KH);
                 console.log(maGV, 'ok')
+
+                const responseLichDay = await axios.get(`http://localhost:2209/api/v1/layLichDay/${maGV}}`);
+                setLichDay(responseLichDay.data.DSLD);
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -121,24 +126,45 @@ const TCGiangVien = () => {
 
                     </Menu>
                 </Sidebar>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
 
 
-                <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gridGap: '40px', marginLeft: '50px', marginTop: '30px' }}>
-                    {data.map((item, index) => (
-                        <div key={index} className="class-for-image-container" style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '10px', textAlign: 'center', height: '260px' }}>
-                            <img src={`http://localhost:2209/images/${item.tenHinhAnhKH}`} className="class-for-image" />
-                            <Link to={`/lophocgv/${item.maLopHoc}`}>
-                                <h3>{item.tenLopHoc}</h3>
-                            </Link>
-                            <p>{item.tenGV}</p>
-                        </div>
+                    <table className="table" style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginBottom: '100px' }}>
+                        {lichday && lichday.length > 0 && (
+                            <thead>
+                                <tr>
+                                    <th>Lớp học</th>
+                                    <th>Thời gian</th>
+                                    <th>Ngày bắt đầu</th>
+                                    <th>Phòng</th>
+                                </tr>
+                            </thead>
+                        )}
+                        <tbody>
+                            {lichday && lichday.length > 0 ? (
+                                lichday.map((lop, index) => (
+                                    <tr key={index}>
+                                        <td>{lop.tenLopHoc}</td>
+                                        <td>{lop.thoigian}</td>
+                                        <td>{lop.ngay_batdau}</td>
+                                        <td>{lop.diadiem}</td>
 
-                    ))}
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td style={{ border: 'none', color: '#FD6504' }}>Chưa có lịch dạy</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+
                 </div>
+
             </div>
         </div>
 
     );
 };
 
-export default TCGiangVien;
+export default LichDay;

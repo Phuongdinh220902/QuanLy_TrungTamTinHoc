@@ -9,7 +9,8 @@ import {
     faGraduationCap,
     faRightFromBracket,
     faBars,
-    faGears
+    faGears,
+    faCalendarDays
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
@@ -175,6 +176,14 @@ const ThongBaoLopHocChiTiet = () => {
                                 Chỉnh sửa
                             </Link>
                         </MenuItem>
+
+                        <Link to="/lichday" style={{ color: 'black' }}>
+                            <MenuItem >
+                                <FontAwesomeIcon icon={faCalendarDays} style={{ marginRight: '10px' }} />
+                                Lịch Dạy
+                            </MenuItem>
+                        </Link>
+
                         <Link to="/" onClick={handleLogout} style={{ color: 'black' }}>
                             <MenuItem >
                                 <FontAwesomeIcon icon={faRightFromBracket} style={{ marginRight: '10px' }} />

@@ -2141,25 +2141,60 @@ let doiMatKhau = async (req, res) => {
 }
 
 let SaveCheckboxStates = async (req, res) => {
-    let { maDSHV, isChecked } = req.body;
+    let { maDSHV, maHV, isChecked } = req.body;
+    console.log(maDSHV, 'madshv')
 
     console.log(req.body);
     console.log("+=============");
     console.log(isChecked);
-
+    console.log(maHV, 'maHV')
     try {
-        // Assuming checkboxStates is an array of objects with IDChiTietDoanPhi and isChecked
-        for (let { maHP, isChecked } of isChecked) {
-            if (isChecked == false) {
-                isChecked = 0;
-            } else {
-                isChecked = 1;
+        for (let { maHP, isChecked: checkboxValue } of isChecked) {
+            // Kiểm tra nếu checkbox được chọn (isChecked = true)
+            if (checkboxValue) {
+                console.log(checkboxValue, 'checkboxValue')
+                const [existingData] = await pool.execute(
+                    "SELECT mshv FROM dshv WHERE maHV = ? AND mshv != '0'",
+                    [maHV]
+                );
+
+                let mshvToUpdate = '';
+
+                // Nếu tồn tại mshv khác 0 cho maHV trong bảng dshv
+                if (existingData.length > 0) {
+                    // Sử dụng mshv đã tồn tại để cập nhật
+                    mshvToUpdate = existingData[0].mshv;
+
+                    // Cập nhật mshv mới vào bảng dshv
+                    await pool.execute(
+                        "UPDATE dshv SET mshv = ? WHERE maHV = ? and maDSHV = ?",
+                        [mshvToUpdate, maHV, maDSHV]
+                    );
+                } else {
+                    // Tạo mshv mới
+                    const yearLastTwoDigits = new Date().getFullYear().toString().slice(-2);
+                    const paddedMaDSHV = maDSHV.toString().padStart(4, '0');
+                    mshvToUpdate = `TT${yearLastTwoDigits}${paddedMaDSHV}`;
+
+                    // Cập nhật mshv mới vào bảng dshv
+                    await pool.execute(
+                        "UPDATE dshv SET mshv = ? WHERE maHV = ? and maDSHV = ?",
+                        [mshvToUpdate, maHV, maDSHV]
+                    );
+                }
             }
-            console.log(isChecked);
-            await pool.execute(
-                "UPDATE hoc_phi SET trang_thai = ? WHERE maDSHV = ? and maHP = ?",
-                [isChecked, maDSHV, maHP]
-            );
+
+            // Chỉ cập nhật trạng thái trong bảng hoc_phi nếu checkbox được chọn
+            if (checkboxValue || !checkboxValue) {
+                // Chuyển đổi giá trị của checkbox thành số (1 nếu true, 0 nếu false)
+                const updatedValue = checkboxValue ? 1 : 0;
+
+                // Cập nhật trạng thái trong bảng hoc_phi
+                await pool.execute(
+                    "UPDATE hoc_phi SET trang_thai = ? WHERE maDSHV = ? and maHP = ?",
+                    [updatedValue, maDSHV, maHP]
+                );
+            }
         }
 
         return res.status(200).json({
@@ -2171,6 +2206,9 @@ let SaveCheckboxStates = async (req, res) => {
         return res.status(500).json({ message: "Cập nhật thành công!" });
     }
 };
+
+
+
 
 let SaveCheckboxStatesLopHoc = async (req, res) => {
     let { maLopHoc, isChecked } = req.body;
@@ -2456,6 +2494,47 @@ let kiemtraDK = async (req, res) => {
     }
 };
 
+// let DangKyLopHoc = async (req, res) => {
+//     let { maLopHoc, maHV } = req.body;
+//     console.log(req.body);
+//     const [existingData] = await pool.execute("SELECT maHV, maLopHoc FROM dshv WHERE dshv.maHV = ? and dshv.maLopHoc = ? ", [maHV, maLopHoc]);
+//     try {
+//         // Nếu không có dữ liệu trùng lặp, tiến hành thêm dữ liệu mới
+//         if (existingData.length === 0) {
+//             const [DSHV] = await pool.execute("INSERT INTO dshv( maLopHoc, maHV, trang_thai) VALUES (?, ?, 1)", [maLopHoc, maHV]);
+
+//             const maDSHV = DSHV.insertId;
+//             console.log(maDSHV, 'maDSHV');
+
+//             const yearLastTwoDigits = new Date().getFullYear().toString().slice(-2); // Lấy hai số cuối của năm hiện tại
+//             const paddedMaDSHV = maDSHV.toString().padStart(4, '0'); // Chuyển maDSHV thành chuỗi với độ dài 4 chữ số và thêm số 0 vào đầu nếu cần
+
+//             const mshv = `TT${yearLastTwoDigits}${paddedMaDSHV}`; // Tạo chuỗi mssv theo yêu cầu
+//             console.log(mshv)
+
+
+//             // Cập nhật dữ liệu vào cột mssv
+//             await pool.execute("UPDATE dshv SET mshv = ? WHERE maDSHV = ?", [mshv, maDSHV]);
+
+
+//             const [DSHP] = await pool.execute("INSERT INTO hoc_phi(maDSHV, trang_thai) VALUES (?, 0)", [maDSHV]);
+
+//             res.status(200).json({
+//                 'DT': {
+//                     'maLopHoc': maLopHoc,
+//                 },
+//                 'EC': 0,
+//                 'EM': 'Tạo thành công'
+//             });
+//         } else {
+//             return res.status(400).send("Đăng ký không thành công! Bạn đã đăng ký lớp học này");
+//         }
+//     } catch (error) {
+//         console.log("Lỗi khi thêm học viên: ", error);
+//         return res.status(500).json({ error: "Lỗi khi thêm học viên" });
+//     }
+// };
+
 let DangKyLopHoc = async (req, res) => {
     let { maLopHoc, maHV } = req.body;
     console.log(req.body);
@@ -2490,6 +2569,7 @@ let DangKyLopHoc = async (req, res) => {
         return res.status(500).json({ error: "Lỗi khi thêm học viên" });
     }
 };
+
 
 let TimDiem = async (req, res) => {
     let { cccd } = req.body;
@@ -2642,7 +2722,37 @@ let laydskh1 = async (req, res) => {
     }
 };
 
+let layLichDay = async (req, res) => {
+    const maGV = req.params.maGV;
+    try {
+        const [DSLD, a] = await pool.execute("SELECT maGV, tenLopHoc, lich_hoc.maLH, diadiem, thoigian ,DATE_FORMAT(STR_TO_DATE(ngay_batdau, '%Y-%m-%d'), '%d-%m-%Y') AS ngay_batdau FROM lich_hoc, lop_hoc where lop_hoc.maGV = ? and lich_hoc.maLH = lop_hoc.maLH", [maGV]);
+        return res.status(200).json({
+            DSLD: DSLD
+        })
 
+    } catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
+let NhapDiem = async (req, res) => {
+    const maLopHoc = req.params.maLopHoc;
+    try {
+        const [Diem, a] = await pool.execute("SELECT DISTINCT hoc_vien.maHV, lop_hoc.maLopHoc, tenHV, mshv, hinhanh_hocvien.tenHinhAnhHV FROM lop_hoc , hoc_vien, hinhanh_hocvien, dshv, hoc_phi where lop_hoc.maLopHoc = ? and hoc_phi.trang_thai = 1 and dshv.maHV = hoc_vien.maHV and dshv.maLopHoc = lop_hoc.maLopHoc and hoc_vien.maHV = hinhanh_hocvien.maHV and hoc_phi.maDSHV = dshv.maDSHV", [maLopHoc]);
+        return res.status(200).json({
+            Diem: Diem
+        })
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
 
 
 
@@ -2660,5 +2770,5 @@ module.exports = {
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,
     layTrangChuCamNhan, layLopHocGiaoVien, layLopHocGV, layThongTinTrangGiangVien, SaveCheckboxStatesLopHocBatDau, layThongBaoGV,
     layThongBaoLopHoc, layThongBaoLopHocChiTiet, layNguoiDung, layTrangCaNhanGV, layFile, layThongTinLTTSTD, updateTTLTTSTD, laydsCaThiND,
-    DangKyLopHoc, GuiCamNhan, KiemTraDanhGia, laydskh1
+    DangKyLopHoc, GuiCamNhan, KiemTraDanhGia, laydskh1, layLichDay, NhapDiem
 }

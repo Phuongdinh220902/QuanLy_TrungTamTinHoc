@@ -109,7 +109,7 @@ const DSHocVien = (props) => {
 
 
 
-    const handleCheckboxChange = async (maDSHV, isChecked, index) => {
+    const handleCheckboxChange = async (maDSHV, maHV, isChecked, index) => {
         const newCheckboxStates = [...checkboxStates];
         newCheckboxStates[index] = !newCheckboxStates[index];
         setCheckboxStates(newCheckboxStates);
@@ -126,6 +126,7 @@ const DSHocVien = (props) => {
         try {
             const response = await axios.post('http://localhost:2209/api/v1/SaveCheckboxStates', {
                 maDSHV: maDSHV,
+                maHV: maHV,
                 isChecked: dataToSave,
             });
 
@@ -197,7 +198,7 @@ const DSHocVien = (props) => {
                                                     <input
                                                         type="checkbox"
                                                         checked={checkboxStates[index]}
-                                                        onChange={() => handleCheckboxChange(item.maDSHV, checkboxStates[index], index)}
+                                                        onChange={() => handleCheckboxChange(item.maDSHV, item.maHV, checkboxStates[index], index)}
                                                     />
                                                 </td>
 

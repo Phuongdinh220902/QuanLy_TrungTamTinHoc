@@ -37,6 +37,8 @@ import DangKyThi from './components/TrangCaNhan/DangKyThi';
 import ThongTinTSTuDoDangKyThi from './components/LichThi/ThongTinTSTuDo';
 import TraCuuChungChi from './components/TraCuuDiem/TraCuuChungChi';
 import ThanhToan from './components/ThanhToan/ThanhToan';
+import LichDay from './components/GiangVien/LichDay';
+import NhapDiem from './components/GiangVien/NhapDiem';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -74,8 +76,9 @@ root.render(
         <Route path="themthongbao/:maLopHoc" element={<ThemThongBao />} />
         <Route path="chitietthongbao/:maTB" element={<ThongBaoLopHocChiTiet />} />
         <Route path="chinhsua" element={<ChinhSua />} />
-
+        <Route path="lichday" element={<LichDay />} />
         <Route path="moinguoi/:maLopHoc" element={<NguoiDung />} />
+        <Route path="nhapdiem/:maLopHoc" element={<NhapDiem />} />
         <Route path="preview/:tenFile" element={<FilePreview />} />
 
       </Routes>
