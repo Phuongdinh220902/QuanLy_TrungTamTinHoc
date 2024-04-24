@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import axios from 'axios';
+import * as XLSX from "xlsx";
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import Button from 'react-bootstrap/Button';
 import {
     faHouseChimney,
     faGraduationCap,
@@ -18,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import Image from '../../images/img_backtoschool.jpg';
 import Image1 from '../../images/img_clr.jpg';
 import Image2 from '../../images/img_code.jpg';
-import moment from 'moment';
+import { NumericFormat } from 'react-number-format';
 
 
 const NhapDiem = () => {
@@ -33,6 +34,8 @@ const NhapDiem = () => {
     const images = [Image, Image1, Image2];
     const [selectedClass, setSelectedClass] = useState(null);
     const [nhapdiem, setNhapDiem] = useState([]);
+    const [secondNhapDiem, setSecondNhapDiem] = useState([]);
+
     const getRandomImage = () => {
         const randomIndex = Math.floor(Math.random() * images.length);
         return images[randomIndex];
@@ -73,8 +76,10 @@ const NhapDiem = () => {
                 console.log(response, 'lh')
                 setRandomImage(getRandomImage());
 
-                const responseHV = await axios.get(`http://localhost:2209/api/v1/NhapDiem/${maLopHoc}`);
+                const responseHV = await axios.get(`http://localhost:2209/api/v1/LayNhapDiem/${maLopHoc}`);
                 setNhapDiem(responseHV.data.Diem);
+                console.log(responseHV.data.Diem, 'diem')
+                setSecondNhapDiem(responseHV.data.Diem);
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -93,10 +98,92 @@ const NhapDiem = () => {
     const handleInputChange = (e, index) => {
         const { value } = e.target;
         const updatedDiem = [...nhapdiem]; // Tạo một bản sao của mảng nhapdiem
-        updatedDiem[index].diem = value; // Cập nhật giá trị điểm trong mảng sao chép
+        updatedDiem[index].diemGK = value; // Cập nhật giá trị điểm trong mảng sao chép
         setNhapDiem(updatedDiem); // Cập nhật mảng nhapdiem với giá trị mới
     };
 
+    const handleInputChangeCK = (e, index) => {
+        const { value } = e.target;
+        const updatedSecondDiem = [...secondNhapDiem];
+        updatedSecondDiem[index].diemCK = value;
+        setSecondNhapDiem(updatedSecondDiem);
+    };
+
+    const calculateTotalScore = (gk, ck) => {
+        const gkScore = parseFloat(gk);
+        const ckScore = parseFloat(ck);
+        if (!isNaN(gkScore) && !isNaN(ckScore)) {
+            return (gkScore + ckScore).toFixed(2);
+        }
+        return '';
+    };
+
+    const handleSubmit = async () => {
+        try {
+            // Kết hợp cả nhapdiem và secondNhapDiem thành một mảng duy nhất chứa tất cả các điểm
+            const allDiem = [...nhapdiem, ...secondNhapDiem];
+            console.log(allDiem)
+            // Gửi dữ liệu điểm lên server thông qua API
+            await axios.post('http://localhost:2209/api/v1/NhapDiem', { diemList: allDiem, maLopHoc });
+            alert('Đã chèn điểm thành công!');
+        } catch (error) {
+            console.error('Error sending data:', error);
+            alert('Đã xảy ra lỗi khi chèn điểm.');
+        }
+    };
+
+    const exportToExcel = async () => {
+        {
+            const dataToExport = nhapdiem.map((item) => {
+                return {
+                    "Mã số học viên": item.mshv,
+                    "Tên học viên": item.tenHV,
+                    "Điểm giữa kì": item.diemGK,
+                    "Điểm cuối kì": item.diemCK,
+                    "Tổng điểm": item.diemGK + item.diemCK
+                };
+            });
+
+            const ws = XLSX.utils.json_to_sheet(dataToExport);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "DanhSachHocVien");
+
+            XLSX.writeFile(wb, "DanhSachHocVien.xlsx");
+        };
+    }
+
+    // Kiểm tra xem có cần hiển thị nút "Gửi" hay không
+    const shouldShowSubmitButton = () => {
+        for (const item of nhapdiem) {
+            if (item.diemGK && item.diemCK) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    // JSX của nút "Gửi" hoặc "Cập nhật"
+    const submitButton = shouldShowSubmitButton() ? (
+        <Button variant="primary" style={{ padding: '10px 20px', fontSize: '15px', borderRadius: '5px', marginRight: '30px' }} onClick={handleSubmit}>
+            Gửi
+        </Button>
+    ) : null;
+
+    const handleUpdate = async (item) => {
+        try {
+            const response = await axios.post(`http://localhost:2209/api/v1/updateDiem`, {
+                diemGK: item.diemGK,
+                diemCK: item.diemCK,
+                maHV: item.maHV,
+                maLopHoc: item.maLopHoc
+            });
+
+            alert(response.data.message);
+        } catch (error) {
+            console.error('Error updating data:', error);
+            alert('Đã xảy ra lỗi khi cập nhật điểm.');
+        }
+    };
 
 
     return (
@@ -195,7 +282,10 @@ const NhapDiem = () => {
                                     <th>STT</th>
                                     <th>Mã số học viên</th>
                                     <th>Tên học viên</th>
-                                    <th>Điểm</th> {/* Cột cuối cùng */}
+                                    <th>Điểm giữa kì</th>
+                                    <th>Điểm cuối kì</th>
+                                    <th>Tổng điểm</th>
+                                    <th> </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -204,12 +294,58 @@ const NhapDiem = () => {
                                         <td>{index + 1}</td>
                                         <td>{item.mshv}</td>
                                         <td>{item.tenHV}</td>
+                                        <td>
+                                            <NumericFormat
+                                                placeholder="0.00"
+                                                value={item.diemGK}
+                                                onChange={(e) => handleInputChange(e, index)}
+                                                format="0.00"
+                                                allowNegative={false}
+                                                allowLeadingZeros={false}
+                                                decimalScale={2}
+                                                allowEmptyFormatting={true}
+                                                mask="_"
+                                            />
+                                        </td>
 
-                                        <td><input type="text" value={item.diem} onChange={(e) => handleInputChange(e, index)} /></td> {/* Ô input */}
+                                        <td>
+                                            <NumericFormat
+                                                placeholder="0.00"
+                                                value={item.diemCK ? item.diemCK : "0.00"}
+                                                onChange={(e) => handleInputChangeCK(e, index)}
+                                                format="0.00"
+                                                allowNegative={false}
+                                                allowLeadingZeros={false}
+                                                decimalScale={2}
+                                                allowEmptyFormatting={true}
+                                                mask="_"
+                                            />
+                                        </td>
+
+                                        <td>{calculateTotalScore(item.diemGK, item.diemCK)}</td>
+                                        <td>
+                                            {(item.diemGK && item.diemCK) ? (
+                                                <button class="btn btn-warning" style={{ color: 'black' }} onClick={() => handleUpdate(item)}>
+                                                    Cập nhật</button>
+                                            ) : null}
+                                        </td>
+
+                                        {/* <td>
+                                            <input type="text" value={item.diemCK} onChange={(e) => handleInputChangeCK(e, index)} />
+                                        </td> */}
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '15px' }}>
+                            <Button variant="primary mx-2" onClick={exportToExcel}> Tải xuống </Button>
+
+                            {/* <Button variant="primary" style={{ padding: '10px 20px', fontSize: '15px', borderRadius: '5px', marginRight: '30px' }}
+                                onClick={handleSubmit}
+                            >Gửi</Button> */}
+                            {submitButton}
+
+                        </div>
                     </div>
 
 

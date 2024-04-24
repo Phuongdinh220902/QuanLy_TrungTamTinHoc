@@ -103,8 +103,9 @@ const initAPIRoute = (app) => {
     router.get('/layTrangCaNhanGV/:maGV', APIController.layTrangCaNhanGV)
     router.get('/layLichDay/:maGV', APIController.layLichDay)
 
-    router.get('/NhapDiem/:maLopHoc', APIController.NhapDiem)
-
+    router.get('/LayNhapDiem/:maLopHoc', APIController.LayNhapDiem)
+    router.post("/NhapDiem", APIController.NhapDiem)
+    router.post("/updateDiem", APIController.updateDiem)
     router.post("/kiemtraDK", APIController.kiemtraDK)
     router.post("/themHocVienDKThi", APIController.themHocVienDKThi)
     router.get('/laydsCaThiND', APIController.laydsCaThiND)

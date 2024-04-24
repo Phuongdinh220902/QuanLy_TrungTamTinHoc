@@ -118,17 +118,15 @@ const DSHocVien = (props) => {
         newNewState[index] = !newNewState[index]; // Cập nhật trạng thái mới
         setNewState(newNewState);
 
-        const dataToSave = DSHocVien.map((item, index) => ({
-            maHP: item.maHP, // Replace with the actual property name
-            isChecked: newNewState[index],
-        }));
-
         try {
             const response = await axios.post('http://localhost:2209/api/v1/SaveCheckboxStates', {
                 maDSHV: maDSHV,
                 maHV: maHV,
-                isChecked: dataToSave,
+                maHP: DSHocVien[index].maHP,
+                isChecked: !isChecked, // Trạng thái mới của ô input
             });
+
+            console.log(response);
 
             if (response.status === 200) {
                 toast.success('Cập nhật trạng thái thành công')
@@ -139,6 +137,7 @@ const DSHocVien = (props) => {
             console.error('Lỗi khi gửi yêu cầu API:', error);
         }
     };
+
 
     const formatCurrency = (value) => {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -201,6 +200,7 @@ const DSHocVien = (props) => {
                                                         onChange={() => handleCheckboxChange(item.maDSHV, item.maHV, checkboxStates[index], index)}
                                                     />
                                                 </td>
+
 
 
                                                 <td className="table-item">
