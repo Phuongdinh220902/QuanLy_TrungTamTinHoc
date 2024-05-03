@@ -150,7 +150,7 @@ const CamNhanHocVien = () => {
                 <img src={ngoisao} width="250px" alt="" />
 
                 {chunkArray(currentItems, 2).map((row, rowIndex) => (
-                    <div key={rowIndex} className="container nganh-khoang-cach">
+                    <div key={rowIndex} className="container nganh-khoang-cach" style={{ marginTop: '20px' }}>
                         <div id="vitri"></div>
                         <div className="col-md-9 khoang-cach-5">
                             <div className="khung-hoc-vien">

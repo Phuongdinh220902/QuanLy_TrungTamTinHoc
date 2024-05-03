@@ -376,10 +376,11 @@ const DoiMK = () => {
                     required
                 />
                 <div id="error-container" style={{ "color": "red" }}>{error}</div>
-                <div>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <button type="button" onClick={handleCancel}>Huỷ</button>&nbsp;
                     <button type="button" onClick={handleChangePassword}>Lưu</button>
                 </div>
+
             </form>
             <ToastContainer
                 position="top-right"

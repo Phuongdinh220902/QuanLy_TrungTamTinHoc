@@ -1201,7 +1201,7 @@ let updateTTLTTSTD = async (req, res) => {
 
 let laydsCaThiND = async (req, res) => {
     try {
-        const [CT, fields] = await pool.execute("SELECT thoigian, ngayhethan, lich_thi.ngaythi, lich_thi.maLichThi, ca_thi.maCaThi FROM ca_thi, lich_thi where lich_thi.batdau = 1 and ca_thi.trang_thai = 1 and lich_thi.maLichThi = ca_thi.maLichThi");
+        const [CT, fields] = await pool.execute("SELECT thoigian, DATE_FORMAT(STR_TO_DATE(lich_thi.ngaythi, '%Y-%m-%d'), '%d-%m-%Y') AS ngaythi, DATE_FORMAT(STR_TO_DATE(lich_thi.ngayhethan, '%Y-%m-%d'), '%d-%m-%Y') AS ngayhethan, lich_thi.maLichThi, ca_thi.maCaThi FROM ca_thi, lich_thi WHERE lich_thi.batdau = 1 AND ca_thi.trang_thai = 1 AND lich_thi.maLichThi = ca_thi.maLichThi");
         return res.status(200).json({
             CT: CT,
         })

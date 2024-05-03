@@ -86,7 +86,7 @@ const DSCamNhan = (props) => {
                 } else {
                     setStatus("Đóng");
                 }
-                console.log(trangthaiCamNhan, 'alo')
+
 
             } else {
                 console.error("Lỗi khi gọi API:", res.statusText);
@@ -188,6 +188,32 @@ const DSCamNhan = (props) => {
         }
     };
 
+    // const maLopHoc_ = maLopHoc
+
+    let formData = {
+        maLopHoc: maLopHoc
+    }
+
+
+    const handleSubmit = async () => {
+        try {
+            console.log(formData, 'formData')
+            const response = await axios.post('http://127.0.0.1:8000/predict_comment', formData, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+            console.log(response.data);
+            // Do something with the response if needed
+        } catch (error) {
+            console.error('Error:', error);
+            // Handle error if needed
+        }
+    };
+
+
+
+
     // const handleStatusSelect = async (selectedStatus) => {
     //     try {
     //         let newValue;
@@ -273,7 +299,7 @@ const DSCamNhan = (props) => {
                                 <Dropdown.Item eventKey="Đóng">Đóng</Dropdown.Item>
                             </DropdownButton>
 
-                            <button className="formatButton1 mx-2">
+                            <button className="formatButton1 mx-2" onClick={handleSubmit} style={{ height: '60px' }}>
                                 Phân loại cảm nhận
                             </button>
                         </div>

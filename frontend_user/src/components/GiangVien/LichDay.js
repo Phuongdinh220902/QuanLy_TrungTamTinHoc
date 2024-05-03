@@ -14,7 +14,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
-
+import * as XLSX from "xlsx";
+import Button from 'react-bootstrap/Button';
 
 const LichDay = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -60,6 +61,25 @@ const LichDay = () => {
         localStorage.removeItem('giangvien');
         navigate('/');
     };
+
+    const exportToExcel = async () => {
+        {
+            const dataToExport = lichday.map((item) => {
+                return {
+                    "Lớp học": item.tenLopHoc,
+                    "Ngày bắt đầu": item.ngay_batdau,
+                    "Thời gian": item.thoigian,
+                    "Phòng": item.diadiem,
+                };
+            });
+
+            const ws = XLSX.utils.json_to_sheet(dataToExport);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "LichGiangDay");
+
+            XLSX.writeFile(wb, "LichGiangDay.xlsx");
+        };
+    }
 
 
     return (
@@ -126,8 +146,11 @@ const LichDay = () => {
 
                     </Menu>
                 </Sidebar>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-
+                {/* <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}> */}
+                <div style={{ marginTop: '20px' }}>
+                    <div className="d-flex justify-content-end" >
+                        <Button variant="primary mx-2" onClick={exportToExcel} style={{ marginRight: '50px' }}> Tải xuống </Button>
+                    </div>
 
                     <table className="table" style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginBottom: '100px' }}>
                         {lichday && lichday.length > 0 && (

@@ -1106,7 +1106,7 @@ h2,
 .ck-editor__editable {
   min-height: 300px;
   /* Chiều cao tối thiểu */
-  height: 500px;
+  height: 450px;
   /* Chiều cao mặc định */
 }
 

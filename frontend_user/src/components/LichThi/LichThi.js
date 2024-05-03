@@ -8,6 +8,8 @@ import TT from '../../images/THÔNG BÁO LỊCH THI UDCNTT.png';
 const LichThi = () => {
     const [noiDungBaiViet, setNoiDungBaiViet] = useState('');
     const [caThi, setcaThi] = useState([]);
+    const [ngaythi, setNgayThi] = useState('');
+    const [ngayhethan, setNgayhethan] = useState('');
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -20,6 +22,15 @@ const LichThi = () => {
                 const responsecaThi = await axios.get(`http://localhost:2209/api/v1/laydsCaThiND`);
                 const { CT } = responsecaThi.data;
                 setcaThi(CT);
+
+                if (CT && CT.length > 0 && CT[0].ngaythi) {
+                    setNgayThi(CT[0].ngaythi);
+                }
+
+                if (CT && CT.length > 0 && CT[0].ngayhethan) {
+                    setNgayhethan(CT[0].ngayhethan);
+                }
+
 
             } catch (error) {
                 console.error('Lỗi khi gọi API: ', error);
@@ -43,12 +54,23 @@ const LichThi = () => {
 
                 <div id="ctl00_cphBody_NoiDungTrai" className="col-md-9 khoang-cach-5" style={{ paddingLeft: 0, marginBottom: '20px' }}>
                     <div className="col-md-12 khoang-cach-5">
-                        <div className="noi-dung">
+                        <div className="noi-dung" style={{ marginBottom: '10px' }}>
                             <p className="tieu-de-nho" style={{ display: 'none' }}><span className="glyphicon glyphicon-time"></span> ngày 03-11-2021</p>
 
                             <div dangerouslySetInnerHTML={{ __html: noiDungBaiViet }} style={{ fontSize: '16px' }} />
                         </div>
+                        <div>
+                            <span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>Ngày thi: </span>
+                            <span style={{ color: 'red' }}>{ngaythi}</span>
+                        </div>
+
+                        <div>
+                            <span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>Ngày hết hạn đăng ký: </span>
+                            <span style={{ color: 'red' }}>{ngayhethan}</span>
+                        </div>
+
                     </div>
+
                     <div style={{ clear: 'both' }}></div>
                 </div>
                 <div className="center-table" style={{ marginLeft: '200px' }}>

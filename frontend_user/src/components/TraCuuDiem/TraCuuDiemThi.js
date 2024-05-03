@@ -144,7 +144,7 @@ const TraCuuDiemThi = () => {
                                     <table className="table" style={{ margin: 'auto', width: '60%' }}>
                                         <tbody>
                                             <tr>
-                                                <td>Thời gian thi: Ngày</td>
+                                                <td>Thời gian thi: </td>
                                                 <td>{ketQua.ngaythi}</td>
                                             </tr>
                                             <tr>

@@ -118,18 +118,19 @@ function ThemThongBao() {
                     }}
                     data={editorData}
                 />
-                <div className="button-container">
-                    <button className="btn btn-info" onClick={handleSendData}>Thêm</button>
+                <div className="button-container d-flex justify-content-center" style={{ marginTop: '20px' }}>
+                    <button className="btn btn-info mx-2" onClick={handleSendData}>Thêm</button>
                     <Link to={`/giangvien`}>
-                        <button className="btn btn-info" >Huỷ</button>
+                        <button className="btn btn-info">Huỷ</button>
                     </Link>
 
-                    <div className="">
-                        <label className="form-label label-upload" htmlFor="labelUpload">
-                            <FontAwesomeIcon icon={faFileImport} /> Tải file lên </label>
-                        <input type="file" id="labelUpload" hidden
-                            onChange={(event) => handleUpLoad(event)} />
-                    </div>
+
+                </div>
+                <div>
+                    <label className="form-label label-upload" htmlFor="labelUpload">
+                        <FontAwesomeIcon icon={faFileImport} /> Tải file lên
+                    </label>
+                    <input type="file" id="labelUpload" hidden onChange={(event) => handleUpLoad(event)} />
                 </div>
 
                 <div className="file-info">

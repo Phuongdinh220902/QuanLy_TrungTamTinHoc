@@ -17,7 +17,7 @@ const DangKyDangNhap = () => {
     const [ngaysinh, setNgaysinh] = useState('');
     const [noisinh, setNoisinh] = useState('');
     const [password, setPassword] = useState('');
-    const [gioitinh, setGioitinh] = useState('Nữ');
+    const [gioitinh, setGioitinh] = useState('');
 
 
     const navigate = useNavigate();
@@ -222,7 +222,7 @@ const DangKyDangNhap = () => {
                 setNgaysinh('');
                 setNoisinh('');
                 setPassword('');
-                setGioitinh('Nữ');
+                setGioitinh('');
                 handleSignInClick()
             } else {
                 console.log(response.status)
@@ -322,7 +322,7 @@ const DangKyDangNhap = () => {
                 outline: none;
             }
             .form-select {
-                font-size:1.5rem;
+                font-size:1rem;
             }
 
             button.ghost {
@@ -571,6 +571,7 @@ const DangKyDangNhap = () => {
 
                         <select className="form-select"
                             onChange={(event) => setGioitinh(event.target.value)}>
+                            <option disabled selected hidden>Chọn giới tính</option>
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
                         </select>
