@@ -299,9 +299,12 @@ const DSCamNhan = (props) => {
                                 <Dropdown.Item eventKey="Đóng">Đóng</Dropdown.Item>
                             </DropdownButton>
 
-                            <button className="formatButton1 mx-2" onClick={handleSubmit} style={{ height: '60px' }}>
+                            <Button variant="success mx-2" id="bg-nested-dropdown" style={{ marginTop: '20px', height: 'fit-content' }}> Thống kê </Button>
+                            <Button variant="info" id="bg-nested-dropdown" onClick={handleSubmit} style={{ marginTop: '20px', height: 'fit-content', backgroundColor: 'rgb(29, 161, 242)', color: 'white' }}>
+                                Phân loại cảm nhận</Button>
+                            {/* <button className="formatButton1 mx-2" onClick={handleSubmit} style={{ height: '60px' }}>
                                 Phân loại cảm nhận
-                            </button>
+                            </button> */}
                         </div>
 
                     </div>
@@ -318,7 +321,7 @@ const DSCamNhan = (props) => {
                                     <th style={styles.tableHeader}>Nội dung</th>
                                     <th style={styles.tableHeader}>Hiển thị</th>
                                     <th style={styles.tableHeader}>Dự đoán</th>
-                                    <th style={styles.tableHeader}></th>
+                                    {/* <th style={styles.tableHeader}></th> */}
                                 </tr>
                             </thead>
                             <tbody id="myTable">
@@ -340,12 +343,22 @@ const DSCamNhan = (props) => {
                                                 </td>
 
 
-                                                <td style={styles.tableData}>{item.nhan}</td>
+                                                {/* <td style={styles.tableData}>{item.nhan}</td> */}
+
                                                 <td style={styles.tableData}>
+                                                    {item.nhan === 0
+                                                        ? "Tiêu cực"
+                                                        : item.nhan === 1
+                                                            ? "Khác"
+                                                            : item.nhan === 2
+                                                                ? "Tích cực"
+                                                                : "Chưa phân loại"}
+                                                </td>
+                                                {/* <td style={styles.tableData}>
                                                     <button className="btn btn-danger" onClick={() => { setselectID(item.maDSHV); setShowModal(true) }}>
                                                         Xoá
                                                     </button>
-                                                </td>
+                                                </td> */}
                                             </tr>
                                         );
                                     })}
