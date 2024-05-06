@@ -160,6 +160,7 @@ const DSCamNhan = (props) => {
 
     const handleCloseModal = () => {
         setShowModal1(false);
+        setModalIsOpen(false)
     };
 
     const [status, setStatus] = useState("");
@@ -205,6 +206,26 @@ const DSCamNhan = (props) => {
             });
             console.log(response.data);
             // Do something with the response if needed
+        } catch (error) {
+            console.error('Error:', error);
+            // Handle error if needed
+        }
+    };
+    const [imageUrl, setImageUrl] = useState('');
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+
+    const ThongKe = async () => {
+        try {
+            console.log(formData, 'formData')
+            const response = await axios.post('http://127.0.0.1:8000/thongke', formData, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+            console.log(response.data);
+            setImageUrl('http://localhost:8000/static/' + response.data);
+            console.log(imageUrl)
+            setModalIsOpen(true);
         } catch (error) {
             console.error('Error:', error);
             // Handle error if needed
@@ -299,7 +320,7 @@ const DSCamNhan = (props) => {
                                 <Dropdown.Item eventKey="Đóng">Đóng</Dropdown.Item>
                             </DropdownButton>
 
-                            <Button variant="success mx-2" id="bg-nested-dropdown" style={{ marginTop: '20px', height: 'fit-content' }}> Thống kê </Button>
+                            <Button variant="success mx-2" id="bg-nested-dropdown" onClick={ThongKe} style={{ marginTop: '20px', height: 'fit-content' }}> Thống kê </Button>
                             <Button variant="info" id="bg-nested-dropdown" onClick={handleSubmit} style={{ marginTop: '20px', height: 'fit-content', backgroundColor: 'rgb(29, 161, 242)', color: 'white' }}>
                                 Phân loại cảm nhận</Button>
                             {/* <button className="formatButton1 mx-2" onClick={handleSubmit} style={{ height: '60px' }}>
@@ -450,6 +471,30 @@ const DSCamNhan = (props) => {
                         Xác nhận
                     </Button>
                 </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={modalIsOpen}
+                onHide={handleCloseModal}
+                contentLabel="Generated Image"
+                size="lg"
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Biểu đồ thống kê cảm nhận học viên</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+
+                    <img src={imageUrl} alt="Generated Image" style={{ maxWidth: '700px', height: '500px' }} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Đóng
+                    </Button>
+
+                </Modal.Footer>
+
+
             </Modal>
         </>
     );

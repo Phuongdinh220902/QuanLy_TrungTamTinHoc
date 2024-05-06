@@ -1000,6 +1000,8 @@ let laydsThiSinh = async (req, res) => {
 
             const offset = (page - 1) * pageSize;
 
+            const [diem, a] = await pool.execute("SELECT diemLT, diemTH, thi_sinh.hoten, thi_sinh.email FROM diem_thi, ca_thi, thi_sinh where ca_thi.maCaThi = ? and ca_thi.maCaThi = diem_thi.maCaThi and thi_sinh.maThiSinh = diem_thi.maThiSinh", [maCaThi])
+
             const [sotrang, fields] = await pool.execute("SELECT dsdkthi.maDSDK, dsdkthi.maThiSinh, dsdkthi.maCaThi, hoten, email, sdt, lich_thi.maLichThi, lich_thi.hocphi, hocphi_thisinh.maHocPhiTS, hocphi_thisinh.trang_thai, hocphi_thisinh.maDSDK FROM dsdkthi, lich_thi, thi_sinh, ca_thi, hocphi_thisinh where dsdkthi.maCaThi = ? and dsdkthi.trang_thai = 1 and dsdkthi.maThiSinh = thi_sinh.maThiSinh and dsdkthi.maCaThi = ca_thi.maCaThi and hocphi_thisinh.maDSDK = dsdkthi.maDSDK and lich_thi.maLichThi = ca_thi.maLichThi", [maCaThi]);
             console.log(sotrang)
             const [result2, fields1] = await Promise.all([
@@ -1016,6 +1018,7 @@ let laydsThiSinh = async (req, res) => {
                     dataCD: result2[0],
                     totalPages: Math.ceil(sotrang.length / pageSize),
                     currentPage: page,
+                    diem: diem
                 });
             } else {
                 console.log("Không tìm thấy kết quả thisinh");
@@ -1023,7 +1026,7 @@ let laydsThiSinh = async (req, res) => {
                     dataCD: [],
                     totalPages: 0,
                     currentPage: 1,
-
+                    diem: diem
                 });
             }
         }
@@ -1031,7 +1034,7 @@ let laydsThiSinh = async (req, res) => {
         const page = parseInt(req.params.page) || 1; // Lấy trang từ query parameters, mặc định là trang 1
         const pageSize = parseInt(req.query.pageSize) || 5; // Lấy số lượng mục trên mỗi trang, mặc định là 5
         const offset = (page - 1) * pageSize;
-
+        const [diem1, a] = await pool.execute("SELECT diemLT, diemTH, thi_sinh.hoten, thi_sinh.email FROM diem_thi, ca_thi, thi_sinh where ca_thi.maCaThi = ? and ca_thi.maCaThi = diem_thi.maCaThi and thi_sinh.maThiSinh = diem_thi.maThiSinh", [maCaThi])
         const [sotrang, fields] = await pool.execute(
             "SELECT dsdkthi.maDSDK, dsdkthi.maThiSinh, dsdkthi.maCaThi, hoten, email, sdt, lich_thi.maLichThi, lich_thi.hocphi, hocphi_thisinh.maHocPhiTS, hocphi_thisinh.trang_thai, hocphi_thisinh.maDSDK FROM dsdkthi, lich_thi, thi_sinh, ca_thi, hocphi_thisinh where dsdkthi.maCaThi = ? and dsdkthi.trang_thai = 1 and dsdkthi.maThiSinh = thi_sinh.maThiSinh and dsdkthi.maCaThi = ca_thi.maCaThi and hocphi_thisinh.maDSDK = dsdkthi.maDSDK and lich_thi.maLichThi = ca_thi.maLichThi AND (UPPER(thi_sinh.hoten) LIKE UPPER(?) OR UPPER(thi_sinh.email) LIKE UPPER(?))",
             [maCaThi, "%" + tukhoa + "%", "%" + tukhoa + "%"]
@@ -1050,6 +1053,7 @@ let laydsThiSinh = async (req, res) => {
                 dataCD: result2[0],
                 totalPages: Math.ceil(sotrang.length / pageSize),
                 currentPage: page,
+                diem: diem1
             });
         } else {
             console.log("Không tìm thấy kết quả thisinh");
@@ -1057,6 +1061,7 @@ let laydsThiSinh = async (req, res) => {
                 dataCD: [],
                 totalPages: 0,
                 currentPage: 1,
+                diem: diem1
             });
         }
     } catch (error) {
@@ -1456,6 +1461,68 @@ let updateChiTietKhoaHoc = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+let NhapDiemThiUDCNTT = async (req, res) => {
+    const { diemList, maCaThi } = req.body;
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Thêm số 0 phía trước nếu tháng chỉ có 1 chữ số
+    const day = String(currentDate.getDate()).padStart(2, '0'); // Thêm số 0 phía trước nếu ngày chỉ có 1 chữ số
+
+    const formattedDate = `${year}/${month}/${day}`;
+
+    try {
+        for (const diem of diemList) {
+            await pool.execute(
+                "INSERT INTO diem_thi (diemLT, diemTH, maThiSinh, maCaThi) VALUES (?, ?, ?, ?)",
+                [diem.diemLT, diem.diemTH, diem.maThiSinh, maCaThi]
+            );
+
+            const [existingChungChi] = await pool.execute(
+                "SELECT * FROM chung_chi WHERE maThiSinh = ?",
+                [diem.maThiSinh]
+            );
+
+            // Nếu dữ liệu chưa tồn tại, thì mới thêm vào
+            if (!existingChungChi.length) {
+                // Thêm vào bảng chung_chi
+                const ngayCap = formattedDate;
+                const noithi = 'Trung tâm tin học';
+                await pool.execute(
+                    "INSERT INTO chung_chi (ngaycap, noithi, maThiSinh) VALUES (?, ?, ?)",
+                    [ngayCap, noithi, diem.maThiSinh]
+                );
+
+                // Lấy mã chứng chỉ vừa thêm vào
+                const [rows] = await pool.execute(
+                    "SELECT maChungChi FROM chung_chi WHERE maThiSinh = ?",
+                    [diem.maThiSinh]
+                );
+                const maChungChi = rows[0].maChungChi;
+
+                // Định dạng mã học viên thành chuỗi 5 ký tự, bắt đầu từ 00001
+                const paddedMaChungChi = maChungChi.toString().padStart(5, '0');
+
+                // Tạo mã số vào sổ
+                const soVaoso = `CTU/CB/2024/${paddedMaChungChi}`;
+                console.log(soVaoso)
+                const sohieu = maChungChi.toString().padStart(7, '0');
+                await pool.execute(
+                    "UPDATE chung_chi SET so_vaoso = ?, sohieu = ? WHERE maChungChi = ?",
+                    [soVaoso, sohieu, maChungChi]
+                );
+            }
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Thêm điểm thành công!",
+        });
+    } catch (error) {
+        console.error("Lỗi khi thêm điểm:", error);
+        return res.status(500).json({ message: "Lỗi khi thêm điểm" });
+    }
+}
 
 
 // người dùng
@@ -2735,6 +2802,43 @@ let LayNhapDiem = async (req, res) => {
     }
 };
 
+let LayNhapDiemThiSinh = async (req, res) => {
+    const maCaThi = req.params.maCaThi;
+    try {
+        const [DSHV, a] = await pool.execute("SELECT DISTINCT thi_sinh.maThiSinh, ca_thi.maCaThi, hoten, email FROM ca_thi , thi_sinh, dsdkthi, hocphi_thisinh where ca_thi.maCaThi = ? and hocphi_thisinh.trang_thai = 1 and dsdkthi.maThiSinh = thi_sinh.maThiSinh and dsdkthi.maCaThi = ca_thi.maCaThi and hocphi_thisinh.maDSDK = dsdkthi.maDSDK", [maCaThi]);
+
+
+        const [DSDiem, b] = await pool.execute("SELECT thi_sinh.maThiSinh, ca_thi.maCaThi,diemLT, diemTH FROM thi_sinh , ca_thi, diem_thi where ca_thi.maCaThi = ? and ca_thi.maCaThi = diem_thi.maCaThi and thi_sinh.maThiSinh = diem_thi.maThiSinh", [maCaThi]);
+
+        // Nếu DSDiem có dữ liệu
+        if (DSDiem.length > 0) {
+            // Gộp DSDiem vào DSHV
+            DSDiem.forEach(diem => {
+                const existingHVIndex = DSHV.findIndex(hv => hv.maThiSinh === diem.maThiSinh);
+                if (existingHVIndex !== -1) {
+                    // Nếu Học viên đã tồn tại trong DSHV, gộp giá trị của điểm vào
+                    DSHV[existingHVIndex] = { ...DSHV[existingHVIndex], ...diem };
+                } else {
+                    // Nếu Học viên chưa tồn tại trong DSHV, thêm mới vào DSHV
+                    DSHV.push(diem);
+                }
+            });
+        }
+
+        return res.status(200).json({
+            Diem: DSHV
+        });
+
+
+    }
+    catch (error) {
+        console.error("Lỗi khi truy vấn cơ sở dữ liệu: ", error);
+        return res.status(500).json({
+            error: "Lỗi khi truy vấn cơ sở dữ liệu",
+        });
+    }
+};
+
 let NhapDiem = async (req, res) => {
 
     const { diemList, maLopHoc } = req.body;
@@ -2774,6 +2878,8 @@ let updateDiem = async (req, res) => {
 }
 
 
+
+
 module.exports = {
     laydshv, laydsgv, loginhv, loginadmin, deleteGV, themHV, deleteHV, updateHV, getMaXacNhan,
     laydskh, deleteKH, laydsLopHoc, updateLH, deleteLH, DSGiangVien, laydsHocVien, deleteHVLopHoc, themLopHoc,
@@ -2782,7 +2888,7 @@ module.exports = {
     dangnhapnguoidung, dangkyTKNguoiDung, layLichThi, laydsCaThi, deleteLichThi, updateLichThi, updateCaThi, themLT,
     deleteCaThi, laydsThiSinh, deleteThiSinhDK, SaveCheckboxStatesHPTS, themHocVienDKThi, updateTrangThaiLichThi,
     layCaThiDK, kiemtraDK, TimDiem, TraCuuChungChi, laydsCamNhan, SaveCheckboxStatesCamNhan, laydsCamNhanHienThi,
-    TrangThaiCamNhan, checkChiTietExists, updateChiTietKhoaHoc, updateDiem,
+    TrangThaiCamNhan, checkChiTietExists, updateChiTietKhoaHoc, updateDiem, NhapDiemThiUDCNTT, LayNhapDiemThiSinh,
 
     layKhoaHoc, layLopHoc, BoLocHocPhi, layGioiThieuKhoaHoc, layNoiDungKhoaHoc, layThongTinDiemThi, updateTTDT, layMoTaKH,
     updateMoTa, lay1MoTaKH, deleteMoTa, layTrangCaNhanHV, layKhoaHocDaDK, layThongBaoLopHocHV, updateHV1, doiMatKhau, SaveCheckboxStates, SaveCheckboxStatesLopHoc,

@@ -125,10 +125,10 @@ const NhapDiem = () => {
             console.log(allDiem)
             // Gửi dữ liệu điểm lên server thông qua API
             await axios.post('http://localhost:2209/api/v1/NhapDiem', { diemList: allDiem, maLopHoc });
-            alert('Đã chèn điểm thành công!');
+            alert('Đã nhập điểm thành công!');
         } catch (error) {
             console.error('Error sending data:', error);
-            alert('Đã xảy ra lỗi khi chèn điểm.');
+            alert('Đã xảy ra lỗi khi nhập điểm.');
         }
     };
 
